@@ -1,0 +1,14 @@
+﻿<Window x:Class="DocumentationGenerator.MVVM.View.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
+        mc:Ignorable="d"
+        Title="MainView" Height="450" Width="800">
+    <Grid>
+        <Label Content="{Binding FileName}" Width="200" Height="50" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,10"/>
+        <TextBlock Text="{Binding Output}" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="12"/>
+        <Button Content="Load File" Command="{Binding LoadFileCommand}" Width="100" Height="50" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10"/>
+    </Grid>
+</Window>
