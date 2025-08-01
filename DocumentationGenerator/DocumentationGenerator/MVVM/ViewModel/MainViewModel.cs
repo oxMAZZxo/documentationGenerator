@@ -18,6 +18,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private OpenFileDialog openFileDialog;
         private OpenFolderDialog openFolderDialog;
         private SourceFileReader sourceFileReader;
+        private DocumentationWriter documentationWriter;
 
         public string Output
         {
@@ -55,15 +56,18 @@ namespace DocumentationGenerator.MVVM.ViewModel
             openFolderDialog = new OpenFolderDialog();
 
             sourceFileReader = new SourceFileReader();
+            documentationWriter = new DocumentationWriter();
         }
 
-        private void SaveDocs()
+        private async void SaveDocs()
         {
             bool? valid = openFolderDialog.ShowDialog();
 
             if (valid.HasValue && valid.Value == true)
             {
-
+                Debug.WriteLine($"Writing to: {openFolderDialog.FolderName}\\Docs.txt");
+                await documentationWriter.WriteDocumentation($"{openFolderDialog.FolderName}\\Docs.txt",sourceFileReader.GetAllDeclarations());
+                Debug.WriteLine($"Data written successfully");
             }
         }
 
