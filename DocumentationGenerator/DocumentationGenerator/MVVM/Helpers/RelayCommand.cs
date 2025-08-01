@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
+
 namespace DocumentationGenerator.MVVM.Helpers
 {
+#pragma warning disable
     public class RelayCommand : ICommand
     {
         private readonly Action execute;
