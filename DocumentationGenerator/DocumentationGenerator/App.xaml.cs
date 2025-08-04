@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Win32;
+using PdfSharp.Fonts;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -16,9 +17,12 @@ namespace DocumentationGenerator
     /// </summary>
     public partial class App : Application
     {
+
         public App()
         {
 
+            GlobalFontSettings.FontResolver = new SimpleFontResolver();
+            
         }
 
     }
