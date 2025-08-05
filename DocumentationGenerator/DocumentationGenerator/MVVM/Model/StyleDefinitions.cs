@@ -1,6 +1,6 @@
 using MigraDoc.DocumentObjectModel;
 
-namespace DocumentationGenerator.MVVM.Helpers
+namespace DocumentationGenerator.MVVM.Model
 {
     public class StyleDefinitions
     {

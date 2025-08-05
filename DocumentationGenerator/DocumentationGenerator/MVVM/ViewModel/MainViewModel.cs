@@ -59,18 +59,13 @@ namespace DocumentationGenerator.MVVM.ViewModel
             documentationWriter = new DocumentationWriter();
         }
 
-        private async void SaveDocs()
+        private void SaveDocs()
         {
             bool? valid = openFolderDialog.ShowDialog();
 
             if (valid.HasValue && valid.Value == true)
             {
-                //Debug.WriteLine($"Writing to: {openFolderDialog.FolderName}\\Docs.txt");
-                // documentationWriter.CreateSample($"{openFolderDialog.FolderName}","Docs.pdf");
                 documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(), sourceFileReader.Enums.ToArray());
-
-                //await documentationWriter.WriteDocumentation($"{openFolderDialog.FolderName}\\Docs.txt",sourceFileReader.GetAllDeclarations());
-                Debug.WriteLine($"Data written successfully");
             }
         }
 
