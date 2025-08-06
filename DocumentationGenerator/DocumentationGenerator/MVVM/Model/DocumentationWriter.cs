@@ -10,6 +10,10 @@ namespace DocumentationGenerator.MVVM.Model
 {
     public class DocumentationWriter
     {
+
+        private const string objectStyle = "Object";
+        private const string objectDefinitionStyle = "ObjectDefinition";
+        private const string variableStyle = "Variable";
         public DocumentationWriter()
         {
         }
@@ -21,7 +25,7 @@ namespace DocumentationGenerator.MVVM.Model
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool WriteDocumentation(string path, ClassDeclaration[]? classes = null, EnumDeclaration[]? enums = null)
+        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, DeclarationColours declarationColours)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
@@ -54,13 +58,13 @@ namespace DocumentationGenerator.MVVM.Model
             if (classes != null && classes.Length > 0)
             {
                 alterations = true;
-                WriteClasses(classes, document);
+                WriteClasses(classes,declarationColours, document);
             }
 
             if (enums != null && enums.Length > 0)
             {
                 alterations = true;
-                WriteEnums(enums, document);
+                WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
             }
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer
@@ -89,14 +93,17 @@ namespace DocumentationGenerator.MVVM.Model
             return alterations;
         }
 
-        private void WriteEnums(EnumDeclaration[] enums, Document document)
+        private void WriteEnums(EnumDeclaration[] enums, Color enumColour, Document document)
         {
             Section section;
             foreach (EnumDeclaration current in enums)
             {
                 section = document.AddSection();
-                Paragraph paragraph = section.AddParagraph($"Enum {current.Name}");
+                Paragraph paragraph = section.AddParagraph($"Enum ");
                 paragraph.Style = StyleNames.Heading1;
+                FormattedText formattedText = paragraph.AddFormattedText(current.Name);
+                formattedText.Font.Color = enumColour;
+
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
                 paragraph.Style = StyleNames.Heading2;
                 if (current.EnumMembers.Length > 0)
@@ -118,14 +125,17 @@ namespace DocumentationGenerator.MVVM.Model
             }
         }
 
-        private void WriteClasses(ClassDeclaration[] classDeclarations, Document document)
+        private void WriteClasses(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document)
         {
             Section section;
             foreach (ClassDeclaration current in classDeclarations)
             {
                 section = document.AddSection();
-                Paragraph paragraph = section.AddParagraph($"Class {current.Name}");
+                Paragraph paragraph = section.AddParagraph($"Class ");
                 paragraph.Style = StyleNames.Heading1;
+
+                paragraph.AddFormattedText(current.Name);
+                paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
                 paragraph.Style = StyleNames.Heading2;
@@ -168,7 +178,25 @@ namespace DocumentationGenerator.MVVM.Model
                 Paragraph paragraph = section.AddParagraph($" {field.Type} {field.Name} - {field.Definition}");
                 paragraph.Style = StyleNames.Heading4;
 
+                
+
             }
+        }
+    }
+
+    public struct DeclarationColours
+    {
+        public Color ClassDeclarationColour { get; set; }
+        public Color EnumDeclarationColour { get; set; }
+        public Color PrimitiveDeclarationColour { get; set; }
+        public Color InterfaceDeclarationColour { get; set; }
+
+        public DeclarationColours(Color classDeclarationColour, Color enumDeclarationColour, Color primitiveDeclarationColour, Color interfaceDeclarationColour)
+        {
+            ClassDeclarationColour = classDeclarationColour;
+            EnumDeclarationColour = enumDeclarationColour;
+            PrimitiveDeclarationColour = primitiveDeclarationColour;
+            InterfaceDeclarationColour = interfaceDeclarationColour;
         }
     }
 }
