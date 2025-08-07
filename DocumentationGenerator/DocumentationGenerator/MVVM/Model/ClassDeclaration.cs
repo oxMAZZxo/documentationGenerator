@@ -13,9 +13,9 @@ namespace DocumentationGenerator.MVVM.Model
     {
         public string Name { get; }
         public string? Definition { get; }
-        public Declaration[]? Methods { get; }
-        public Declaration[]? Fields { get; }
-        public Declaration[]? Properties { get; }
+        public Declaration[]? Methods { get; set; }
+        public Declaration[]? Fields { get; set; }
+        public Declaration[]? Properties { get; set; }
 
         public ClassDeclaration(string name, string? Definition, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations)
         {
@@ -38,14 +38,24 @@ namespace DocumentationGenerator.MVVM.Model
         public string? Definition { get; set; }
         public string? ReturnDefinition { get; set; }
         public bool? IsTypePrimitive { get; set; }
+        public ObjectType? WhatIsType { get; set; }
 
-        public Declaration(string name, string? definition, string? type = null, string? returns = null, bool? isTypePrimitive = null)
+        public Declaration(string name, string? definition, string? type = null, string? returns = null, bool? isTypePrimitive = null, ObjectType? objDeclaration = null)
         {
             this.Name = name;
             this.Type = type;
             this.Definition = definition;
             this.ReturnDefinition = returns;
             this.IsTypePrimitive = isTypePrimitive;
+            this.WhatIsType = objDeclaration;
         }
+    }
+
+    public enum ObjectType
+    {
+        Class,
+        Enum,
+        Interface,
+        Struct
     }
 }

@@ -1,6 +1,7 @@
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
+using System.Security.AccessControl;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -12,8 +13,10 @@ namespace DocumentationGenerator.MVVM.Model
         private const string MemberStyle = "Member";
         private const string MemberTypeStyle = "MemberType";
         private const string MemberDefinitionStyle = "MemberDefinition";
+
         public DocumentationWriter()
         {
+
         }
 
         /// <summary>
@@ -23,7 +26,7 @@ namespace DocumentationGenerator.MVVM.Model
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, DeclarationColours declarationColours)
+        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
@@ -40,6 +43,11 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 alterations = true;
                 WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
+            }
+
+            if(interfaces != null && interfaces.Length > 0)
+            {
+                WriteInterfaces(interfaces,declarationColours,document);
             }
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer
@@ -66,6 +74,39 @@ namespace DocumentationGenerator.MVVM.Model
             pdfRenderer.Save($"{path}\\Docs.pdf");
 
             return alterations;
+        }
+
+        private void WriteInterfaces(InterfaceDeclaration[] interfaces, DeclarationColours declarationColours, Document document)
+        {
+            Section section;
+
+            foreach(InterfaceDeclaration current in interfaces)
+            {
+                section = document.AddSection();
+
+                Paragraph paragraph = section.AddParagraph("Interface ");
+                paragraph.Style = ObjectStyle;
+
+                FormattedText formattedText = paragraph.AddFormattedText(current.Name);
+                formattedText.Font.Color = declarationColours.InterfaceDeclarationColour;
+
+                paragraph = section.AddParagraph($"Definition: {current.Definition}");
+                paragraph.Style = ObjectDefinitionStyle;
+
+                if(current.Properties != null && current.Properties.Length > 0)
+                {
+                    paragraph = section.AddParagraph(" Properties: ");
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Properties, declarationColours, section);
+                }
+
+                if (current.Methods != null && current.Methods.Length > 0)
+                {
+                    paragraph = section.AddParagraph(" Methods & Functions: ");
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Methods, declarationColours, section);
+                }
+            }
         }
 
         private Styles InitialiseDocumentStyles(Styles styles, DeclarationColours declarationColours)
@@ -191,13 +232,17 @@ namespace DocumentationGenerator.MVVM.Model
                 Paragraph paragraph = section.AddParagraph($" {method.Type} ");
                 paragraph.Style = MemberTypeStyle;
 
-                if (method.IsTypePrimitive.HasValue && method.IsTypePrimitive.Value == true)
+                paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
+
+                if (method.IsTypePrimitive.HasValue && method.IsTypePrimitive.Value == false)
                 {
-                    paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
-                }
-                else if (method.IsTypePrimitive.HasValue && method.IsTypePrimitive == false)
-                {
-                    paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
+                    switch (method.WhatIsType)
+                    {
+                        case ObjectType.Class: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
+                        case ObjectType.Enum: paragraph.Format.Font.Color = declarationColours.EnumDeclarationColour; break;
+                        case ObjectType.Interface: paragraph.Format.Font.Color = declarationColours.InterfaceDeclarationColour; break;
+                        //case ObjectType.Struct: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
+                    }
                 }
 
                 FormattedText formatted = paragraph.AddFormattedText($"{method.Name} - ");
@@ -215,14 +260,19 @@ namespace DocumentationGenerator.MVVM.Model
                 Paragraph paragraph = section.AddParagraph($" {field.Type} ");
                 paragraph.Style = MemberTypeStyle;
 
-                if (field.IsTypePrimitive.HasValue && field.IsTypePrimitive.Value == true)
+                paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
+
+                if (field.IsTypePrimitive.HasValue && field.IsTypePrimitive.Value == false) 
                 {
-                    paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
+                    switch (field.WhatIsType)
+                    {
+                        case ObjectType.Class: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
+                        case ObjectType.Enum: paragraph.Format.Font.Color = declarationColours.EnumDeclarationColour; break;
+                        case ObjectType.Interface: paragraph.Format.Font.Color = declarationColours.InterfaceDeclarationColour; break;
+                        //case ObjectType.Struct: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
+                    }
                 }
-                else if(field.IsTypePrimitive.HasValue && field.IsTypePrimitive == false)
-                {
-                    paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
-                }
+
 
                 FormattedText formatted = paragraph.AddFormattedText($"{field.Name} - ");
                 formatted.Style = MemberStyle;

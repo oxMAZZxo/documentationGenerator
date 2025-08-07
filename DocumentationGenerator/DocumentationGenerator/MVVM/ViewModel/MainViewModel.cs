@@ -127,7 +127,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             {
                 DeclarationColours declarationColours = new DeclarationColours(new MigraDoc.DocumentObjectModel.Color(classDeclarationColour.R,classDeclarationColour.G,classDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(enumDeclarationColour.R, enumDeclarationColour.G, enumDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(primitiveDeclarationColour.R, primitiveDeclarationColour.G, primitiveDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(interfaceDeclarationColour.R, interfaceDeclarationColour.G, interfaceDeclarationColour.B));
                 
-                documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(), sourceFileReader.Enums.ToArray(),declarationColours);
+                documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(), sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), declarationColours);
             }
         }
 

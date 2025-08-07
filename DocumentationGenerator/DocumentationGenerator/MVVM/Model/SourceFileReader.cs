@@ -1,9 +1,10 @@
-using System;
-using System.Diagnostics;
-using System.IO;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Xml.Linq;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -11,11 +12,15 @@ namespace DocumentationGenerator.MVVM.Model
     {
         public List<ClassDeclaration> Classes { get; private set; }
         public List<EnumDeclaration> Enums { get; private set; }
+        public List<InterfaceDeclaration> Interfaces { get; private set; }
+        public List<StructDeclaration> Structs { get; private set; }
+
 
         public SourceFileReader()
         {
             Classes = new List<ClassDeclaration>();
             Enums = new List<EnumDeclaration>();
+            Interfaces = new List<InterfaceDeclaration>();
         }
 
         ~SourceFileReader()
@@ -35,6 +40,7 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 Classes.AddRange(parsedSourceResults.Classes);
                 Enums.AddRange(parsedSourceResults.Enums);
+                Interfaces.AddRange(parsedSourceResults.Interfaces);
             }
         }
 
@@ -53,6 +59,8 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 Classes.AddRange(parsedSourceResults.Classes);
                 Enums.AddRange(parsedSourceResults.Enums);
+                Interfaces.AddRange(parsedSourceResults.Interfaces);
+                Structs.AddRange(parsedSourceResults.Structs);
             }
         }
 
@@ -89,10 +97,141 @@ namespace DocumentationGenerator.MVVM.Model
 
                         break;
 
+                    case InterfaceDeclarationSyntax interfaceDec:
+                        results.Interfaces.Add(HandleInterfaceDeclaration(interfaceDec));
+                        break;
+
+                    case StructDeclarationSyntax structDec:
+                        results.Structs.Add(HandleStructDeclaration(structDec));
+                        break;
+
                 }
             }
 
+            results.HandleClassCustomTypes();
+            results.HandleInterfaceCustomTypes();
+            results.HandleStructCustomTypes();
+
             return results;
+        }
+
+        private StructDeclaration HandleStructDeclaration(StructDeclarationSyntax structDec)
+        {
+            string structName = structDec.Identifier.Text;
+            string structDefinition = GetXML(structDec, XmlTag.summary);
+
+            var properties = structDec.Members.OfType<PropertyDeclarationSyntax>();
+            var fields = structDec.Members.OfType<FieldDeclarationSyntax>();
+            var methods = structDec.Members.OfType<MethodDeclarationSyntax>();
+
+            Declaration[]? newProperties = null;
+            Declaration[]? newFields = null;
+            Declaration[]? newMethods = null;
+            int index = 0;
+
+            if (properties.Count() > 0)
+            {
+                newProperties = new Declaration[properties.Count()];
+                foreach (var property in properties)
+                {
+                    newProperties[index] = new Declaration(
+                        property.Identifier.Text,
+                        GetXML(property, XmlTag.summary),
+                        property.Type.ToString(),
+                        null,
+                        IsPrimitiveType(property.Type.ToString())
+                    );
+                    index++;
+                }
+            }
+
+            if (fields.Count() > 0)
+            {
+                index = 0;
+                newFields = new Declaration[fields.Count()];
+                foreach (var field in fields)
+                {
+                    foreach (var variable in field.Declaration.Variables)
+                    {
+                        newFields[index] = new Declaration(
+                            variable.Identifier.Text,
+                            GetXML(field, XmlTag.summary),
+                            field.Declaration.Type.ToString(),
+                            null,
+                            IsPrimitiveType(field.Declaration.Type.ToString())
+                        );
+                        index++;
+                    }
+                }
+            }
+
+            if (methods.Count() > 0)
+            {
+                newMethods = new Declaration[methods.Count()];
+                index = 0;
+                foreach (var method in methods)
+                {
+                    newMethods[index] = new Declaration(
+                        method.Identifier.Text,
+                        GetXML(method, XmlTag.summary),
+                        method.ReturnType.ToString(),
+                        GetXML(method, XmlTag.returns),
+                        IsPrimitiveType(method.ReturnType.ToString())
+                    );
+                    index++;
+                }
+            }
+
+            return new StructDeclaration(structName, structDefinition, newMethods, newFields, newProperties);
+        }
+
+        private InterfaceDeclaration HandleInterfaceDeclaration(InterfaceDeclarationSyntax interfaceDec)
+        {
+            string interfaceName = interfaceDec.Identifier.Text;
+            string interfaceDefinition = GetXML(interfaceDec, XmlTag.summary);
+
+            IEnumerable<PropertyDeclarationSyntax> properties = interfaceDec.Members.OfType<PropertyDeclarationSyntax>();
+            IEnumerable<MethodDeclarationSyntax> methods = interfaceDec.Members.OfType<MethodDeclarationSyntax>();
+
+            Declaration[]? newProperties = null;
+            Declaration[]? newMethods = null;
+            int index = 0;
+
+            if (properties.Count() > 0)
+            {
+                newProperties = new Declaration[properties.Count()];
+                foreach (PropertyDeclarationSyntax property in properties)
+                {
+                    newProperties[index] = new Declaration(
+                        property.Identifier.Text,
+                        GetXML(property, XmlTag.summary),
+                        property.Type.ToString(),
+                        null,
+                        IsPrimitiveType(property.Type.ToString())
+                    );
+                    index++;
+                }
+            }
+
+            if (methods.Count() > 0)
+            {
+                newMethods = new Declaration[methods.Count()];
+                index = 0;
+
+                foreach (MethodDeclarationSyntax method in methods)
+                {
+                    newMethods[index] = new Declaration(
+                        method.Identifier.Text,
+                        GetXML(method, XmlTag.summary),
+                        method.ReturnType.ToString(),
+                        GetXML(method, XmlTag.returns),
+                        IsPrimitiveType(method.ReturnType.ToString())
+                    );
+                    index++;
+                }
+            }
+
+            return new InterfaceDeclaration(interfaceName, interfaceDefinition,newProperties, newMethods);
         }
 
         /// <summary>
@@ -269,6 +408,8 @@ namespace DocumentationGenerator.MVVM.Model
         {
             Classes.Clear();
             Enums.Clear();
+            Interfaces.Clear();
+            Structs.Clear();
         }
 
         /// <summary>
@@ -281,6 +422,8 @@ namespace DocumentationGenerator.MVVM.Model
 
             output += GetClassDeclarations();
             output += GetEnumDeclarations();
+            output += GetInterfaceDeclarations();
+
             return output;
         }
 
@@ -330,6 +473,38 @@ namespace DocumentationGenerator.MVVM.Model
             return output;
         }
 
+        public string GetInterfaceDeclarations()
+        {
+            string output = "";
+
+            if (Interfaces == null) return "";
+
+            foreach (InterfaceDeclaration interfaceDeclaration in Interfaces)
+            {
+                output += $"Interface: {interfaceDeclaration.Name} - {interfaceDeclaration.Definition}\n";
+
+                if (interfaceDeclaration.Properties != null)
+                {
+                    output += $"    Properties:\n";
+                    foreach (Declaration declaration in interfaceDeclaration.Properties)
+                    {
+                        output += $"    {declaration.Type} {declaration.Name} - {declaration.Definition}\n";
+                    }
+                }
+
+                if (interfaceDeclaration.Methods != null)
+                {
+                    output += $"    Methods:\n";
+                    foreach (Declaration declaration in interfaceDeclaration.Methods)
+                    {
+                        output += $"    {declaration.Type} {declaration.Name} - {declaration.Definition} - {declaration.ReturnDefinition}\n";
+                    }
+                }
+            }
+
+            return output;
+        }
+
         /// <summary>
         /// Assembles all Enum Declarations from the sources.  The only formatting it applies is tab spacing and new lines.
         /// </summary>
@@ -358,6 +533,8 @@ namespace DocumentationGenerator.MVVM.Model
             Clear();
             Classes = null;
             Enums = null;
+            Interfaces = null;
+            Structs = null;
         }
     }
 
@@ -373,12 +550,254 @@ namespace DocumentationGenerator.MVVM.Model
         public string FilePath { get; set; }
         public List<ClassDeclaration> Classes { get; set; }
         public List<EnumDeclaration> Enums { get; set; }
+        public List<InterfaceDeclaration> Interfaces { get; set; }
+        public List<StructDeclaration> Structs { get; set; }
 
         public ParsedSourceResults()
         {
             FilePath = "";
             Classes = new List<ClassDeclaration>();
             Enums = new List<EnumDeclaration>();
+            Interfaces = new List<InterfaceDeclaration>();
+            Structs = new List<StructDeclaration>();
+        }
+
+        /// <summary>
+        /// Analyzes each class in the Classes collection and updates the WhatIsType
+        /// property for fields, methods, and properties that use non-primitive types. It should be noted that if a class member is not primitive, it will be assumed the type is a class which could come from external sources (such as packages, libraries etc.)
+        /// </summary>
+        public void HandleClassCustomTypes()
+        {
+            foreach (ClassDeclaration currentClass in Classes)
+            {
+                if (currentClass.Fields != null)
+                {
+                    HandleDeclarationType(currentClass.Fields);
+                }
+
+                if (currentClass.Methods != null)
+                {
+                    for (int i = 0; i < currentClass.Methods.Length; i++)
+                    {
+                        Declaration method = currentClass.Methods[i];
+                        if (method.Type != null &&
+                            method.IsTypePrimitive.HasValue &&
+                            method.IsTypePrimitive.Value == false)
+                        {
+                            method.WhatIsType = ObjectType.Class;
+
+                            bool valid = FindTypeInCachedEnums(method.Type);
+                            if (valid)
+                            {
+                                method.WhatIsType = ObjectType.Enum;
+                            }
+                            currentClass.Methods[i] = method;
+                        }
+                    }
+                }
+
+                if (currentClass.Properties != null)
+                {
+                    for (int i = 0; i < currentClass.Properties.Length; i++)
+                    {
+                        Declaration property = currentClass.Properties[i];
+                        if (property.Type != null &&
+                            property.IsTypePrimitive.HasValue &&
+                            property.IsTypePrimitive.Value == false)
+                        {
+                            property.WhatIsType = ObjectType.Class;
+
+                            bool valid = FindTypeInCachedEnums(property.Type);
+                            if (valid)
+                            {
+                                property.WhatIsType = ObjectType.Enum;
+                            }
+                            currentClass.Properties[i] = property;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void HandleDeclarationType(Declaration[] fields)
+        {
+            for (int i = 0; i < fields.Length; i++)
+            {
+                Declaration field = fields[i];
+                if (field.Type != null &&
+                    field.IsTypePrimitive.HasValue &&
+                    field.IsTypePrimitive.Value == false)
+                {
+                    field.WhatIsType = ObjectType.Class;
+                    bool valid = FindTypeInCachedEnums(field.Type);
+                    if (valid)
+                    {
+                        field.WhatIsType = ObjectType.Enum;
+                    }
+                    fields[i] = field;
+                }
+            }
+        }
+
+        private bool FindTypeInCachedEnums(string type)
+        {
+            EnumDeclaration? enumDeclaration = null;
+            try
+            {
+                enumDeclaration = Enums.First(current => current.Name == type);
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+
+            if(enumDeclaration.HasValue && enumDeclaration.Value.Name == type) { return true; }
+
+            return false;
+        }
+
+        public void HandleInterfaceCustomTypes()
+        {
+            foreach (InterfaceDeclaration currentInterface in Interfaces)
+            {
+                if (currentInterface.Properties != null)
+                {
+                    for (int i = 0; i < currentInterface.Properties.Length; i++)
+                    {
+                        Declaration property = currentInterface.Properties[i];
+                        if (property.Type != null &&
+                            property.IsTypePrimitive.HasValue &&
+                            property.IsTypePrimitive.Value == false)
+                        {
+                            property.WhatIsType = ObjectType.Class;
+
+                            bool validEnum = FindTypeInCachedEnums(property.Type);
+                            bool validClass = FindTypeInCachedClasses(property.Type);
+
+                            if (validEnum)
+                            {
+                                property.WhatIsType = ObjectType.Enum;
+                            }
+                            else if (!validClass)
+                            {
+                                property.WhatIsType = ObjectType.Class;
+                            }
+
+                            currentInterface.Properties[i] = property;
+                        }
+                    }
+                }
+
+                if (currentInterface.Methods != null)
+                {
+                    for (int i = 0; i < currentInterface.Methods.Length; i++)
+                    {
+                        Declaration method = currentInterface.Methods[i];
+                        if (method.Type != null &&
+                            method.IsTypePrimitive.HasValue &&
+                            method.IsTypePrimitive.Value == false)
+                        {
+                            method.WhatIsType = ObjectType.Class;
+
+                            bool validEnum = FindTypeInCachedEnums(method.Type);
+                            bool validClass = FindTypeInCachedClasses(method.Type);
+
+                            if (validEnum)
+                            {
+                                method.WhatIsType = ObjectType.Enum;
+                            }
+                            else if (!validClass)
+                            {
+                                method.WhatIsType = ObjectType.Class;
+                            }
+
+                            currentInterface.Methods[i] = method;
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool FindTypeInCachedClasses(string type)
+        {
+            ClassDeclaration? classDeclaration = null;
+            try
+            {
+                classDeclaration = Classes.First(current => current.Name == type);
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+
+            if (classDeclaration.HasValue && classDeclaration.Value.Name == type)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void HandleStructCustomTypes()
+        {
+            foreach (StructDeclaration currentStruct in Structs)
+            {
+                if (currentStruct.Properties != null)
+                {
+                    for (int i = 0; i < currentStruct.Properties.Length; i++)
+                    {
+                        Declaration property = currentStruct.Properties[i];
+                        if (property.Type != null &&
+                            property.IsTypePrimitive.HasValue &&
+                            property.IsTypePrimitive.Value == false)
+                        {
+                            property.WhatIsType = ObjectType.Class;
+
+                            bool validEnum = FindTypeInCachedEnums(property.Type);
+                            bool validClass = FindTypeInCachedClasses(property.Type);
+
+                            if (validEnum)
+                            {
+                                property.WhatIsType = ObjectType.Enum;
+                            }
+                            else if (!validClass)
+                            {
+                                property.WhatIsType = ObjectType.Class;
+                            }
+
+                            currentStruct.Properties[i] = property;
+                        }
+                    }
+                }
+
+                if (currentStruct.Methods != null)
+                {
+                    for (int i = 0; i < currentStruct.Methods.Length; i++)
+                    {
+                        Declaration method = currentStruct.Methods[i];
+                        if (method.Type != null &&
+                            method.IsTypePrimitive.HasValue &&
+                            method.IsTypePrimitive.Value == false)
+                        {
+                            method.WhatIsType = ObjectType.Class;
+
+                            bool validEnum = FindTypeInCachedEnums(method.Type);
+                            bool validClass = FindTypeInCachedClasses(method.Type);
+
+                            if (validEnum)
+                            {
+                                method.WhatIsType = ObjectType.Enum;
+                            }
+                            else if (!validClass)
+                            {
+                                method.WhatIsType = ObjectType.Class;
+                            }
+
+                            currentStruct.Methods[i] = method;
+                        }
+                    }
+                }
+            }
         }
     }
 }
