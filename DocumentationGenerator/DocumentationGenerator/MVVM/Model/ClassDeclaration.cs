@@ -37,13 +37,15 @@ namespace DocumentationGenerator.MVVM.Model
         public string? Type { get; set; }
         public string? Definition { get; set; }
         public string? ReturnDefinition { get; set; }
+        public bool? IsTypePrimitive { get; set; }
 
-        public Declaration(string name, string? definition, string? type = null, string? returns = null)
+        public Declaration(string name, string? definition, string? type = null, string? returns = null, bool? isTypePrimitive = null)
         {
             this.Name = name;
             this.Type = type;
             this.Definition = definition;
             this.ReturnDefinition = returns;
+            this.IsTypePrimitive = isTypePrimitive;
         }
     }
 }

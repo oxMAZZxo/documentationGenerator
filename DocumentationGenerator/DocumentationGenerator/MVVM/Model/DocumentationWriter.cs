@@ -1,19 +1,17 @@
-using MigraDoc;
 using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Visitors;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
-using System.IO;
-
 
 namespace DocumentationGenerator.MVVM.Model
 {
     public class DocumentationWriter
     {
-
-        private const string objectStyle = "Object";
-        private const string objectDefinitionStyle = "ObjectDefinition";
-        private const string variableStyle = "Variable";
+        private const string ObjectStyle = "Object";
+        private const string ObjectDefinitionStyle = "ObjectDefinition";
+        private const string MemberHeading = "MemberHeading";
+        private const string MemberStyle = "Member";
+        private const string MemberTypeStyle = "MemberType";
+        private const string MemberDefinitionStyle = "MemberDefinition";
         public DocumentationWriter()
         {
         }
@@ -29,30 +27,7 @@ namespace DocumentationGenerator.MVVM.Model
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
-            Style style = document.AddStyle(StyleNames.Heading1, StyleNames.Normal);
-            style.Font.Size = 20;
-            style.Font.Bold = true;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "5pt";
-
-            style = document.AddStyle(StyleNames.Heading2, StyleNames.Normal);
-            style.Font.Size = 18;
-            style.Font.Bold = false;
-            style.Font.Italic = true;
-            style.ParagraphFormat.SpaceAfter = "15pt";
-
-            style = document.AddStyle(StyleNames.Heading3, StyleNames.Normal);
-            style.Font.Size = 16;
-            style.Font.Bold = true;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "2pt";
-
-            style = document.AddStyle(StyleNames.Heading4, StyleNames.Normal);
-            style.Font.Size = 14;
-            style.Font.Bold = false;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "1pt";
-
+            Styles styles = InitialiseDocumentStyles(document.Styles, declarationColours);
 
             bool alterations = false;
             if (classes != null && classes.Length > 0)
@@ -93,6 +68,47 @@ namespace DocumentationGenerator.MVVM.Model
             return alterations;
         }
 
+        private Styles InitialiseDocumentStyles(Styles styles, DeclarationColours declarationColours)
+        {
+            Style style = styles.AddStyle(ObjectStyle, StyleNames.Normal);
+            style.Font.Size = 20;
+            style.Font.Bold = true;
+            style.Font.Italic = false;
+            style.ParagraphFormat.SpaceAfter = "5pt";
+
+            style = styles.AddStyle(ObjectDefinitionStyle, StyleNames.Normal);
+            style.Font.Size = 18;
+            style.Font.Bold = false;
+            style.Font.Italic = true;
+            style.ParagraphFormat.SpaceAfter = "15pt";
+
+            style = styles.AddStyle(MemberHeading, StyleNames.Normal);
+            style.Font.Size = 16;
+            style.Font.Bold = true;
+            style.Font.Italic = false;
+            style.ParagraphFormat.SpaceAfter = "2pt";
+
+            style = styles.AddStyle(MemberStyle, StyleNames.Normal);
+            style.Font.Size = 14;
+            style.Font.Bold = false;
+            style.Font.Italic = false;
+            style.ParagraphFormat.SpaceAfter = "1pt";
+
+            style = styles.AddStyle(MemberTypeStyle, StyleNames.Normal);
+            style.Font.Size = 14;
+            style.Font.Bold = true;
+            style.Font.Italic = false;
+            style.ParagraphFormat.SpaceAfter = "1pt";
+
+            style = styles.AddStyle(MemberDefinitionStyle, StyleNames.Normal);
+            style.Font.Size = 14;
+            style.Font.Bold = false;
+            style.Font.Italic = true;
+            style.ParagraphFormat.SpaceAfter = "1pt";
+
+            return styles;
+        }
+
         private void WriteEnums(EnumDeclaration[] enums, Color enumColour, Document document)
         {
             Section section;
@@ -100,12 +116,13 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 section = document.AddSection();
                 Paragraph paragraph = section.AddParagraph($"Enum ");
-                paragraph.Style = StyleNames.Heading1;
+                paragraph.Style = ObjectStyle;
+
                 FormattedText formattedText = paragraph.AddFormattedText(current.Name);
                 formattedText.Font.Color = enumColour;
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
-                paragraph.Style = StyleNames.Heading2;
+                paragraph.Style = ObjectDefinitionStyle;
                 if (current.EnumMembers.Length > 0)
                 {
                     WriteEnumMembers(current.EnumMembers, section);
@@ -116,12 +133,17 @@ namespace DocumentationGenerator.MVVM.Model
         private void WriteEnumMembers(Declaration[] enumMembers, Section section)
         {
             Paragraph paragraph = section.AddParagraph($" Members: ");
-            paragraph.Style = StyleNames.Heading3;
+            paragraph.Style = MemberHeading;
 
             foreach (Declaration member in enumMembers)
             {
-                paragraph = section.AddParagraph($" {member.Name} - {member.Definition}");
-                paragraph.Style = StyleNames.Heading4;
+                paragraph = section.AddParagraph($" {member.Name} - ");
+                paragraph.Style = MemberStyle;
+
+                if(member.Definition == null) { continue; }
+
+                FormattedText formatted = paragraph.AddFormattedText(member.Definition);
+                formatted.Style = MemberDefinitionStyle;
             }
         }
 
@@ -132,53 +154,82 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 section = document.AddSection();
                 Paragraph paragraph = section.AddParagraph($"Class ");
-                paragraph.Style = StyleNames.Heading1;
+                paragraph.Style = ObjectStyle;
 
-                paragraph.AddFormattedText(current.Name);
-                paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
+                FormattedText formatted = paragraph.AddFormattedText(current.Name);
+                formatted.Font.Color = declarationColours.ClassDeclarationColour;
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
-                paragraph.Style = StyleNames.Heading2;
+                paragraph.Style = ObjectDefinitionStyle;
 
                 if (current.Properties != null && current.Properties.Length > 0)
                 {
                     paragraph = section.AddParagraph($" Properties: ");
-                    paragraph.Style = StyleNames.Heading3;
-                    WriteVariables(current.Properties, section);
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Properties,declarationColours ,section);
                 }
 
                 if (current.Fields != null && current.Fields.Length > 0)
                 {
                     paragraph = section.AddParagraph($" Fields: ");
-                    paragraph.Style = StyleNames.Heading3;
-                    WriteVariables(current.Fields, section);
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Fields,declarationColours ,section);
                 }
                 if (current.Methods != null && current.Methods.Length > 0)
                 {
                     paragraph = section.AddParagraph($" Methods & Functions: ");
-                    paragraph.Style = StyleNames.Heading3;
-                    WriteMethods(current.Methods, section);
+                    paragraph.Style = MemberHeading;
+                    WriteMethods(current.Methods,declarationColours ,section);
                 }
             }
         }
 
-        private void WriteMethods(Declaration[] methods, Section section)
+        private void WriteMethods(Declaration[] methods, DeclarationColours declarationColours, Section section)
         {
             foreach (Declaration method in methods)
             {
-                Paragraph paragraph = section.AddParagraph($" {method.Type} {method.Name} - {method.Definition} - {method.ReturnDefinition}");
-                paragraph.Style = StyleNames.Heading4;
+                Paragraph paragraph = section.AddParagraph($" {method.Type} ");
+                paragraph.Style = MemberTypeStyle;
+
+                if (method.IsTypePrimitive.HasValue && method.IsTypePrimitive.Value == true)
+                {
+                    paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
+                }
+                else if (method.IsTypePrimitive.HasValue && method.IsTypePrimitive == false)
+                {
+                    paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
+                }
+
+                FormattedText formatted = paragraph.AddFormattedText($"{method.Name} - ");
+                formatted.Style = MemberStyle;
+
+                formatted = paragraph.AddFormattedText($"{method.Definition} - {method.ReturnDefinition}");
+                formatted.Style = MemberDefinitionStyle;
             }
         }
 
-        private void WriteVariables(Declaration[] fields, Section section)
+        private void WriteVariables(Declaration[] fields, DeclarationColours declarationColours ,Section section)
         {
             foreach (Declaration field in fields)
             {
-                Paragraph paragraph = section.AddParagraph($" {field.Type} {field.Name} - {field.Definition}");
-                paragraph.Style = StyleNames.Heading4;
+                Paragraph paragraph = section.AddParagraph($" {field.Type} ");
+                paragraph.Style = MemberTypeStyle;
 
-                
+                if (field.IsTypePrimitive.HasValue && field.IsTypePrimitive.Value == true)
+                {
+                    paragraph.Format.Font.Color = declarationColours.PrimitiveDeclarationColour;
+                }
+                else if(field.IsTypePrimitive.HasValue && field.IsTypePrimitive == false)
+                {
+                    paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour;
+                }
+
+                FormattedText formatted = paragraph.AddFormattedText($"{field.Name} - ");
+                formatted.Style = MemberStyle;
+
+                if(field.Definition == null) { continue; }
+                formatted = paragraph.AddFormattedText(field.Definition);
+                formatted.Style = MemberDefinitionStyle;
 
             }
         }

@@ -92,7 +92,7 @@ namespace DocumentationGenerator.MVVM.Model
 
             foreach (EnumMemberDeclarationSyntax member in enumDec.Members)
             {
-                enumMembers[index] = new Declaration(member.Identifier.Text, GetXML(member, XmlTag.summary));
+                enumMembers[index] = new Declaration(member.Identifier.Text, GetXML(member, XmlTag.summary),null, null);
                 index++;
             }
 
@@ -118,7 +118,9 @@ namespace DocumentationGenerator.MVVM.Model
                 newProperties = new Declaration[properties.Count()];
                 foreach (PropertyDeclarationSyntax property in properties)
                 {
-                    newProperties[index] = new Declaration(property.Identifier.Text, GetXML(property, XmlTag.summary), property.Type.ToString());
+                    newProperties[index] = new Declaration(property.Identifier.Text, 
+                        GetXML(property, XmlTag.summary), property.Type.ToString(), null, IsPrimitiveType(property.Type.ToString()));
+                    
                     index++;
                 }
             }
@@ -133,7 +135,8 @@ namespace DocumentationGenerator.MVVM.Model
                     foreach (VariableDeclaratorSyntax variable in field.Declaration.Variables)
                     {
                         //tempOutput += $"  {field.Declaration.Type} {variable.Identifier.Text} - {GetXML(field, XmlTag.summary)}" + Environment.NewLine;
-                        newFields[index] = new Declaration(variable.Identifier.Text, GetXML(field, XmlTag.summary), field.Declaration.Type.ToString());
+                        newFields[index] = new Declaration(variable.Identifier.Text, 
+                            GetXML(field, XmlTag.summary), field.Declaration.Type.ToString(),null,IsPrimitiveType(field.Declaration.Type.ToString()));
                         index++;
                     }
                 }
@@ -148,7 +151,8 @@ namespace DocumentationGenerator.MVVM.Model
 
                 foreach (MethodDeclarationSyntax method in methods)
                 {
-                    newMethods[index] = new Declaration(method.Identifier.Text, GetXML(method, XmlTag.summary), method.ReturnType.ToString(), GetXML(method, XmlTag.returns));
+                    newMethods[index] = new Declaration(method.Identifier.Text, GetXML(method, XmlTag.summary), 
+                        method.ReturnType.ToString(), GetXML(method, XmlTag.returns),IsPrimitiveType(method.ReturnType.ToString()));
                     index++;
                 }
             }
@@ -199,6 +203,27 @@ namespace DocumentationGenerator.MVVM.Model
 
             return string.Join(" ", lines);
         }
+
+        private bool IsPrimitiveType(string type)
+        {
+            if(type == "int") { return true; }
+            if(type == "bool") { return true; }
+            if(type == "sbyte") { return true; }
+            if(type == "int16") { return true; }
+            if(type == "uint16") { return true; }
+            if(type == "int32") { return true; }
+            if(type == "uint32") { return true; }
+            if(type == "int64") { return true; }
+            if(type == "uint64") { return true; }
+            if(type == "single") { return true; }
+            if(type == "double") { return true; }
+            if(type == "char") { return true; }
+            if(type == "float") { return true; }
+            if(type == "void") { return true; }
+
+            return false;
+        }
+
 
         public void Clear()
         {
