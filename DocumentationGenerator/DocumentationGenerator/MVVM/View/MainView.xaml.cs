@@ -17,19 +17,45 @@ namespace DocumentationGenerator.MVVM.View
         {
             InitializeComponent();
             this.DataContext = new MainViewModel();
-            //myRichTextBox.SelectionChanged += MyRichTextBox_SelectionChanged;
-        }
+            // Example: Procedurally add formatted text to a WPF RichTextBox
 
-        private void MyRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
-        {
-            //Debug.WriteLine(myRichTextBox.Selection.Text.ToString());
-            //TextRange selection = new TextRange(myRichTextBox.Selection.Start, myRichTextBox.Selection.End);
-            
-            //if(myColorPicker.SelectedColor.HasValue == false) { return; }
-            
-            //selection.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(myColorPicker.SelectedColor.Value)); // or any brush
+            // Clear the RichTextBox first if needed
+            myRichTextBox.Document.Blocks.Clear();
 
-            ColorPicker c = new ColorPicker();
+            // Create a paragraph to hold our runs
+            Paragraph paragraph = new Paragraph();
+
+            // Example list of strings
+            var words = new List<string> { "OK", "Warning", "Error" };
+
+            // Loop through words and format each one differently
+            foreach (var word in words)
+            {
+                Run run = new Run(word + " "); // add space for separation
+
+                // Change color based on value
+                switch (word)
+                {
+                    case "OK":
+                        run.Foreground = Brushes.Green;
+                        break;
+                    case "Warning":
+                        run.Foreground = Brushes.Orange;
+                        run.FontWeight = FontWeights.Bold;
+                        break;
+                    case "Error":
+                        run.Foreground = Brushes.Red;
+                        run.TextDecorations = TextDecorations.Underline;
+                        break;
+                }
+
+                // Add this run to the paragraph
+                paragraph.Inlines.Add(run);
+            }
+
+            // Add the paragraph to the RichTextBox's document
+            myRichTextBox.Document.Blocks.Add(paragraph);
+
         }
 
         private void OnFileButtonClick(object sender, RoutedEventArgs e)

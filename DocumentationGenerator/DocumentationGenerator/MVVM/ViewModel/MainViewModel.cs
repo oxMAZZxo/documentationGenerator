@@ -1,12 +1,13 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model;
-
+using DocumentationGenerator.MVVM.View;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -20,61 +21,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private OpenFolderDialog openFolderDialog;
         private SourceFileReader sourceFileReader;
         private DocumentationWriter documentationWriter;
-        private Color classDeclarationColour;
-        private Color primitiveDeclarationColour;
-        private Color enumDeclarationColour;
-        private Color interfaceDeclarationColour;
-        private Color structDeclarationColour;
-
-        public Color ClassDeclarationColour
-        {
-            get { return classDeclarationColour; }
-            set
-            {
-                classDeclarationColour = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color PrimitiveDeclarationColour
-        {
-            get { return primitiveDeclarationColour; }
-            set
-            {
-                primitiveDeclarationColour = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color EnumDeclarationColour
-        {
-            get { return enumDeclarationColour; }
-            set
-            {
-                enumDeclarationColour = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color InterfaceDeclarationColour
-        {
-            get { return interfaceDeclarationColour; }
-            set
-            {
-                interfaceDeclarationColour = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public Color StructDeclarationColour
-        {
-            get { return structDeclarationColour; }
-            set
-            {
-                structDeclarationColour = value;
-                OnPropertyChanged();
-            }
-        }
+        private SettingsView settingsView;
 
         public string Output
         {
@@ -100,6 +47,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         public ICommand LoadDirectoryCommand { get; set; }
         public ICommand SaveDocsCommand { get; set; }
         public ICommand ClearDocsCommand { get; set; }
+        public ICommand OpenSettingsMenuCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -115,6 +63,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             SaveDocsCommand = new RelayCommand(SaveDocs);
             LoadDirectoryCommand = new RelayCommand(LoadDirectory);
             ClearDocsCommand = new RelayCommand(ClearDocs);
+            OpenSettingsMenuCommand = new RelayCommand(OpenSettingsMenu);
             output = "";
             fileName = "";
             FileName = "This is where the file name you selected will be shown";
@@ -124,12 +73,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             sourceFileReader = new SourceFileReader();
             documentationWriter = new DocumentationWriter();
+            settingsView = new SettingsView();
+        }
 
-            ClassDeclarationColour = Color.FromRgb(173, 216, 230); // LightBlue
-            PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255); // Blue
-            EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
-            InterfaceDeclarationColour = Color.FromRgb(0, 128, 128); // Teal
-            StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
+        private void OpenSettingsMenu()
+        {
+            settingsView.Show();
         }
 
         private void ClearDocs()
@@ -143,13 +92,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if (valid.HasValue && valid.Value == true)
             {
-                DeclarationColours declarationColours = new DeclarationColours(
-                    new MigraDoc.DocumentObjectModel.Color(classDeclarationColour.R,classDeclarationColour.G,classDeclarationColour.B), 
-                    new MigraDoc.DocumentObjectModel.Color(enumDeclarationColour.R, enumDeclarationColour.G, enumDeclarationColour.B), 
-                    new MigraDoc.DocumentObjectModel.Color(primitiveDeclarationColour.R, primitiveDeclarationColour.G, primitiveDeclarationColour.B), 
-                    new MigraDoc.DocumentObjectModel.Color(interfaceDeclarationColour.R, interfaceDeclarationColour.G, interfaceDeclarationColour.B),
-                    new MigraDoc.DocumentObjectModel.Color(structDeclarationColour.R, structDeclarationColour.G, structDeclarationColour.B)
-                    );
+                if(SettingsModel.Instance == null) { MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); return; }
+                
+                DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.ClassDeclarationColour,
+                    SettingsModel.Instance.EnumDeclarationColour,SettingsModel.Instance.PrimitiveDeclarationColour,
+                    SettingsModel.Instance.InterfaceDeclarationColour,SettingsModel.Instance.StructDeclarationColour);
                 
                 documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), declarationColours);
