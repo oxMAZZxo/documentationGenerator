@@ -26,7 +26,7 @@ namespace DocumentationGenerator.MVVM.Model
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours)
+        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DeclarationColours declarationColours)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
@@ -39,16 +39,22 @@ namespace DocumentationGenerator.MVVM.Model
                 WriteClasses(classes,declarationColours, document);
             }
 
-            if (enums != null && enums.Length > 0)
+            if(structs != null && structs.Length > 0)
             {
-                alterations = true;
-                WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
+                WriteStructs(structs, declarationColours, document);
             }
 
             if(interfaces != null && interfaces.Length > 0)
             {
                 WriteInterfaces(interfaces,declarationColours,document);
             }
+
+            if (enums != null && enums.Length > 0)
+            {
+                alterations = true;
+                WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
+            }
+
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer
             {
@@ -74,6 +80,46 @@ namespace DocumentationGenerator.MVVM.Model
             pdfRenderer.Save($"{path}\\Docs.pdf");
 
             return alterations;
+        }
+
+        private void WriteStructs(StructDeclaration[] structs, DeclarationColours declarationColours, Document document)
+        {
+            Section section;
+            foreach(StructDeclaration current in structs)
+            {
+                section = document.AddSection();
+
+                Paragraph paragraph = section.AddParagraph("Struct ");
+                paragraph.Style = ObjectStyle;
+
+                FormattedText formattedText = paragraph.AddFormattedText(current.Name);
+                formattedText.Font.Color = declarationColours.StructDeclarationColour;
+
+
+                paragraph = section.AddParagraph($"Definition: {current.Definition}");
+                paragraph.Style = ObjectDefinitionStyle;
+
+                if (current.Properties != null && current.Properties.Length > 0)
+                {
+                    paragraph = section.AddParagraph(" Properties: ");
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Properties, declarationColours, section);
+                }
+
+                if (current.Fields != null && current.Fields.Length > 0)
+                {
+                    paragraph = section.AddParagraph($" Fields: ");
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Fields, declarationColours, section);
+                }
+
+                if (current.Methods != null && current.Methods.Length > 0)
+                {
+                    paragraph = section.AddParagraph(" Methods & Functions: ");
+                    paragraph.Style = MemberHeading;
+                    WriteVariables(current.Methods, declarationColours, section);
+                }
+            }
         }
 
         private void WriteInterfaces(InterfaceDeclaration[] interfaces, DeclarationColours declarationColours, Document document)
@@ -216,6 +262,7 @@ namespace DocumentationGenerator.MVVM.Model
                     paragraph.Style = MemberHeading;
                     WriteVariables(current.Fields,declarationColours ,section);
                 }
+
                 if (current.Methods != null && current.Methods.Length > 0)
                 {
                     paragraph = section.AddParagraph($" Methods & Functions: ");
@@ -291,13 +338,15 @@ namespace DocumentationGenerator.MVVM.Model
         public Color EnumDeclarationColour { get; set; }
         public Color PrimitiveDeclarationColour { get; set; }
         public Color InterfaceDeclarationColour { get; set; }
+        public Color StructDeclarationColour { get; set; }
 
-        public DeclarationColours(Color classDeclarationColour, Color enumDeclarationColour, Color primitiveDeclarationColour, Color interfaceDeclarationColour)
+        public DeclarationColours(Color classDeclarationColour, Color enumDeclarationColour, Color primitiveDeclarationColour, Color interfaceDeclarationColour, Color structDeclarationColour)
         {
             ClassDeclarationColour = classDeclarationColour;
             EnumDeclarationColour = enumDeclarationColour;
             PrimitiveDeclarationColour = primitiveDeclarationColour;
             InterfaceDeclarationColour = interfaceDeclarationColour;
+            StructDeclarationColour = structDeclarationColour;
         }
     }
 }

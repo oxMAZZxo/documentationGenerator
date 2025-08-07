@@ -8,9 +8,8 @@
         xmlns:helpers="clr-namespace:DocumentationGenerator.MVVM.Helpers"
         mc:Ignorable="d"
         Title="MainView" Height="800" Width="1000">
-    
+
     <Window.Resources>
-      
         <Style TargetType="Popup">
             <Style.Resources>
                 <Style TargetType="Border">
@@ -66,12 +65,13 @@
             <Setter Property="Margin" Value="0,10"/>
         </Style>
 
-        <Style TargetType="xctk:ColorPicker">
+        <Style x:Key="ColourPickers" TargetType="xctk:ColorPicker">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="20,50"/>
+            <Setter Property="Margin" Value="20,0"/>
         </Style>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -106,17 +106,33 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="0" Style="{StaticResource ColourPickerLabels}" Content="Object Declaration Colour:"/>
-            <xctk:ColorPicker SelectedColor="{Binding ClassDeclarationColour, Mode=TwoWay}" Grid.Column="0"/>
+            <StackPanel Grid.Column="0">
+                <StackPanel>
+                    <Label Style="{StaticResource ColourPickerLabels}" Content="Class Declaration Colour:"/>
+                    <xctk:ColorPicker Style="{StaticResource ColourPickers}" SelectedColor="{Binding ClassDeclarationColour, Mode=TwoWay}"/>
+                </StackPanel>
 
-            <Label Grid.Column="1" Style="{StaticResource ColourPickerLabels}" Content="Primitive Declaration Colour:"/>
-            <xctk:ColorPicker SelectedColor="{Binding PrimitiveDeclarationColour, Mode=TwoWay}" Grid.Column="1"/>
+                <StackPanel>
+                    <Label Style="{StaticResource ColourPickerLabels}" Content="Struct Declaration Colour:"/>
+                    <xctk:ColorPicker Style="{StaticResource ColourPickers}" SelectedColor="{Binding StructDeclarationColour, Mode=TwoWay}"/>
+                </StackPanel>
+            </StackPanel>
 
-            <Label Grid.Column="2" Style="{StaticResource ColourPickerLabels}" Content="Enum Declaration Colour:"/>
-            <xctk:ColorPicker SelectedColor="{Binding EnumDeclarationColour, Mode=TwoWay}" Grid.Column="2"/>
+            <StackPanel Grid.Column="1">
+                <Label Style="{StaticResource ColourPickerLabels}" Content="Primitive Declaration Colour:"/>
+                <xctk:ColorPicker Style="{StaticResource ColourPickers}" SelectedColor="{Binding PrimitiveDeclarationColour, Mode=TwoWay}"/>
+            </StackPanel>
 
-            <Label Grid.Column="3" Style="{StaticResource ColourPickerLabels}" Content="Interface Declaration Colour:"/>
-            <xctk:ColorPicker SelectedColor="{Binding InterfaceDeclarationColour, Mode=TwoWay}" Grid.Column="3"/>
+            <StackPanel Grid.Column="2">
+                <Label Style="{StaticResource ColourPickerLabels}" Content="Enum Declaration Colour:"/>
+                <xctk:ColorPicker Style="{StaticResource ColourPickers}" SelectedColor="{Binding EnumDeclarationColour, Mode=TwoWay}"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="3">
+                <Label Style="{StaticResource ColourPickerLabels}" Content="Interface Declaration Colour:"/>
+                <xctk:ColorPicker Style="{StaticResource ColourPickers}" SelectedColor="{Binding InterfaceDeclarationColour, Mode=TwoWay}"/>
+            </StackPanel>
+
         </Grid>
 
     </Grid>

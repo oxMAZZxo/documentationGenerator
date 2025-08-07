@@ -16,7 +16,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
     {
         private string output;
         private string fileName;
-        
         private OpenFileDialog openFileDialog;
         private OpenFolderDialog openFolderDialog;
         private SourceFileReader sourceFileReader;
@@ -25,6 +24,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private Color primitiveDeclarationColour;
         private Color enumDeclarationColour;
         private Color interfaceDeclarationColour;
+        private Color structDeclarationColour;
 
         public Color ClassDeclarationColour
         {
@@ -66,6 +66,15 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
+        public Color StructDeclarationColour
+        {
+            get { return structDeclarationColour; }
+            set
+            {
+                structDeclarationColour = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Output
         {
@@ -77,7 +86,15 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
-        public string FileName { get { return fileName; } set { fileName = value; OnPropertyChanged(); } }
+        public string FileName 
+        { 
+            get { return fileName; } 
+            set 
+            { 
+                fileName = value; 
+                OnPropertyChanged(); 
+            } 
+        }
 
         public ICommand LoadFileCommand { get; set; }
         public ICommand LoadDirectoryCommand { get; set; }
@@ -112,6 +129,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255); // Blue
             EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
             InterfaceDeclarationColour = Color.FromRgb(0, 128, 128); // Teal
+            StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
         }
 
         private void ClearDocs()
@@ -125,9 +143,16 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if (valid.HasValue && valid.Value == true)
             {
-                DeclarationColours declarationColours = new DeclarationColours(new MigraDoc.DocumentObjectModel.Color(classDeclarationColour.R,classDeclarationColour.G,classDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(enumDeclarationColour.R, enumDeclarationColour.G, enumDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(primitiveDeclarationColour.R, primitiveDeclarationColour.G, primitiveDeclarationColour.B), new MigraDoc.DocumentObjectModel.Color(interfaceDeclarationColour.R, interfaceDeclarationColour.G, interfaceDeclarationColour.B));
+                DeclarationColours declarationColours = new DeclarationColours(
+                    new MigraDoc.DocumentObjectModel.Color(classDeclarationColour.R,classDeclarationColour.G,classDeclarationColour.B), 
+                    new MigraDoc.DocumentObjectModel.Color(enumDeclarationColour.R, enumDeclarationColour.G, enumDeclarationColour.B), 
+                    new MigraDoc.DocumentObjectModel.Color(primitiveDeclarationColour.R, primitiveDeclarationColour.G, primitiveDeclarationColour.B), 
+                    new MigraDoc.DocumentObjectModel.Color(interfaceDeclarationColour.R, interfaceDeclarationColour.G, interfaceDeclarationColour.B),
+                    new MigraDoc.DocumentObjectModel.Color(structDeclarationColour.R, structDeclarationColour.G, structDeclarationColour.B)
+                    );
                 
-                documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(), sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), declarationColours);
+                documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
+                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), declarationColours);
             }
         }
 
