@@ -38,6 +38,11 @@ namespace DocumentationGenerator.MVVM.Model
             }
         }
 
+        /// <summary>
+        /// Attempts to read multiple source files asyncronously and awaits for all source files to be read until it Parses all the Results into the object.
+        /// </summary>
+        /// <param name="fileNames">The source files to read.</param>
+        /// <returns>Returns the async Task.</returns>
         public async Task ReadSourceFilesAsync(string[] fileNames)
         {
             IEnumerable<Task<ParsedSourceResults>>? tasks = fileNames.Select(path => ReadSourceFileAsync(path));
@@ -51,6 +56,11 @@ namespace DocumentationGenerator.MVVM.Model
             }
         }
 
+        /// <summary>
+        /// Reads a given source file for Syntax Node to extract into Declaration along with their Definitions if any.
+        /// </summary>
+        /// <param name="sourceFile">The source file to read.</param>
+        /// <returns>Returns the Parsed Source Results which may contain Class, Enum, etc. Declarations.</returns>
         private async Task<ParsedSourceResults> ReadSourceFileAsync(string sourceFile)
         {
             string rawCode = await File.ReadAllTextAsync(sourceFile);
@@ -85,6 +95,11 @@ namespace DocumentationGenerator.MVVM.Model
             return results;
         }
 
+        /// <summary>
+        /// Creates a new Enum Declaration object with the data from the given Enum Declaration Syntax Node.
+        /// </summary>
+        /// <param name="enumDec">The Syntax Node to get the data from.</param>
+        /// <returns>Returns an Enum Declaration containing all the members found in the given syntax, along with all their definitions read from the Trivia.</returns>
         private EnumDeclaration HandleEnumDeclaration(EnumDeclarationSyntax enumDec)
         {
             Declaration[] enumMembers = new Declaration[enumDec.Members.Count()];
@@ -99,6 +114,11 @@ namespace DocumentationGenerator.MVVM.Model
             return new EnumDeclaration(enumDec.Identifier.Text, GetXML(enumDec, XmlTag.summary), enumMembers);
         }
 
+        /// <summary>
+        /// Creates a new Class Declaration object with the data from the given Class Declaration Syntax Node.
+        /// </summary>
+        /// <param name="classDec">The Syntax Node to get the data from.</param>
+        /// <returns>Returns a Class Declaration containing all the fields, properties, methods and functions found in the given syntax, along with all their definitions read from the Trivia.</returns>
         private ClassDeclaration HandleClassDeclaration(ClassDeclarationSyntax classDec)
         {
             string className = classDec.Identifier.Text;
@@ -160,6 +180,12 @@ namespace DocumentationGenerator.MVVM.Model
             return new ClassDeclaration(className, classDefinition, newMethods, newFields, newProperties);
         }
 
+        /// <summary>
+        /// Attempts to find the XML comment for the given syntax node.
+        /// </summary>
+        /// <param name="node">The node that may contain a XML comment trivia.</param>
+        /// <param name="tag">The type of XML comment to look for.</param>
+        /// <returns></returns>
         private string GetXML(SyntaxNode node, XmlTag tag)
         {
             SyntaxToken token = node.GetFirstToken();
@@ -186,6 +212,12 @@ namespace DocumentationGenerator.MVVM.Model
             return $" NO {tag.ToString().ToUpper()} ";
         }
 
+        /// <summary>
+        /// Cleans the XML Comment by removing the comment characters (such as '/') and returns the declaration itself.
+        /// </summary>
+        /// <param name="rawComment">The XML comment.</param>
+        /// <param name="tag">The type of XML (returns, summary, etc.)</param>
+        /// <returns></returns>
         private string CleanXML(string rawComment, XmlTag tag)
         {
             var lines = rawComment.Split('\n')
@@ -204,6 +236,11 @@ namespace DocumentationGenerator.MVVM.Model
             return string.Join(" ", lines);
         }
 
+        /// <summary>
+        /// Determines whether the given type in a string is a primitive.
+        /// </summary>
+        /// <param name="type">The type in a string format.</param>
+        /// <returns>Returns true if is a primitive, otherwise false.</returns>
         private bool IsPrimitiveType(string type)
         {
             if(type == "int") { return true; }
@@ -225,12 +262,19 @@ namespace DocumentationGenerator.MVVM.Model
         }
 
 
+        /// <summary>
+        /// Clears all declarations cached.
+        /// </summary>
         public void Clear()
         {
             Classes.Clear();
             Enums.Clear();
         }
 
+        /// <summary>
+        /// Gets all the declaration read from the source files combining them into a string. The only formatting it applies is tab spacing and new lines.
+        /// </summary>
+        /// <returns>Returns a string with all declarations.</returns>
         public string GetAllDeclarations()
         {
             string output = "";
@@ -240,6 +284,10 @@ namespace DocumentationGenerator.MVVM.Model
             return output;
         }
 
+        /// <summary>
+        /// Assembles all Class Declarations from the sources.  The only formatting it applies is tab spacing and new lines.
+        /// </summary>
+        /// <returns>Returns a string with all class declarations and their fields, properties and method/functions.</returns>
         public string GetClassDeclarations()
         {
             string output = "";
@@ -282,6 +330,10 @@ namespace DocumentationGenerator.MVVM.Model
             return output;
         }
 
+        /// <summary>
+        /// Assembles all Enum Declarations from the sources.  The only formatting it applies is tab spacing and new lines.
+        /// </summary>
+        /// <returns>Returns a string with all enum declarations and their members.</returns>
         public string GetEnumDeclarations()
         {
             string output = "";
