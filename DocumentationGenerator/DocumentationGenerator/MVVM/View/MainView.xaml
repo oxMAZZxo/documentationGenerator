@@ -106,7 +106,7 @@
             </Border>
         </Popup>
 
-        <Label Grid.Row="1" HorizontalAlignment="Left" Margin="10,10" Content="{Binding FileName}"/>
+        <Label Grid.Row="1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Margin="10,10" Content="{Binding FileName}"/>
         <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,10" 
                 Command="{Binding RefreshPreviewCommand}" Content="Refresh Preview"
                 FontSize="16" FontWeight="Normal" Padding="10">
@@ -117,7 +117,7 @@
             </Button.Resources>
         </Button>
 
-        <ScrollViewer Grid.Row="1"  Margin="10,50,10,0">
+        <ScrollViewer Grid.Row="1"  Margin="10,70,10,0">
             <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="4" Margin="10,10"/>
         </ScrollViewer>
         

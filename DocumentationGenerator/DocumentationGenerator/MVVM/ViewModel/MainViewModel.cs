@@ -69,9 +69,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
             RefreshPreviewCommand = new RelayCommand(RefreshPreview);
 
             fileName = "";
-            FileName = "This is where the file/s or directory loaded will be displayed.";
+            FileName = "The name of the file/directory loaded will be displayed.";
             output = "";
-            Output = "An output preview will be shown here.";
+            Output = "The source that is loaded will be displayed here.";
 
             openFileDialog = new OpenFileDialog();
             openFolderDialog = new OpenFolderDialog();
@@ -122,9 +122,20 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private async void LoadFile()
         {
+            if(sourceFileReader.HasData)
+            {
+                MessageBoxResult result = MessageBox.Show($"You already has source data loaded. Would you like to clear the existing data? \nClick Yes to add data, \nClick No to clear data, \nClick Cancel to not perform any operation.","Caption",MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.No: ClearDocs(); break;
+                    case MessageBoxResult.Cancel: return;
+                }
+            }
+
             bool? valid = openFileDialog.ShowDialog();
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
+
 
             await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames);
             
@@ -134,6 +145,16 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private async void LoadDirectory()
         {
+            if (sourceFileReader.HasData)
+            {
+                MessageBoxResult result = MessageBox.Show($"You already has source data loaded. Would you like to clear the existing data? \nClick Yes to add data, \nClick No to clear data, \nClick Cancel to not perform any operation.", "Caption", MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.No: ClearDocs(); break;
+                    case MessageBoxResult.Cancel: return;
+                }
+            }
+
             bool? valid = openFolderDialog.ShowDialog();
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }

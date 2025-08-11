@@ -1,11 +1,8 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
 using System.Diagnostics;
 using System.IO;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -15,7 +12,7 @@ namespace DocumentationGenerator.MVVM.Model
         public List<EnumDeclaration> Enums { get; private set; }
         public List<InterfaceDeclaration> Interfaces { get; private set; }
         public List<StructDeclaration> Structs { get; private set; }
-
+        public bool HasData { get; private set; }
 
         public SourceFileReader()
         {
@@ -44,6 +41,12 @@ namespace DocumentationGenerator.MVVM.Model
                 Enums.AddRange(parsedSourceResults.Enums);
                 Interfaces.AddRange(parsedSourceResults.Interfaces);
             }
+
+            if(Classes.Count > 0 ||  Enums.Count > 0 || Structs.Count > 0 || Interfaces.Count > 0)
+            {
+                HasData = true;
+                Debug.WriteLine($"Source file reader has data");
+            }
         }
 
         /// <summary>
@@ -55,7 +58,6 @@ namespace DocumentationGenerator.MVVM.Model
         {
             IEnumerable<Task<ParsedSourceResults>>? tasks = fileNames.Select(path => ReadSourceFileAsync(path));
 
-
             ParsedSourceResults[] results = await Task.WhenAll(tasks);
 
             foreach (ParsedSourceResults parsedSourceResults in results)
@@ -64,6 +66,12 @@ namespace DocumentationGenerator.MVVM.Model
                 Enums.AddRange(parsedSourceResults.Enums);
                 Interfaces.AddRange(parsedSourceResults.Interfaces);
                 Structs.AddRange(parsedSourceResults.Structs);
+            }
+
+            if (Classes.Count > 0 || Enums.Count > 0 || Structs.Count > 0 || Interfaces.Count > 0)
+            {
+                HasData = true;
+                Debug.WriteLine($"Source file reader has data");
             }
         }
 
@@ -412,6 +420,7 @@ namespace DocumentationGenerator.MVVM.Model
             Enums.Clear();
             Interfaces.Clear();
             Structs.Clear();
+            HasData = false;
         }
 
         /// <summary>
