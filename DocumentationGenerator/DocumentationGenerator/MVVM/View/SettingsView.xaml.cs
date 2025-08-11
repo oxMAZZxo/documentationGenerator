@@ -23,7 +23,7 @@ namespace DocumentationGenerator.MVVM.View
         public SettingsView()
         {
             InitializeComponent();
-            this.DataContext = new SettingsViewModel();
+            this.DataContext = new SettingsViewModel(this);
         }
 
         private void OnCloseButtonClicked(object sender, RoutedEventArgs e)

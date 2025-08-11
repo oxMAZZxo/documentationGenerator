@@ -1,5 +1,6 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model;
+using DocumentationGenerator.MVVM.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,7 +28,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get { return classDeclarationColour; }
             set
             {
-                Settings.SetClassDeclarationColour(value.R, value.G, value.B);
+                Settings.SetMigraDocClassDeclarationColour(value.R, value.G, value.B);
+                Settings.ClassDeclarationColour = value;
                 classDeclarationColour = value;
                 OnPropertyChanged();
             }
@@ -38,7 +40,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get { return primitiveDeclarationColour; }
             set
             {
-                Settings.SetPrimitiveDeclarationColour(value.R, value.G, value.B);
+                Settings.SetMigraDocPrimitiveDeclarationColour(value.R, value.G, value.B);
+                Settings.PrimitiveDeclarationColour = value;
                 primitiveDeclarationColour = value;
                 OnPropertyChanged();
             }
@@ -49,7 +52,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get { return enumDeclarationColour; }
             set
             {
-                Settings.SetEnumDeclarationColour(value.R, value.G, value.B);
+                Settings.SetMigraDocEnumDeclarationColour(value.R, value.G, value.B);
+                Settings.EnumDeclarationColour = value;
                 enumDeclarationColour = value;
                 OnPropertyChanged();
             }
@@ -60,7 +64,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get { return interfaceDeclarationColour; }
             set
             {
-                Settings.SetInterfaceDeclarationColour(value.R, value.G, value.B);
+                Settings.SetMigraDocInterfaceDeclarationColour(value.R, value.G, value.B);
+                Settings.InterfaceDeclarationColour = value;
                 interfaceDeclarationColour = value;
                 OnPropertyChanged();
             }
@@ -71,16 +76,19 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get { return structDeclarationColour; }
             set
             {
-                Settings.SetStructDeclarationColour(value.R, value.G, value.B);
+                Settings.SetMigraDocStructDeclarationColour(value.R, value.G, value.B);
+                Settings.StructDeclarationColour = value;
                 structDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
-        public SettingsViewModel()
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public SettingsViewModel(View.SettingsView settingsView)
         {
             Settings = new SettingsModel();
-
+            settingsView.Closing += SettingsViewClosing;
             ClassDeclarationColour = Color.FromRgb(173, 216, 230); // LightBlue
             PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255); // Blue
             EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
@@ -88,12 +96,26 @@ namespace DocumentationGenerator.MVVM.ViewModel
             StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private void SettingsViewClosing(object? sender, CancelEventArgs e)
+        {
+            if(App.Instance == null || sender == null) { return; }
+            if(App.Instance.IsShuttingDown)
+            {
+                Debug.WriteLine($"Settings is closing");
+                //Settings.Save();
+                Settings.Dispose();
+            }else
+            {
+                e.Cancel = true;
+                SettingsView view = (SettingsView)sender;
+                view.Hide();
+                
+            }
+        }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            Debug.WriteLine($"Property with name {propertyName} has been changed");
         }
     }
 }

@@ -55,6 +55,7 @@ namespace DocumentationGenerator.MVVM.Model
         {
             IEnumerable<Task<ParsedSourceResults>>? tasks = fileNames.Select(path => ReadSourceFileAsync(path));
 
+
             ParsedSourceResults[] results = await Task.WhenAll(tasks);
 
             foreach (ParsedSourceResults parsedSourceResults in results)
@@ -626,6 +627,9 @@ namespace DocumentationGenerator.MVVM.Model
                     }
 
                         declarations[i] = field;
+                }else if(field.Type != null && field.IsTypePrimitive.HasValue && field.IsTypePrimitive.Value == true)
+                {
+                    field.WhatIsType = ObjectType.Primitive;
                 }
             }
             return declarations;

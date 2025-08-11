@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using DocumentationGenerator.MVVM.View;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Win32;
@@ -17,14 +18,34 @@ namespace DocumentationGenerator
     /// </summary>
     public partial class App : Application
     {
+        private MainView? mainView;
+        public static App? Instance { get; private set; }
+        public bool IsShuttingDown { get; private set; }
 
         public App()
         {
+            if(Instance == null)
+            {
+                Instance = this;
+            }else 
+            { 
+                return; 
+            }
 
             GlobalFontSettings.FontResolver = new SimpleFontResolver();
-            
+            Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            mainView = new MainView();
+            mainView.Show();
+
+            this.MainWindow = mainView;
+            MainWindow.Closing += MainWindowClosing;
         }
 
+        private void MainWindowClosing(object? sender, CancelEventArgs e)
+        {
+            Debug.WriteLine($"App is shutting down.");
+            IsShuttingDown = true;
+        }
     }
 
 

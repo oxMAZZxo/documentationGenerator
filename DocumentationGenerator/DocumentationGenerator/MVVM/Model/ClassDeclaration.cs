@@ -56,6 +56,7 @@ namespace DocumentationGenerator.MVVM.Model
         Class,
         Enum,
         Interface,
-        Struct
+        Struct,
+        Primitive
     }
 }

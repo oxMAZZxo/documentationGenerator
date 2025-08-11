@@ -1,5 +1,4 @@
-﻿using MigraDoc.DocumentObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +9,18 @@ namespace DocumentationGenerator.MVVM.Model
     public class SettingsModel : IDisposable
     {
         public static SettingsModel? Instance { get; private set; }
-        public Color ClassDeclarationColour { get; private set; }
-        public Color PrimitiveDeclarationColour { get; private set; }
-        public Color EnumDeclarationColour { get; private set; }
-        public Color InterfaceDeclarationColour { get; private set; }
-        public Color StructDeclarationColour { get; private set; }
+        public MigraDoc.DocumentObjectModel.Color MigraDocClassDeclarationColour { get; private set; }
+        public MigraDoc.DocumentObjectModel.Color MigraDocPrimitiveDeclarationColour { get; private set; }
+        public MigraDoc.DocumentObjectModel.Color MigraDocEnumDeclarationColour { get; private set; }
+        public MigraDoc.DocumentObjectModel.Color MigraDocInterfaceDeclarationColour { get; private set; }
+        public MigraDoc.DocumentObjectModel.Color MigraDocStructDeclarationColour { get; private set; }
+
+        public System.Windows.Media.Color ClassDeclarationColour { get; set; }
+        public System.Windows.Media.Color PrimitiveDeclarationColour { get; set; }
+        public System.Windows.Media.Color EnumDeclarationColour { get; set; }
+        public System.Windows.Media.Color InterfaceDeclarationColour { get; set; }
+        public System.Windows.Media.Color StructDeclarationColour { get; set; }
+
 
         public SettingsModel()
         {
@@ -34,29 +40,29 @@ namespace DocumentationGenerator.MVVM.Model
             Dispose();
         }
 
-        public void SetClassDeclarationColour(byte r, byte g, byte b)
+        public void SetMigraDocClassDeclarationColour(byte r, byte g, byte b)
         {
-            ClassDeclarationColour = new Color(255,r, g, b);
+            MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255,r, g, b);
         }
 
-        public void SetPrimitiveDeclarationColour(byte r, byte g, byte b)
+        public void SetMigraDocPrimitiveDeclarationColour(byte r, byte g, byte b)
         {
-            PrimitiveDeclarationColour = new Color(255, r, g, b);    
+            MigraDocPrimitiveDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);    
         }
 
-        public void SetInterfaceDeclarationColour(byte r, byte g, byte b)
+        public void SetMigraDocInterfaceDeclarationColour(byte r, byte g, byte b)
         {
-            InterfaceDeclarationColour = new Color(255, r, g,b);
+            MigraDocInterfaceDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g,b);
         }
 
-        public void SetEnumDeclarationColour(byte r, byte g, byte b)
+        public void SetMigraDocEnumDeclarationColour(byte r, byte g, byte b)
         {
-            EnumDeclarationColour = new Color(255,r,g,b);
+            MigraDocEnumDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255,r,g,b);
         }
 
-        public void SetStructDeclarationColour(byte r, byte g, byte b)
+        public void SetMigraDocStructDeclarationColour(byte r, byte g, byte b)
         {
-            StructDeclarationColour = new Color(255, r, g, b);
+            MigraDocStructDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
         }
 
         public void Dispose()

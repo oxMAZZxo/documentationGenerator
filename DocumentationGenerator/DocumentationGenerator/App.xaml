@@ -1,8 +1,7 @@
 ﻿<Application x:Class="DocumentationGenerator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:DocumentationGenerator"
-             StartupUri="MVVM/View/MainView.xaml">
+             xmlns:local="clr-namespace:DocumentationGenerator">
     <Application.Resources>
          
     </Application.Resources>
