@@ -77,7 +77,7 @@ namespace DocumentationGenerator.MVVM.Model
             // Add sample-specific heading with sample project helper function.
 
             // Save the document.
-            pdfRenderer.Save($"{path}\\Docs.pdf");
+            pdfRenderer.Save(path);
 
             return alterations;
         }

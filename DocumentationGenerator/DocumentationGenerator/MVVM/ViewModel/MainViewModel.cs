@@ -21,6 +21,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private string fileName;
         private OpenFileDialog openFileDialog;
         private OpenFolderDialog openFolderDialog;
+        private SaveFileDialog saveFileDialog;
         private SourceFileReader sourceFileReader;
         private DocumentationWriter documentationWriter;
         private SettingsView settingsView { get; }
@@ -78,6 +79,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             openFileDialog = new OpenFileDialog();
             openFolderDialog = new OpenFolderDialog();
+            saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Title = "Save the Documentation as a PDF at the desired Location";
+            saveFileDialog.DefaultExt = ".pdf";
+            saveFileDialog.Filter = "PDF (*.pdf)|*.pdf";
+            saveFileDialog.AddExtension = true;
 
             sourceFileReader = new SourceFileReader();
             documentationWriter = new DocumentationWriter();
@@ -117,11 +124,13 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private void ClearDocs()
         {
             sourceFileReader.Clear();
+            view.ShowDefaultPreviewMessage();
+            FileName = "The name of the file/directory loaded will be displayed here.";
         }
 
         private void SaveDocs()
         {
-            bool? valid = openFolderDialog.ShowDialog();
+            bool? valid = saveFileDialog.ShowDialog();
 
             if (valid.HasValue && valid.Value == true)
             {
@@ -131,7 +140,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.MigraDocEnumDeclarationColour,SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour,SettingsModel.Instance.MigraDocStructDeclarationColour);
                 
-                documentationWriter.WriteDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
+                documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), declarationColours);
             }
         }
