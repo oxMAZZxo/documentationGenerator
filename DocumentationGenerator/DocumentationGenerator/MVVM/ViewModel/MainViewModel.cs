@@ -4,20 +4,14 @@ using DocumentationGenerator.MVVM.View;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace DocumentationGenerator.MVVM.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private string output;
         private string fileName;
         private OpenFileDialog openFileDialog;
         private OpenFolderDialog openFolderDialog;
@@ -26,16 +20,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private DocumentationWriter documentationWriter;
         private SettingsView settingsView { get; }
         private MainView view { get; }
-
-        public string Output
-        {
-            get { return output; }
-            set
-            {
-                output = value;
-                OnPropertyChanged();
-            }
-        }
 
         public string FileName 
         { 
@@ -74,8 +58,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             fileName = "";
             FileName = "The name of the file/directory loaded will be displayed here.";
-            output = "";
-            Output = "The source that is loaded will be displayed here.";
 
             openFileDialog = new OpenFileDialog();
             openFolderDialog = new OpenFolderDialog();
@@ -161,11 +143,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
 
+            FileName = "Reading Directory, PLEASE WAIT...";
 
             await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames);
             
             FileName = $"File Name: {openFileDialog.SafeFileName}";
-            Output = sourceFileReader.GetAllDeclarations();
         }
 
         private async void LoadDirectory()
@@ -184,11 +166,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
 
+            FileName = "Reading Directory, PLEASE WAIT...";
 
             await sourceFileReader.ReadSourceDirectory(openFolderDialog.FolderName);
-            FileName = $"Directory: {openFolderDialog.SafeFolderName}";
-            Output = sourceFileReader.GetAllDeclarations();
 
+            FileName = $"Directory: {openFolderDialog.SafeFolderName}";
         }
 
         public ParsedSourceResults GetAllSourceResults()

@@ -29,18 +29,28 @@ namespace DocumentationGenerator.MVVM.Model
 
         public async Task ReadSourceDirectory(string directory)
         {
-            IEnumerable<string> filePaths = Directory.EnumerateFiles(directory, "*.cs", new EnumerationOptions { RecurseSubdirectories = true, MatchCasing = MatchCasing.CaseInsensitive, MatchType = MatchType.Simple });
+            //IEnumerable<string> filePaths = Directory.EnumerateFiles(directory, "*.cs", new EnumerationOptions { RecurseSubdirectories = true, MatchCasing = MatchCasing.CaseInsensitive, MatchType = MatchType.Simple });
+            List<string> filePaths = await Task.Run(() =>
+                Directory.EnumerateFiles(
+                    directory, "*.cs",
+                    new EnumerationOptions { RecurseSubdirectories = true, MatchCasing = MatchCasing.CaseInsensitive, MatchType = MatchType.Simple }
+                    ).ToList()
+                );
 
-            IEnumerable<Task<ParsedSourceResults>>? tasks = filePaths.Select(path => ReadSourceFileAsync(path));
+            Task<ParsedSourceResults>[] tasks = filePaths.Select(path => Task.Run(() => ReadSourceFileAsync(path))).ToArray();
 
             ParsedSourceResults[] results = await Task.WhenAll(tasks);
 
-            foreach (ParsedSourceResults parsedSourceResults in results)
+            await Task.Run(() =>
             {
-                Classes.AddRange(parsedSourceResults.Classes);
-                Enums.AddRange(parsedSourceResults.Enums);
-                Interfaces.AddRange(parsedSourceResults.Interfaces);
-            }
+                foreach (ParsedSourceResults parsedSourceResults in results)
+                {
+                    Classes.AddRange(parsedSourceResults.Classes);
+                    Enums.AddRange(parsedSourceResults.Enums);
+                    Interfaces.AddRange(parsedSourceResults.Interfaces);
+                }
+            });
+           
 
             if(Classes.Count > 0 ||  Enums.Count > 0 || Structs.Count > 0 || Interfaces.Count > 0)
             {
