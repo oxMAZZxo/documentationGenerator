@@ -1,6 +1,7 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model;
 using DocumentationGenerator.MVVM.View;
+using DocumentationGenerator.MVVM.View.SettingsTabViews;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +10,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -22,6 +25,10 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private Color enumDeclarationColour;
         private Color interfaceDeclarationColour;
         private Color structDeclarationColour;
+        private UserControl currentUserControl;
+        private UserControl colourSettingsTabView;
+        private UserControl fontSettingsTabView;
+        private UserControl generalSettingsTabView;
 
         public Color ClassDeclarationColour
         {
@@ -83,12 +90,47 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
+        public UserControl CurrentUserControl
+        {
+            get
+            {
+                return currentUserControl;
+            }
+            set
+            {
+                currentUserControl = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsColourButtonChecked { get; set; }
+        public bool IsFontButtonChecked { get; set; }
+        public bool IsGeneralButtonChecked { get; set; }
+
+        public ICommand ShowColourSettingsCommand { get; set; }
+        public ICommand ShowFontSettingsCommand { get; set; }
+        public ICommand ShowGeneralSettingsCommand { get; set; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public SettingsViewModel(View.SettingsView settingsView)
+        public SettingsViewModel(SettingsView settingsView)
         {
             Settings = new SettingsModel();
             settingsView.Closing += SettingsViewClosing;
+
+            colourSettingsTabView = new UCColourSettingsView();
+            fontSettingsTabView = new UCFontSettingsView();
+            generalSettingsTabView = new UCGeneralSettingsView();
+
+            currentUserControl = generalSettingsTabView;
+            CurrentUserControl = generalSettingsTabView;
+            IsGeneralButtonChecked = true;
+            OnPropertyChanged("IsGeneralButtonChecked");
+
+            ShowColourSettingsCommand = new RelayCommand(ShowColourSettings);
+            ShowFontSettingsCommand = new RelayCommand(ShowFontSettings);
+            ShowGeneralSettingsCommand = new RelayCommand(ShowGeneralSettings);
+
             ClassDeclarationColour = Color.FromRgb(173, 216, 230); // LightBlue
             PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255); // Blue
             EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
@@ -111,6 +153,33 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 view.Hide();
                 
             }
+        }
+
+        private void ShowColourSettings()
+        {
+            CurrentUserControl = colourSettingsTabView;
+            IsGeneralButtonChecked = false;
+            IsFontButtonChecked = false;
+            OnPropertyChanged("IsFontButtonChecked");
+            OnPropertyChanged("IsGeneralButtonChecked");
+        }
+
+        private void ShowFontSettings()
+        {
+            CurrentUserControl = fontSettingsTabView;
+            IsGeneralButtonChecked = false;
+            IsColourButtonChecked = false;
+            OnPropertyChanged("IsColourButtonChecked");
+            OnPropertyChanged("IsGeneralButtonChecked");
+        }
+
+        private void ShowGeneralSettings()
+        {
+            CurrentUserControl = generalSettingsTabView;
+            IsFontButtonChecked = false;
+            IsColourButtonChecked = false;
+            OnPropertyChanged("IsColourButtonChecked");
+            OnPropertyChanged("IsFontButtonChecked");
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

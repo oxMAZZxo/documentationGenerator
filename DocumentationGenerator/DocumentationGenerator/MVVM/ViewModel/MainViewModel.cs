@@ -23,7 +23,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private OpenFolderDialog openFolderDialog;
         private SourceFileReader sourceFileReader;
         private DocumentationWriter documentationWriter;
-        private SettingsView settingsView;
+        private SettingsView settingsView { get; }
+        private MainView view { get; }
+
         public string Output
         {
             get { return output; }
@@ -49,7 +51,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
         public ICommand SaveDocsCommand { get; set; }
         public ICommand ClearDocsCommand { get; set; }
         public ICommand OpenSettingsMenuCommand { get; set; }
-        public ICommand RefreshPreviewCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -61,15 +62,17 @@ namespace DocumentationGenerator.MVVM.ViewModel
         public MainViewModel(MainView mainView)
         {
             mainView.Closed += MainView_Closed;
+            view = mainView;
+            
+
             LoadFileCommand = new RelayCommand(LoadFile);
             SaveDocsCommand = new RelayCommand(SaveDocs);
             LoadDirectoryCommand = new RelayCommand(LoadDirectory);
             ClearDocsCommand = new RelayCommand(ClearDocs);
             OpenSettingsMenuCommand = new RelayCommand(OpenSettingsMenu);
-            RefreshPreviewCommand = new RelayCommand(RefreshPreview);
 
             fileName = "";
-            FileName = "The name of the file/directory loaded will be displayed.";
+            FileName = "The name of the file/directory loaded will be displayed here.";
             output = "";
             Output = "The source that is loaded will be displayed here.";
 
@@ -78,13 +81,26 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             sourceFileReader = new SourceFileReader();
             documentationWriter = new DocumentationWriter();
+
             settingsView = new SettingsView();
-            
+
+            SettingsViewModel settingsViewModel = (SettingsViewModel)settingsView.DataContext;
+            settingsViewModel.PropertyChanged += SettingsViewModelPropertyChanged;
+
+            view.ShowDefaultPreviewMessage();
         }
 
-        private void RefreshPreview()
+        private void SettingsViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged("FileName");
+
+            if (sourceFileReader.HasData)
+            {
+                OnPropertyChanged("FileName");
+            }
+            else
+            {
+                view.ShowDefaultPreviewMessage();
+            }
         }
 
         private void MainView_Closed(object? sender, EventArgs e)

@@ -24,7 +24,6 @@ namespace DocumentationGenerator.MVVM.View
             this.DataContext = viewModel;
 
             viewModel.PropertyChanged += PropertyChanged;
-            ShowDefaultPreviewMessage();
         }
 
         private void PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -47,10 +46,9 @@ namespace DocumentationGenerator.MVVM.View
              UpdatePreviewRichTextBox(parsedSourceResults,declarationColours);
         }
 
-        private void ShowDefaultPreviewMessage()
+        public void ShowDefaultPreviewMessage()
         {
-            if (SettingsModel.Instance == null) { System.Windows.MessageBox.Show("Cannot Display Preview since the settings have not been initialised."); return; }
-
+            if (SettingsModel.Instance == null) { Debug.WriteLine($"Settings Model IS NULL"); return; }
             myRichTextBox.Document.Blocks.Clear();
 
             // Create a paragraph for the message
@@ -64,7 +62,7 @@ namespace DocumentationGenerator.MVVM.View
             var brush = new SolidColorBrush(color);
             brush.Freeze();
 
-            Run run = new Run("This is where the source results will be shown.")
+            Run run = new Run("The source that is loaded will be displayed here.")
             {
                 FontSize = 18,
                 FontWeight = FontWeights.SemiBold,
