@@ -48,29 +48,49 @@ namespace DocumentationGenerator.MVVM.View
 
         public void ShowDefaultPreviewMessage()
         {
-            if (SettingsModel.Instance == null) { Debug.WriteLine($"Settings Model IS NULL"); return; }
+            if (SettingsModel.Instance == null)
+            {
+                Debug.WriteLine($"Settings Model IS NULL");
+                return;
+            }
+
             myRichTextBox.Document.Blocks.Clear();
 
-            // Create a paragraph for the message
-            Paragraph paragraph = new Paragraph
-            {
-                TextAlignment = TextAlignment.Center,
-                Margin = new Thickness(20)
-            };
+            // Fake "Class" heading
+            var classP = new Paragraph();
+            classP.Inlines.Add(MakeRun("Class ", 20, true));
+            classP.Inlines.Add(MakeRun("ExampleClass", 20, true, SettingsModel.Instance.ClassDeclarationColour));
+            myRichTextBox.Document.Blocks.Add(classP);
 
-            Color color = SettingsModel.Instance.PrimitiveDeclarationColour;
-            var brush = new SolidColorBrush(color);
-            brush.Freeze();
+            // Fake definition
+            var defP = new Paragraph();
+            AddDefinition(defP, "This is where the parsed source results will be displayed.");
+            myRichTextBox.Document.Blocks.Add(defP);
 
-            Run run = new Run("The source that is loaded will be displayed here.")
-            {
-                FontSize = 18,
-                FontWeight = FontWeights.SemiBold,
-                Foreground = brush
-            };
+            // Fake property
+            var propP = new Paragraph();
+            propP.Inlines.Add(MakeRun("Property: ", 16, true));
+            propP.Inlines.Add(MakeRun("string ", 14, true, SettingsModel.Instance.PrimitiveDeclarationColour));
+            propP.Inlines.Add(MakeRun("ExampleProperty - ", 14, false));
+            propP.Inlines.Add(MakeRun("A sample property.", 14, false, null, true));
+            myRichTextBox.Document.Blocks.Add(propP);
 
-            paragraph.Inlines.Add(run);
-            myRichTextBox.Document.Blocks.Add(paragraph);
+            // Fake field
+            var fieldP = new Paragraph();
+            fieldP.Inlines.Add(MakeRun("Field: ", 16, true));
+            fieldP.Inlines.Add(MakeRun("int ", 14, true, SettingsModel.Instance.PrimitiveDeclarationColour));
+            fieldP.Inlines.Add(MakeRun("_exampleField - ", 14, false));
+            fieldP.Inlines.Add(MakeRun("A sample field.", 14, false, null, true));
+            myRichTextBox.Document.Blocks.Add(fieldP);
+
+            // Fake method
+            var methodP = new Paragraph();
+            methodP.Inlines.Add(MakeRun("Method: ", 16, true));
+            methodP.Inlines.Add(MakeRun("void ", 14, true, SettingsModel.Instance.PrimitiveDeclarationColour));
+            methodP.Inlines.Add(MakeRun("ExampleMethod - ", 14, false));
+            methodP.Inlines.Add(MakeRun("A sample method.", 14, false, null, true));
+            methodP.Inlines.Add(MakeRun(" - Does nothing.", 14, false, null, true));
+            myRichTextBox.Document.Blocks.Add(methodP);
         }
 
         /// <summary>

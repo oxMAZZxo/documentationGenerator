@@ -32,6 +32,20 @@ namespace DocumentationGenerator.MVVM.Model
             Document document = new Document();
             Styles styles = InitialiseDocumentStyles(document.Styles, declarationColours);
 
+            List<string> tocEntries = new List<string>();
+
+            if (classes != null)
+                tocEntries.AddRange(classes.Select(c => c.Name));
+            if (structs != null)
+                tocEntries.AddRange(structs.Select(s => s.Name));
+            if (interfaces != null)
+                tocEntries.AddRange(interfaces.Select(i => i.Name));
+            if (enums != null)
+                tocEntries.AddRange(enums.Select(e => e.Name));
+
+            // Add TOC before main content
+            AddTableOfContents(document, tocEntries);
+
             bool alterations = false;
             if (classes != null && classes.Length > 0)
             {
@@ -55,6 +69,7 @@ namespace DocumentationGenerator.MVVM.Model
                 WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
             }
 
+            AddPageNumbers(document);
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer
             {
@@ -82,6 +97,61 @@ namespace DocumentationGenerator.MVVM.Model
             return alterations;
         }
 
+        private void AddTableOfContents(Document document, List<string> entryNames)
+        {
+            Section tocSection = document.AddSection();
+
+            // Title styling
+            Paragraph tocHeading = tocSection.AddParagraph("Table of Contents");
+            tocHeading.Format.Font.Size = 28;
+            tocHeading.Format.Font.Bold = true;
+            tocHeading.Format.SpaceAfter = "1.5cm";
+            tocHeading.Format.Alignment = ParagraphAlignment.Center;
+
+            foreach (var name in entryNames)
+            {
+                Paragraph tocEntry = tocSection.AddParagraph();
+
+                // Left align entry name
+                var link = tocEntry.AddHyperlink(name, HyperlinkType.Bookmark);
+                link.AddText(name);
+
+                // Add leader dots before page number
+                tocEntry.AddTab();
+                tocEntry.AddText(new string('.', 10)); // Long enough to stretch across the page
+                tocEntry.AddTab();
+
+                // Right align page number
+                tocEntry.AddPageRefField(name);
+
+                // Formatting for the TOC entries
+                tocEntry.Format.Font.Size = 14;
+                tocEntry.Format.SpaceBefore = 3;
+                tocEntry.Format.SpaceAfter = 3;
+                tocEntry.Format.Font.Color = Color.FromRgb(31, 78, 121);
+                tocEntry.Format.Font.Bold = true;
+                tocEntry.Format.TabStops.Clear();
+                tocEntry.Format.TabStops.AddTabStop(Unit.FromCentimeter(12), TabAlignment.Right);
+            }
+
+            // Add extra space after TOC before starting main content
+            tocSection.AddParagraph().Format.SpaceAfter = "1cm";
+        }
+
+        private void AddPageNumbers(Document document)
+        {
+            foreach (Section? section in document.Sections)
+            {
+                if(section == null) { continue; }
+                // Add footer
+                Paragraph footer = section.Footers.Primary.AddParagraph();
+                footer.AddPageField();
+
+                footer.Format.Alignment = ParagraphAlignment.Right;
+                footer.Format.Font.Size = 8;
+            }
+        }
+
         private void WriteStructs(StructDeclaration[] structs, DeclarationColours declarationColours, Document document)
         {
             Section section;
@@ -90,6 +160,7 @@ namespace DocumentationGenerator.MVVM.Model
                 section = document.AddSection();
 
                 Paragraph paragraph = section.AddParagraph("Struct ");
+                paragraph.AddBookmark(current.Name);
                 paragraph.Style = ObjectStyle;
 
                 FormattedText formattedText = paragraph.AddFormattedText(current.Name);
@@ -131,6 +202,7 @@ namespace DocumentationGenerator.MVVM.Model
                 section = document.AddSection();
 
                 Paragraph paragraph = section.AddParagraph("Interface ");
+                paragraph.AddBookmark(current.Name);
                 paragraph.Style = ObjectStyle;
 
                 FormattedText formattedText = paragraph.AddFormattedText(current.Name);
@@ -203,6 +275,7 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 section = document.AddSection();
                 Paragraph paragraph = section.AddParagraph($"Enum ");
+                paragraph.AddBookmark(current.Name);
                 paragraph.Style = ObjectStyle;
 
                 FormattedText formattedText = paragraph.AddFormattedText(current.Name);
@@ -241,6 +314,7 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 section = document.AddSection();
                 Paragraph paragraph = section.AddParagraph($"Class ");
+                paragraph.AddBookmark(current.Name);
                 paragraph.Style = ObjectStyle;
 
                 FormattedText formatted = paragraph.AddFormattedText(current.Name);
