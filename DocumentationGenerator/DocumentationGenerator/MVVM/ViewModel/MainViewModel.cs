@@ -60,6 +60,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             FileName = "The name of the file/directory loaded will be displayed here.";
 
             openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+
             openFolderDialog = new OpenFolderDialog();
             saveFileDialog = new SaveFileDialog();
 
@@ -127,7 +129,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
-        private async void LoadFile()
+        private void LoadFile()
         {
             if(sourceFileReader.HasData)
             {
@@ -143,14 +145,19 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
 
-            FileName = "Reading Directory, PLEASE WAIT...";
+            FileName = "Reading File, PLEASE WAIT...";
 
+            LoadFileAsync();
+        }
+
+        private async void LoadFileAsync()
+        {
             await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames);
-            
+
             FileName = $"File Name: {openFileDialog.SafeFileName}";
         }
 
-        private async void LoadDirectory()
+        private void LoadDirectory()
         {
             if (sourceFileReader.HasData)
             {
@@ -168,9 +175,16 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             FileName = "Reading Directory, PLEASE WAIT...";
 
+            LoadDirectoryAsync();
+
+        }
+
+        private async void LoadDirectoryAsync()
+        {
             await sourceFileReader.ReadSourceDirectory(openFolderDialog.FolderName);
 
             FileName = $"Directory: {openFolderDialog.SafeFolderName}";
+
         }
 
         public ParsedSourceResults GetAllSourceResults()

@@ -29,7 +29,6 @@ namespace DocumentationGenerator.MVVM.Model
 
         public async Task ReadSourceDirectory(string directory)
         {
-            //IEnumerable<string> filePaths = Directory.EnumerateFiles(directory, "*.cs", new EnumerationOptions { RecurseSubdirectories = true, MatchCasing = MatchCasing.CaseInsensitive, MatchType = MatchType.Simple });
             List<string> filePaths = await Task.Run(() =>
                 Directory.EnumerateFiles(
                     directory, "*.cs",
@@ -37,26 +36,7 @@ namespace DocumentationGenerator.MVVM.Model
                     ).ToList()
                 );
 
-            Task<ParsedSourceResults>[] tasks = filePaths.Select(path => Task.Run(() => ReadSourceFileAsync(path))).ToArray();
-
-            ParsedSourceResults[] results = await Task.WhenAll(tasks);
-
-            await Task.Run(() =>
-            {
-                foreach (ParsedSourceResults parsedSourceResults in results)
-                {
-                    Classes.AddRange(parsedSourceResults.Classes);
-                    Enums.AddRange(parsedSourceResults.Enums);
-                    Interfaces.AddRange(parsedSourceResults.Interfaces);
-                }
-            });
-           
-
-            if(Classes.Count > 0 ||  Enums.Count > 0 || Structs.Count > 0 || Interfaces.Count > 0)
-            {
-                HasData = true;
-                Debug.WriteLine($"Source file reader has data");
-            }
+            await ReadSourceFilesAsync(filePaths.ToArray());
         }
 
         /// <summary>
@@ -94,12 +74,20 @@ namespace DocumentationGenerator.MVVM.Model
         {
             string rawCode = await File.ReadAllTextAsync(sourceFile);
 
+            ParsedSourceResults results = await Task.Run(() => ParseSourceResults(rawCode));
+
+            await Task.Run(() => results.HandleCustomTypes());
+            
+            return results;
+        }
+
+        private ParsedSourceResults ParseSourceResults(string rawCode)
+        {
+            ParsedSourceResults results = new ParsedSourceResults();
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(rawCode);
 
             SyntaxNode root = syntaxTree.GetRoot();
             IEnumerable<SyntaxNode> nodes = root.ChildNodes();
-
-            ParsedSourceResults results = new ParsedSourceResults();
 
 
             foreach (SyntaxNode node in nodes)
@@ -128,8 +116,6 @@ namespace DocumentationGenerator.MVVM.Model
 
                 }
             }
-
-            results.HandleCustomTypes();
 
             return results;
         }
