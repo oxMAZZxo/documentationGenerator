@@ -6,7 +6,172 @@
              xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View.SettingsTabViews"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="Red">
-        <Label Background="White" Content="Font Settings"/>
+    <UserControl.Resources>
+        <Style x:Key="FieldStackPanel" TargetType="StackPanel">
+            <Setter Property="Margin" Value="20,10"/>
+        </Style>
+        <Style x:Key="SectionGrid" TargetType="Grid">
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+        <Style x:Key="SectionStackPanel" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,50,0,10"/>
+        </Style>
+        <Style x:Key="HeadingLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Margin" Value="10,10"/>
+        </Style>
+        <Style x:Key="SizeSetterTextBox" TargetType="TextBox">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="MinWidth" Value="25"/>
+        </Style>
+        <Style x:Key="CheckBoxFontStyle" TargetType="CheckBox">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="Height" Value="15"/>
+                    <Setter Property="Width" Value="15"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <Style x:Key="FontSizeLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Label Content="Font Family:" Height="40" FontWeight="SemiBold" Margin="30,10" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding SelectedFont}"
+                  FontSize="18" VerticalContentAlignment="Center" FontWeight="SemiBold" MinWidth="50" 
+                  Height="35" Margin="140,10" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ScrollViewer Margin="0,50,0,0">
+            <StackPanel Orientation="Vertical">
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Object Declaration Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding ObjectDeclarationStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding ObjectDeclarationStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding ObjectDeclarationStyle.IsItalic}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Paragraph Space After:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding ObjectDeclarationStyle.SpaceAfterString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Object Definition Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding ObjectDefinitionStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding ObjectDefinitionStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding ObjectDefinitionStyle.IsItalic}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Paragraph Space After:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding ObjectDefinitionStyle.SpaceAfterString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Member Heading Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberHeadingStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding MemberHeadingStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding MemberHeadingStyle.IsItalic}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Paragraph Space After:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberHeadingStyle.SpaceAfterString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Member Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding MemberStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding MemberStyle.IsItalic}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Paragraph Space After:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberStyle.SpaceAfterString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Member Type Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberTypeStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding MemberTypeStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding MemberTypeStyle.IsItalic}"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Style="{StaticResource SectionGrid}">
+                    <Label Style="{StaticResource HeadingLabel}" Content="Member Definition Style"/>
+                    <StackPanel Style="{StaticResource SectionStackPanel}" Orientation="Horizontal">
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <Label Style="{StaticResource FontSizeLabel}" Content="Font Size:"/>
+                            <TextBox Style="{StaticResource SizeSetterTextBox}" Text="{Binding MemberDefinitionStyle.FontSizeString}" PreviewTextInput="TextBox_PreviewTextInput" PreviewKeyDown="TextBox_PreviewKeyDown"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Bold" IsChecked="{Binding MemberDefinitionStyle.IsBold}"/>
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource FieldStackPanel}" Orientation="Horizontal">
+                            <CheckBox Style="{StaticResource CheckBoxFontStyle}" Content="Is Italic" IsChecked="{Binding MemberDefinitionStyle.IsItalic}"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <Separator VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

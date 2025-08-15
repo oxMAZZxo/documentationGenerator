@@ -49,6 +49,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             mainView.Closed += MainView_Closed;
             view = mainView;
             
+            
 
             LoadFileCommand = new RelayCommand(LoadFile);
             SaveDocsCommand = new RelayCommand(SaveDocs);

@@ -2,14 +2,10 @@
 using DocumentationGenerator.MVVM.Model;
 using DocumentationGenerator.MVVM.View;
 using DocumentationGenerator.MVVM.View.SettingsTabViews;
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -29,6 +25,13 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private UserControl colourSettingsTabView;
         private UserControl fontSettingsTabView;
         private UserControl generalSettingsTabView;
+        private FontDeclarationStyle objectDeclarationStyle;
+        private FontDeclarationStyle objectDefinitionStyle;
+        private FontDeclarationStyle memberHeadingStyle;
+        private FontDeclarationStyle memberStyle;
+        private FontDeclarationStyle memberTypeStyle;
+        private FontDeclarationStyle memberDefinitionStyle;
+        private string selectedFont;
 
         public Color ClassDeclarationColour
         {
@@ -103,6 +106,80 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
+        public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
+
+        public string SelectedFont
+        {
+            get => selectedFont;
+            set
+            {
+                selectedFont = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FontDeclarationStyle ObjectDeclarationStyle
+        {
+            get => objectDeclarationStyle;
+            set
+            {
+                objectDeclarationStyle = value;
+                Debug.WriteLine("Object Declaration Style Changed");
+                OnPropertyChanged();
+            }
+        }
+
+        public FontDeclarationStyle ObjectDefinitionStyle
+        {
+            get => objectDefinitionStyle;
+            set
+            {
+                objectDefinitionStyle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FontDeclarationStyle MemberHeadingStyle
+        {
+            get => memberHeadingStyle;
+            set
+            {
+                memberHeadingStyle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FontDeclarationStyle MemberStyle
+        {
+            get => memberStyle;
+            set
+            {
+                memberStyle = value;
+                OnPropertyChanged();
+            }
+        } 
+        
+        public FontDeclarationStyle MemberTypeStyle
+        {
+            get => memberTypeStyle;
+            set
+            {
+                memberTypeStyle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FontDeclarationStyle MemberDefinitionStyle
+        {
+            get => memberDefinitionStyle;
+            set
+            {
+                memberDefinitionStyle = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public bool IsColourButtonChecked { get; set; }
         public bool IsFontButtonChecked { get; set; }
         public bool IsGeneralButtonChecked { get; set; }
@@ -124,6 +201,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             currentUserControl = generalSettingsTabView;
             CurrentUserControl = generalSettingsTabView;
+
             IsGeneralButtonChecked = true;
             OnPropertyChanged("IsGeneralButtonChecked");
 
@@ -136,6 +214,27 @@ namespace DocumentationGenerator.MVVM.ViewModel
             EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
             InterfaceDeclarationColour = Color.FromRgb(0, 128, 128); // Teal
             StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
+
+            objectDeclarationStyle = new FontDeclarationStyle("20",false,true,"5");
+            ObjectDeclarationStyle = objectDeclarationStyle;
+
+            objectDefinitionStyle = new FontDeclarationStyle("18",true,false,"20");
+            ObjectDefinitionStyle = objectDefinitionStyle;
+
+            memberHeadingStyle = new FontDeclarationStyle("16",false,true,"2");
+            MemberHeadingStyle = memberHeadingStyle;
+
+            memberStyle = new FontDeclarationStyle("14",false,false,"1");
+            MemberStyle = memberStyle;
+
+            memberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
+            MemberTypeStyle = memberTypeStyle;
+
+            memberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
+            MemberDefinitionStyle = memberDefinitionStyle;
+
+            selectedFont = Fonts[0];
+            SelectedFont = selectedFont;
         }
 
         private void SettingsViewClosing(object? sender, CancelEventArgs e)

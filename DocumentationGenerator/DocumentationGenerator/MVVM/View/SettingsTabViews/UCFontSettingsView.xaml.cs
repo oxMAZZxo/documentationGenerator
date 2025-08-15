@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,46 @@ namespace DocumentationGenerator.MVVM.View.SettingsTabViews
     /// </summary>
     public partial class UCFontSettingsView : UserControl
     {
+        private const string numbers = "0123456789";
+
         public UCFontSettingsView()
         {
             InitializeComponent();
+
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if(sender == null) { return; }
+            e.Handled = false;
+
+            TextBox textBox = (TextBox)sender;
+            if(e.Text == "0" && (string.IsNullOrEmpty(textBox.Text) || string.IsNullOrWhiteSpace(textBox.Text)) || 
+                (string.IsNullOrEmpty(e.Text) || string.IsNullOrWhiteSpace(e.Text))) 
+            { 
+                e.Handled = true; 
+                return; 
+            }
+
+            bool valid = false;
+            for(int i = 0; i < numbers.Length; i++)
+            {
+                if (numbers[i] == e.Text[0])
+                {
+                    valid = true;
+                    break;
+                }
+            }
+
+            if(!valid) { e.Handled = true; }
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Space)
+            {
+                e.Handled = true; // Block space
+            }
         }
     }
 }
