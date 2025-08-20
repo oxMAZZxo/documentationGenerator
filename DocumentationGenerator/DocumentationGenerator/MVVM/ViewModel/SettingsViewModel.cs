@@ -106,6 +106,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get => Settings.ObjectDeclarationStyle;
             set
             {
+                Debug.WriteLine("Object Dclaration Changed");
                 Settings.ObjectDeclarationStyle = value;
                 OnPropertyChanged();
             }

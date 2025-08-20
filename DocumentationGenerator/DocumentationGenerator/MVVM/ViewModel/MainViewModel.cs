@@ -82,7 +82,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void SettingsViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-
+            Debug.WriteLine($"Property changed: {e.PropertyName}");
             if (sourceFileReader.HasData)
             {
                 OnPropertyChanged("FileName");
