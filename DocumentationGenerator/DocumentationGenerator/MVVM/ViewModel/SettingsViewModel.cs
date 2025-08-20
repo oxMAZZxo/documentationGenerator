@@ -16,79 +16,63 @@ namespace DocumentationGenerator.MVVM.ViewModel
     public class SettingsViewModel : INotifyPropertyChanged
     {
         public SettingsModel Settings { get; private set; }
-        private Color classDeclarationColour;
-        private Color primitiveDeclarationColour;
-        private Color enumDeclarationColour;
-        private Color interfaceDeclarationColour;
-        private Color structDeclarationColour;
         private UserControl currentUserControl;
         private UserControl colourSettingsTabView;
         private UserControl fontSettingsTabView;
         private UserControl generalSettingsTabView;
-        private FontDeclarationStyle objectDeclarationStyle;
-        private FontDeclarationStyle objectDefinitionStyle;
-        private FontDeclarationStyle memberHeadingStyle;
-        private FontDeclarationStyle memberStyle;
-        private FontDeclarationStyle memberTypeStyle;
-        private FontDeclarationStyle memberDefinitionStyle;
-        private string selectedFont;
+
 
         public Color ClassDeclarationColour
         {
-            get { return classDeclarationColour; }
+            get { return Settings.ClassDeclarationColour; }
             set
             {
                 Settings.SetMigraDocClassDeclarationColour(value.R, value.G, value.B);
                 Settings.ClassDeclarationColour = value;
-                classDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color PrimitiveDeclarationColour
         {
-            get { return primitiveDeclarationColour; }
+            get { return Settings.PrimitiveDeclarationColour; }
             set
             {
                 Settings.SetMigraDocPrimitiveDeclarationColour(value.R, value.G, value.B);
                 Settings.PrimitiveDeclarationColour = value;
-                primitiveDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color EnumDeclarationColour
         {
-            get { return enumDeclarationColour; }
+            get { return Settings.EnumDeclarationColour; }
             set
             {
                 Settings.SetMigraDocEnumDeclarationColour(value.R, value.G, value.B);
                 Settings.EnumDeclarationColour = value;
-                enumDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color InterfaceDeclarationColour
         {
-            get { return interfaceDeclarationColour; }
+            get { return Settings.InterfaceDeclarationColour; }
             set
             {
                 Settings.SetMigraDocInterfaceDeclarationColour(value.R, value.G, value.B);
                 Settings.InterfaceDeclarationColour = value;
-                interfaceDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color StructDeclarationColour
         {
-            get { return structDeclarationColour; }
+            get { return Settings.StructDeclarationColour; }
             set
             {
                 Settings.SetMigraDocStructDeclarationColour(value.R, value.G, value.B);
                 Settings.StructDeclarationColour = value;
-                structDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
@@ -110,20 +94,20 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         public string SelectedFont
         {
-            get => selectedFont;
+            get => Settings.SelectedFont;
             set
             {
-                selectedFont = value;
+                Settings.SelectedFont = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle ObjectDeclarationStyle
         {
-            get => objectDeclarationStyle;
+            get => Settings.ObjectDeclarationStyle;
             set
             {
-                objectDeclarationStyle = value;
+                Settings.ObjectDeclarationStyle = value;
                 Debug.WriteLine("Object Declaration Style Changed");
                 OnPropertyChanged();
             }
@@ -131,50 +115,50 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         public FontDeclarationStyle ObjectDefinitionStyle
         {
-            get => objectDefinitionStyle;
+            get => Settings.ObjectDefinitionStyle;
             set
             {
-                objectDefinitionStyle = value;
+                Settings.ObjectDefinitionStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberHeadingStyle
         {
-            get => memberHeadingStyle;
+            get => Settings.MemberHeadingStyle;
             set
             {
-                memberHeadingStyle = value;
+                Settings.MemberHeadingStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberStyle
         {
-            get => memberStyle;
+            get => Settings.MemberStyle;
             set
             {
-                memberStyle = value;
+                Settings.MemberStyle = value;
                 OnPropertyChanged();
             }
         } 
         
         public FontDeclarationStyle MemberTypeStyle
         {
-            get => memberTypeStyle;
+            get => Settings.MemberTypeStyle;
             set
             {
-                memberTypeStyle = value;
+                Settings.MemberTypeStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberDefinitionStyle
         {
-            get => memberDefinitionStyle;
+            get => Settings.MemberDefinitionStyle;
             set
             {
-                memberDefinitionStyle = value;
+                Settings.MemberDefinitionStyle = value;
                 OnPropertyChanged();
             }
         }
@@ -215,26 +199,19 @@ namespace DocumentationGenerator.MVVM.ViewModel
             InterfaceDeclarationColour = Color.FromRgb(0, 128, 128); // Teal
             StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
 
-            objectDeclarationStyle = new FontDeclarationStyle("20",false,true,"5");
-            ObjectDeclarationStyle = objectDeclarationStyle;
+            ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
 
-            objectDefinitionStyle = new FontDeclarationStyle("18",true,false,"20");
-            ObjectDefinitionStyle = objectDefinitionStyle;
+            ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
 
-            memberHeadingStyle = new FontDeclarationStyle("16",false,true,"2");
-            MemberHeadingStyle = memberHeadingStyle;
+            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
 
-            memberStyle = new FontDeclarationStyle("14",false,false,"1");
-            MemberStyle = memberStyle;
+            MemberStyle = new FontDeclarationStyle("14", false, false, "1");
 
-            memberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
-            MemberTypeStyle = memberTypeStyle;
+            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
 
-            memberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
-            MemberDefinitionStyle = memberDefinitionStyle;
+            MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
 
-            selectedFont = Fonts[0];
-            SelectedFont = selectedFont;
+            SelectedFont = Fonts[0];
         }
 
         private void SettingsViewClosing(object? sender, CancelEventArgs e)

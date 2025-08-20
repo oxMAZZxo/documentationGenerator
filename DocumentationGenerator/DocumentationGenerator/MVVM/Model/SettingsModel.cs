@@ -21,15 +21,22 @@ namespace DocumentationGenerator.MVVM.Model
         public System.Windows.Media.Color InterfaceDeclarationColour { get; set; }
         public System.Windows.Media.Color StructDeclarationColour { get; set; }
 
+        public FontDeclarationStyle ObjectDeclarationStyle { get; set; }
+        public FontDeclarationStyle ObjectDefinitionStyle { get; set; }
+        public FontDeclarationStyle MemberHeadingStyle { get; set; }
+        public FontDeclarationStyle MemberStyle { get; set; }
+        public  FontDeclarationStyle MemberTypeStyle { get; set; }
+        public FontDeclarationStyle MemberDefinitionStyle { get; set; }
+        public string SelectedFont { get; set; }
 
         public SettingsModel()
         {
-            if(Instance != null)
+            if (Instance != null)
             {
                 return;
             }
 
-            if(Instance == null && Instance != this)
+            if (Instance == null && Instance != this)
             {
                 Instance = this;
             }

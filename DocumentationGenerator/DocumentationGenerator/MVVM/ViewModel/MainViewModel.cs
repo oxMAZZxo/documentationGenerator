@@ -49,8 +49,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             mainView.Closed += MainView_Closed;
             view = mainView;
             
-            
-
             LoadFileCommand = new RelayCommand(LoadFile);
             SaveDocsCommand = new RelayCommand(SaveDocs);
             LoadDirectoryCommand = new RelayCommand(LoadDirectory);
@@ -124,9 +122,15 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour,SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour,SettingsModel.Instance.MigraDocStructDeclarationColour);
-                
+
+                DeclarationFontStyles declarationFontStyles = new DeclarationFontStyles(SettingsModel.Instance.SelectedFont, SettingsModel.Instance.ObjectDeclarationStyle,
+                    SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
+                    SettingsModel.Instance.MemberStyle,SettingsModel.Instance.MemberDefinitionStyle);
+
+                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles,true,true);
+
                 documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
-                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), declarationColours);
+                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
             }
         }
 

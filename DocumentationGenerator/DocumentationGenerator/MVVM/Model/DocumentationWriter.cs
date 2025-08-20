@@ -26,11 +26,11 @@ namespace DocumentationGenerator.MVVM.Model
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DeclarationColours declarationColours)
+        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentStyling documentStyling)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
-            Styles styles = InitialiseDocumentStyles(document.Styles, declarationColours);
+            Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling.DeclarationColours);
 
             List<string> tocEntries = new List<string>();
 
@@ -50,23 +50,23 @@ namespace DocumentationGenerator.MVVM.Model
             if (classes != null && classes.Length > 0)
             {
                 alterations = true;
-                WriteClasses(classes,declarationColours, document);
+                WriteClasses(classes,documentStyling.DeclarationColours, document);
             }
 
             if(structs != null && structs.Length > 0)
             {
-                WriteStructs(structs, declarationColours, document);
+                WriteStructs(structs, documentStyling.DeclarationColours, document);
             }
 
             if(interfaces != null && interfaces.Length > 0)
             {
-                WriteInterfaces(interfaces,declarationColours,document);
+                WriteInterfaces(interfaces, documentStyling.DeclarationColours, document);
             }
 
             if (enums != null && enums.Length > 0)
             {
                 alterations = true;
-                WriteEnums(enums,declarationColours.EnumDeclarationColour ,document);
+                WriteEnums(enums, documentStyling.DeclarationColours.EnumDeclarationColour ,document);
             }
 
             AddPageNumbers(document);

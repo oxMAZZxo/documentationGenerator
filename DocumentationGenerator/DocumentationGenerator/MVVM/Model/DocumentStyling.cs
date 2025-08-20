@@ -1,12 +1,5 @@
-﻿using MigraDoc.DocumentObjectModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -35,7 +28,7 @@ namespace DocumentationGenerator.MVVM.Model
         public FontDeclarationStyle MemberTypeStyle { get; set; }
         public FontDeclarationStyle MemberDefinitionStyle { get; set; }
 
-        public DeclarationFontStyles(string fontFamilyName, FontDeclarationStyle objectDeclarationStyle, FontDeclarationStyle objectDefinitionStyle, FontDeclarationStyle memberHeadingStyle, FontDeclarationStyle memberTypeStyle, FontDeclarationStyle memberDefinitionStyle)
+        public DeclarationFontStyles(string fontFamilyName, FontDeclarationStyle objectDeclarationStyle, FontDeclarationStyle objectDefinitionStyle, FontDeclarationStyle memberHeadingStyle, FontDeclarationStyle memberTypeStyle, FontDeclarationStyle memberStyle ,FontDeclarationStyle memberDefinitionStyle)
         {
             FontFamilyName = fontFamilyName;
             ObjectDeclarationStyle = objectDeclarationStyle;
@@ -70,7 +63,6 @@ namespace DocumentationGenerator.MVVM.Model
             set
             {
                 isItalic = value;
-                Debug.WriteLine("IsItalic changed");
                 OnPropertyChanged();
             }
         }
@@ -81,7 +73,6 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 isBold = value;
 
-                Debug.WriteLine("IsBold changed");
                 OnPropertyChanged();
             }
         }
