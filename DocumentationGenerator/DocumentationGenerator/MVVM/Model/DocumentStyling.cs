@@ -21,12 +21,13 @@ namespace DocumentationGenerator.MVVM.Model
 
     public class DeclarationFontStyles
     {
-        public string FontFamilyName { get; set; }
-        public FontDeclarationStyle ObjectDeclarationStyle { get; set; }
-        public FontDeclarationStyle ObjectDefinitionStyle { get; set; }
-        public FontDeclarationStyle MemberHeadingStyle { get; set; }
-        public FontDeclarationStyle MemberTypeStyle { get; set; }
-        public FontDeclarationStyle MemberDefinitionStyle { get; set; }
+        public string FontFamilyName { get; }
+        public FontDeclarationStyle ObjectDeclarationStyle { get; }
+        public FontDeclarationStyle ObjectDefinitionStyle { get;}
+        public FontDeclarationStyle MemberHeadingStyle { get;}
+        public FontDeclarationStyle MemberStyle { get; }
+        public FontDeclarationStyle MemberTypeStyle { get;}
+        public FontDeclarationStyle MemberDefinitionStyle { get;}
 
         public DeclarationFontStyles(string fontFamilyName, FontDeclarationStyle objectDeclarationStyle, FontDeclarationStyle objectDefinitionStyle, FontDeclarationStyle memberHeadingStyle, FontDeclarationStyle memberTypeStyle, FontDeclarationStyle memberStyle ,FontDeclarationStyle memberDefinitionStyle)
         {
@@ -34,6 +35,7 @@ namespace DocumentationGenerator.MVVM.Model
             ObjectDeclarationStyle = objectDeclarationStyle;
             ObjectDefinitionStyle = objectDefinitionStyle;
             MemberHeadingStyle = memberHeadingStyle;
+            MemberStyle = memberStyle;
             MemberTypeStyle = memberTypeStyle;
             MemberDefinitionStyle = memberDefinitionStyle;
         }

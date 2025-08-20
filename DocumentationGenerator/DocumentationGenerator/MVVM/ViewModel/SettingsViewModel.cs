@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -108,7 +107,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             set
             {
                 Settings.ObjectDeclarationStyle = value;
-                Debug.WriteLine("Object Declaration Style Changed");
                 OnPropertyChanged();
             }
         }

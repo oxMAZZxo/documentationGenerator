@@ -30,7 +30,7 @@ namespace DocumentationGenerator.MVVM.Model
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
-            Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling.DeclarationColours);
+            Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling);
 
             List<string> tocEntries = new List<string>();
 
@@ -227,43 +227,43 @@ namespace DocumentationGenerator.MVVM.Model
             }
         }
 
-        private Styles InitialiseDocumentStyles(Styles styles, DeclarationColours declarationColours)
+        private Styles InitialiseDocumentStyles(Styles styles, DocumentStyling styling)
         {
             Style style = styles.AddStyle(ObjectStyle, StyleNames.Normal);
-            style.Font.Size = 20;
-            style.Font.Bold = true;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "5pt";
+            style.Font.Size = styling.DeclarationFonts.ObjectDeclarationStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.ObjectDeclarationStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.ObjectDeclarationStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.ObjectDeclarationStyle.SpaceAfter;
 
             style = styles.AddStyle(ObjectDefinitionStyle, StyleNames.Normal);
-            style.Font.Size = 18;
-            style.Font.Bold = false;
-            style.Font.Italic = true;
-            style.ParagraphFormat.SpaceAfter = "15pt";
+            style.Font.Size = styling.DeclarationFonts.ObjectDefinitionStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.ObjectDefinitionStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.ObjectDefinitionStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.ObjectDefinitionStyle.SpaceAfter;
 
             style = styles.AddStyle(MemberHeading, StyleNames.Normal);
-            style.Font.Size = 16;
-            style.Font.Bold = true;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "2pt";
+            style.Font.Size = styling.DeclarationFonts.MemberHeadingStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.MemberHeadingStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.MemberHeadingStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.MemberHeadingStyle.SpaceAfter;
 
             style = styles.AddStyle(MemberStyle, StyleNames.Normal);
-            style.Font.Size = 14;
-            style.Font.Bold = false;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "1pt";
+            style.Font.Size = styling.DeclarationFonts.MemberStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.MemberStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.MemberStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.MemberStyle.SpaceAfter;
 
             style = styles.AddStyle(MemberTypeStyle, StyleNames.Normal);
-            style.Font.Size = 14;
-            style.Font.Bold = true;
-            style.Font.Italic = false;
-            style.ParagraphFormat.SpaceAfter = "1pt";
+            style.Font.Size = styling.DeclarationFonts.MemberTypeStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.MemberTypeStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.MemberTypeStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.MemberTypeStyle.SpaceAfter;
 
             style = styles.AddStyle(MemberDefinitionStyle, StyleNames.Normal);
-            style.Font.Size = 14;
-            style.Font.Bold = false;
-            style.Font.Italic = true;
-            style.ParagraphFormat.SpaceAfter = "1pt";
+            style.Font.Size = styling.DeclarationFonts.MemberDefinitionStyle.FontSize;
+            style.Font.Bold = styling.DeclarationFonts.MemberDefinitionStyle.IsBold;
+            style.Font.Italic = styling.DeclarationFonts.MemberDefinitionStyle.IsItalic;
+            style.ParagraphFormat.SpaceAfter = styling.DeclarationFonts.MemberDefinitionStyle.SpaceAfter;
 
             return styles;
         }
@@ -390,7 +390,7 @@ namespace DocumentationGenerator.MVVM.Model
                         case ObjectType.Class: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
                         case ObjectType.Enum: paragraph.Format.Font.Color = declarationColours.EnumDeclarationColour; break;
                         case ObjectType.Interface: paragraph.Format.Font.Color = declarationColours.InterfaceDeclarationColour; break;
-                        //case ObjectType.Struct: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
+                        case ObjectType.Struct: paragraph.Format.Font.Color = declarationColours.ClassDeclarationColour; break;
                     }
                 }
 
