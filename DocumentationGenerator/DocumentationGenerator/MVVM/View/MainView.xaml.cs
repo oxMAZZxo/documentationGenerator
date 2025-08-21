@@ -14,31 +14,25 @@ namespace DocumentationGenerator.MVVM.View
     /// </summary>
     public partial class MainView : Window
     {
-        private MainViewModel viewModel;
 
         public MainView()
         {
             InitializeComponent();
+            this.DataContext = new MainViewModel(this);
 
-            viewModel = new MainViewModel(this);
-            this.DataContext = viewModel;
-
-            viewModel.PropertyChanged += PropertyChanged;
         }
 
-        private void PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public void ChangeRichTextBoxFont()
         {
-            if (e.PropertyName == "FileName")
-            {
-                UpdateRichTextBox();
-            }
+            if(SettingsModel.Instance == null) { return; }
+
+            myRichTextBox.FontFamily = new FontFamily(SettingsModel.Instance.SelectedFont);
         }
 
-        private void UpdateRichTextBox()
+        public void UpdateRichTextBox(ParsedSourceResults parsedSourceResults)
         {
             if (SettingsModel.Instance == null) { System.Windows.MessageBox.Show("Cannot Display Preview since the settings have not been initialised."); return; }
 
-            ParsedSourceResults parsedSourceResults = viewModel.GetAllSourceResults();
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -50,12 +44,12 @@ namespace DocumentationGenerator.MVVM.View
         {
             if (SettingsModel.Instance == null)
             {
-                Debug.WriteLine($"Settings Model IS NULL");
+                System.Windows.MessageBox.Show($"Settings have not been initialised. The preview will not been shown.");
                 return;
             }
 
             myRichTextBox.Document.Blocks.Clear();
-
+            ChangeRichTextBoxFont();
             // Fake "Class" heading
             var classP = new Paragraph();
             classP.Inlines.Add(MakeRun("Class ", SettingsModel.Instance.ObjectDeclarationStyle.FontSize, SettingsModel.Instance.ObjectDeclarationStyle.IsBold, 
@@ -179,6 +173,8 @@ namespace DocumentationGenerator.MVVM.View
 
         private void WriteInterfacesPreview(List<InterfaceDeclaration> interfaces, DeclarationColours colours)
         {
+            if(SettingsModel.Instance == null) { return; }
+
             foreach (InterfaceDeclaration currentInterface in interfaces)
             {
                 var p = new Paragraph();
@@ -274,8 +270,8 @@ namespace DocumentationGenerator.MVVM.View
                     GetTypeColour(prop, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
                 propP.Inlines.Add(MakeRun($"{prop.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
                     Color.FromRgb(1,1,1), SettingsModel.Instance.MemberStyle.IsItalic));
-                propP.Inlines.Add(MakeRun(prop.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold, 
-                    Color.FromRgb(1,1,1), SettingsModel.Instance.MemberStyle.IsItalic));
+                propP.Inlines.Add(MakeRun(prop.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold, 
+                    Color.FromRgb(1,1,1), SettingsModel.Instance.MemberDefinitionStyle.IsItalic));
                 myRichTextBox.Document.Blocks.Add(propP);
             }
         }
@@ -293,8 +289,8 @@ namespace DocumentationGenerator.MVVM.View
                     GetTypeColour(field, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
                 fieldP.Inlines.Add(MakeRun($"{field.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
                     Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberStyle.IsItalic));
-                fieldP.Inlines.Add(MakeRun(field.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
-                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberStyle.IsItalic));
+                fieldP.Inlines.Add(MakeRun(field.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold,
+                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberDefinitionStyle.IsItalic));
                 myRichTextBox.Document.Blocks.Add(fieldP);
             }
         }
@@ -312,12 +308,12 @@ namespace DocumentationGenerator.MVVM.View
                     GetTypeColour(m, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
                 methodP.Inlines.Add(MakeRun($"{m.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
                     Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberStyle.IsItalic));
-                methodP.Inlines.Add(MakeRun(m.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
-                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberStyle.IsItalic));
+                methodP.Inlines.Add(MakeRun(m.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold,
+                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberDefinitionStyle.IsItalic));
                 if (!string.IsNullOrEmpty(m.ReturnDefinition))
                 {
-                    methodP.Inlines.Add(MakeRun($" - {m.ReturnDefinition}", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
-                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberStyle.IsItalic));
+                    methodP.Inlines.Add(MakeRun($" - {m.ReturnDefinition}", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold,
+                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberDefinitionStyle.IsItalic));
                 }
                 myRichTextBox.Document.Blocks.Add(methodP);
             }

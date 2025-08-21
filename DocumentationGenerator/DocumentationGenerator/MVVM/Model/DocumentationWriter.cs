@@ -34,19 +34,21 @@ namespace DocumentationGenerator.MVVM.Model
 
             Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling);
 
-            List<string> tocEntries = new List<string>();
-
-            if (classes != null)
-                tocEntries.AddRange(classes.Select(c => c.Name));
-            if (structs != null)
-                tocEntries.AddRange(structs.Select(s => s.Name));
-            if (interfaces != null)
-                tocEntries.AddRange(interfaces.Select(i => i.Name));
-            if (enums != null)
-                tocEntries.AddRange(enums.Select(e => e.Name));
+            
 
             // Add TOC before main content
-            AddTableOfContents(document, tocEntries);
+            if(documentStyling.GenerateTableOfContents) 
+            {
+                List<string> tocEntries = new List<string>();
+
+                if (classes != null) { tocEntries.AddRange(classes.Select(c => c.Name)); }
+                if (structs != null) { tocEntries.AddRange(structs.Select(s => s.Name)); }
+                if (interfaces != null) { tocEntries.AddRange(interfaces.Select(i => i.Name)); }
+                if (enums != null) { tocEntries.AddRange(enums.Select(e => e.Name)); }
+
+                AddTableOfContents(document, tocEntries); 
+            }
+            
 
             bool alterations = false;
             if (classes != null && classes.Length > 0)
@@ -71,7 +73,7 @@ namespace DocumentationGenerator.MVVM.Model
                 WriteEnums(enums, documentStyling.DeclarationColours.EnumDeclarationColour ,document);
             }
 
-            AddPageNumbers(document);
+            if(documentStyling.GeneratePageNumbers) { AddPageNumbers(document); }
 
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer
             {

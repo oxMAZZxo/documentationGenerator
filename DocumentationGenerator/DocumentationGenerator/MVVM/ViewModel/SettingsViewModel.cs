@@ -106,7 +106,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             get => Settings.ObjectDeclarationStyle;
             set
             {
-                Debug.WriteLine("Object Dclaration Changed");
                 Settings.ObjectDeclarationStyle = value;
                 OnPropertyChanged();
             }
@@ -162,6 +161,25 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
+        public bool GenerateTableOfContents
+        {
+            get => Settings.GenerateTableOfContents;
+            set
+            {
+                Settings.GenerateTableOfContents = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool GeneratePageNumbers
+        {
+            get => Settings.GeneratePageNumbers;
+            set
+            {
+                Settings.GeneratePageNumbers = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool IsColourButtonChecked { get; set; }
         public bool IsFontButtonChecked { get; set; }
@@ -211,6 +229,21 @@ namespace DocumentationGenerator.MVVM.ViewModel
             MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
 
             SelectedFont = Fonts[0];
+
+            ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
+            ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
+            MemberHeadingStyle.PropertyChanged += DeclarationStylePropertyChanged;
+            MemberStyle.PropertyChanged += DeclarationStylePropertyChanged;
+            MemberTypeStyle.PropertyChanged += DeclarationStylePropertyChanged;
+            MemberDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
+
+            GeneratePageNumbers = true;
+            GenerateTableOfContents = true;
+        }
+
+        private void DeclarationStylePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
         }
 
         private void SettingsViewClosing(object? sender, CancelEventArgs e)
@@ -218,7 +251,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             if(App.Instance == null || sender == null) { return; }
             if(App.Instance.IsShuttingDown)
             {
-                Debug.WriteLine($"Settings is closing");
                 //Settings.Save();
                 Settings.Dispose();
             }else

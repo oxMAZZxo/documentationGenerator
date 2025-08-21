@@ -6,7 +6,24 @@
              xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View.SettingsTabViews"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="CheckBox">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="10,10"/>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="Height" Value="20"/>
+                    <Setter Property="Width" Value="20"/>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <Label Content="General Settings"/>
+        <StackPanel Orientation="Vertical">
+            <CheckBox Content="Generate Page Numbers" IsChecked="{Binding GeneratePageNumbers}"/>
+            <CheckBox Content="Generate Table Of Contents" IsChecked="{Binding GenerateTableOfContents}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

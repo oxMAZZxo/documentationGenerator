@@ -28,6 +28,8 @@ namespace DocumentationGenerator.MVVM.Model
         public  FontDeclarationStyle MemberTypeStyle { get; set; }
         public FontDeclarationStyle MemberDefinitionStyle { get; set; }
         public string SelectedFont { get; set; }
+        public bool GenerateTableOfContents { get; set; }
+        public bool GeneratePageNumbers { get; set; }
 
         public SettingsModel()
         {

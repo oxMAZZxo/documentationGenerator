@@ -61,7 +61,6 @@ namespace DocumentationGenerator.MVVM.Model
             if (Classes.Count > 0 || Enums.Count > 0 || Structs.Count > 0 || Interfaces.Count > 0)
             {
                 HasData = true;
-                Debug.WriteLine($"Source file reader has data");
             }
         }
 

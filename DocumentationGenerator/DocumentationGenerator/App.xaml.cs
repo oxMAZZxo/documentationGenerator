@@ -43,7 +43,6 @@ namespace DocumentationGenerator
 
         private void MainWindowClosing(object? sender, CancelEventArgs e)
         {
-            Debug.WriteLine($"App is shutting down.");
             IsShuttingDown = true;
         }
     }

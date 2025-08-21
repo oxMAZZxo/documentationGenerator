@@ -9,7 +9,6 @@ public class SimpleFontResolver : IFontResolver
 {
     public byte[] GetFont(string faceName)
     {
-        Debug.WriteLine($"GetFont: {faceName}");
         string fontPath = "Invalid";
 
         switch (faceName)
@@ -37,7 +36,6 @@ public class SimpleFontResolver : IFontResolver
     public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
     {
         familyName = familyName.ToLowerInvariant();
-        Debug.WriteLine($"ResolveTypeFace: {familyName}");
         if (familyName == "courier new")
         {
             if (isBold && isItalic) { return new FontResolverInfo("Courier-New-BoldItalic#"); }

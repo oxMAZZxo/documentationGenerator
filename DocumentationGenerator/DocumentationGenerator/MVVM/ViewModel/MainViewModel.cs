@@ -82,10 +82,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void SettingsViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine($"Property changed: {e.PropertyName}");
+            if(e.PropertyName == "SelectedFont") { view.ChangeRichTextBoxFont(); return; }
+
             if (sourceFileReader.HasData)
             {
-                OnPropertyChanged("FileName");
+                view.UpdateRichTextBox(GetAllSourceResults());
             }
             else
             {
@@ -95,7 +96,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void MainView_Closed(object? sender, EventArgs e)
         {
-            Debug.WriteLine($"Main View Closing");
             settingsView.Close();
         }
 
@@ -127,7 +127,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle,SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles,true,true);
+                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles,SettingsModel.Instance.GenerateTableOfContents,SettingsModel.Instance.GeneratePageNumbers);
 
                 documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
