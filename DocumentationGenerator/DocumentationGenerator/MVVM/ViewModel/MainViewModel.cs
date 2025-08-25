@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Diagnostics;
 using System.Windows.Input;
 
 namespace DocumentationGenerator.MVVM.ViewModel
@@ -42,6 +43,18 @@ namespace DocumentationGenerator.MVVM.ViewModel
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if(sourceFileReader != null && sourceFileReader.HasData)
+            {
+                ParsedSourceResults parsedSourceResults = new ParsedSourceResults
+                {
+                    Classes = sourceFileReader.Classes,
+                    Enums = sourceFileReader.Enums,
+                    Structs = sourceFileReader.Structs,
+                    Interfaces = sourceFileReader.Interfaces
+                };
+
+                view.UpdateRichTextBox(parsedSourceResults);
+            }
         }
 
         public MainViewModel(MainView mainView)
