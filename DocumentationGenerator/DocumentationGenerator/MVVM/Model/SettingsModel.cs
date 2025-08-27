@@ -154,7 +154,6 @@ namespace DocumentationGenerator.MVVM.Model
         public void Dispose()
         {
             Instance = null;
-            SaveSettings();
         }
     }
 }
