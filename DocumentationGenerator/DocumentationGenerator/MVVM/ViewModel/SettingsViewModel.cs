@@ -210,25 +210,25 @@ namespace DocumentationGenerator.MVVM.ViewModel
             ShowFontSettingsCommand = new RelayCommand(ShowFontSettings);
             ShowGeneralSettingsCommand = new RelayCommand(ShowGeneralSettings);
 
-            ClassDeclarationColour = Color.FromRgb(173, 216, 230); // LightBlue
-            PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255); // Blue
-            EnumDeclarationColour = Color.FromRgb(255, 165, 0);    // Orange
-            InterfaceDeclarationColour = Color.FromRgb(0, 128, 128); // Teal
-            StructDeclarationColour = Color.FromRgb(0, 255, 255); // Cyan  
+            ClassDeclarationColour = Settings.ClassDeclarationColour;
+            PrimitiveDeclarationColour = Settings.PrimitiveDeclarationColour;
+            EnumDeclarationColour = Settings.EnumDeclarationColour;
+            InterfaceDeclarationColour = Settings.InterfaceDeclarationColour;
+            StructDeclarationColour = Settings.StructDeclarationColour;
 
-            ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
+            ObjectDeclarationStyle = Settings.ObjectDeclarationStyle;
 
-            ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
+            ObjectDefinitionStyle = Settings.ObjectDefinitionStyle;
 
-            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
+            MemberHeadingStyle = Settings.MemberHeadingStyle;
 
-            MemberStyle = new FontDeclarationStyle("14", false, false, "1");
+            MemberStyle = Settings.MemberStyle;
 
-            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
+            MemberTypeStyle = Settings.MemberTypeStyle;
 
-            MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
+            MemberDefinitionStyle = Settings.MemberDefinitionStyle;
 
-            SelectedFont = Fonts[0];
+            SelectedFont = Settings.SelectedFont;
 
             ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
             ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;

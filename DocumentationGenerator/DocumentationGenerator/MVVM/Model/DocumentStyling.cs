@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Xceed.Wpf.Toolkit.Core.Converters;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -114,6 +115,11 @@ namespace DocumentationGenerator.MVVM.Model
         private void SetFontSize()
         {
             FontSize = Convert.ToInt32(FontSizeString);
+        }
+
+        public string GetValuesInStrings()
+        {
+            return $"{FontSize},{isBold},{IsItalic},{SpaceAfter}";
         }
     }
 }
