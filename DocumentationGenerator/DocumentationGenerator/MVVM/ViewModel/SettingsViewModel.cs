@@ -250,15 +250,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private void SettingsViewClosing(object? sender, CancelEventArgs e)
         {
             if(App.Instance == null || sender == null) { return; }
-            if(App.Instance.IsShuttingDown)
-            {
-                Settings.Dispose();
-            }else
+            if(!App.Instance.IsShuttingDown)
             {
                 e.Cancel = true;
                 SettingsView view = (SettingsView)sender;
                 view.Hide();
-                
             }
         }
 

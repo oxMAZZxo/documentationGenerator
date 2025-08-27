@@ -537,10 +537,6 @@ namespace DocumentationGenerator.MVVM.Model
         public void Dispose()
         {
             Clear();
-            Classes = null;
-            Enums = null;
-            Interfaces = null;
-            Structs = null;
         }
     }
 

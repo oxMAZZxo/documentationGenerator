@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace DocumentationGenerator.MVVM.Model
 {
-    public class SettingsModel : IDisposable
+    public class SettingsModel
     {
         public static SettingsModel? Instance { get; private set; }
         public MigraDoc.DocumentObjectModel.Color MigraDocClassDeclarationColour { get; private set; }
@@ -121,11 +121,6 @@ namespace DocumentationGenerator.MVVM.Model
             writer.Dispose();
         }
 
-        ~SettingsModel()
-        {
-            Dispose();
-        }
-
         public void SetMigraDocClassDeclarationColour(byte r, byte g, byte b)
         {
             MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255,r, g, b);
@@ -149,11 +144,6 @@ namespace DocumentationGenerator.MVVM.Model
         public void SetMigraDocStructDeclarationColour(byte r, byte g, byte b)
         {
             MigraDocStructDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
-        }
-
-        public void Dispose()
-        {
-            Instance = null;
         }
     }
 }
