@@ -230,6 +230,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             SelectedFont = Settings.SelectedFont;
 
+            GeneratePageNumbers = Settings.GeneratePageNumbers;
+            GenerateTableOfContents = Settings.GenerateTableOfContents;
+
             ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
             ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
             MemberHeadingStyle.PropertyChanged += DeclarationStylePropertyChanged;
@@ -237,8 +240,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             MemberTypeStyle.PropertyChanged += DeclarationStylePropertyChanged;
             MemberDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
 
-            GeneratePageNumbers = true;
-            GenerateTableOfContents = true;
         }
 
         private void DeclarationStylePropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -251,7 +252,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             if(App.Instance == null || sender == null) { return; }
             if(App.Instance.IsShuttingDown)
             {
-                //Settings.Save();
                 Settings.Dispose();
             }else
             {

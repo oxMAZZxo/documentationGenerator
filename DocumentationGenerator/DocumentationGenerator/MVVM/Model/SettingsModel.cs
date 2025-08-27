@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.PerformanceData;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,6 +87,10 @@ namespace DocumentationGenerator.MVVM.Model
             MemberDefinitionStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
 
             SelectedFont = lines[13];
+
+            GeneratePageNumbers = Convert.ToBoolean(lines[14]);
+
+            GenerateTableOfContents = Convert.ToBoolean(lines[15]);
         }
 
 
@@ -109,6 +114,8 @@ namespace DocumentationGenerator.MVVM.Model
             writer.WriteLine(MemberDefinitionStyle.GetValuesInStrings());
 
             writer.WriteLine(SelectedFont);
+            writer.WriteLine(GeneratePageNumbers.ToString());
+            writer.WriteLine(GenerateTableOfContents.ToString());
 
             writer.Close();
             writer.Dispose();
@@ -146,7 +153,8 @@ namespace DocumentationGenerator.MVVM.Model
 
         public void Dispose()
         {
-            
+            Instance = null;
+            SaveSettings();
         }
     }
 }

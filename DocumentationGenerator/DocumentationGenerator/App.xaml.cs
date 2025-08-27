@@ -45,8 +45,6 @@ namespace DocumentationGenerator
         private void MainWindowClosing(object? sender, CancelEventArgs e)
         {
             IsShuttingDown = true;
-            SettingsModel.Instance?.SaveSettings();
-
         }
     }
 
