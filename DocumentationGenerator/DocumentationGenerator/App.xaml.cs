@@ -25,16 +25,18 @@ namespace DocumentationGenerator
 
         public App()
         {
-            if(Instance == null)
+            if (Instance == null)
             {
                 Instance = this;
-            }else 
-            { 
-                return; 
+            }
+            else
+            {
+                return;
             }
 
             GlobalFontSettings.FontResolver = new SimpleFontResolver();
             Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            new SettingsModel();
             mainView = new MainView();
             mainView.Show();
 
@@ -45,7 +47,7 @@ namespace DocumentationGenerator
         private void MainWindowClosing(object? sender, CancelEventArgs e)
         {
             IsShuttingDown = true;
-            if(SettingsModel.Instance != null) { SettingsModel.Instance.SaveSettings(); }
+            if (SettingsModel.Instance != null) { SettingsModel.Instance.SaveSettings(); }
         }
     }
 

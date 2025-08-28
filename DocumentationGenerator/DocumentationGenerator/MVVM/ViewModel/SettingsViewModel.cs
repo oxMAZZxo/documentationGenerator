@@ -14,7 +14,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
-        public SettingsModel Settings { get; private set; }
         private UserControl currentUserControl;
         private UserControl colourSettingsTabView;
         private UserControl fontSettingsTabView;
@@ -23,55 +22,55 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         public Color ClassDeclarationColour
         {
-            get { return Settings.ClassDeclarationColour; }
+            get { return SettingsModel.Instance.ClassDeclarationColour; }
             set
             {
-                Settings.SetMigraDocClassDeclarationColour(value.R, value.G, value.B);
-                Settings.ClassDeclarationColour = value;
+                SettingsModel.Instance.SetMigraDocClassDeclarationColour(value.R, value.G, value.B);
+                SettingsModel.Instance.ClassDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color PrimitiveDeclarationColour
         {
-            get { return Settings.PrimitiveDeclarationColour; }
+            get { return SettingsModel.Instance.PrimitiveDeclarationColour; }
             set
             {
-                Settings.SetMigraDocPrimitiveDeclarationColour(value.R, value.G, value.B);
-                Settings.PrimitiveDeclarationColour = value;
+                SettingsModel.Instance.SetMigraDocPrimitiveDeclarationColour(value.R, value.G, value.B);
+                SettingsModel.Instance.PrimitiveDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color EnumDeclarationColour
         {
-            get { return Settings.EnumDeclarationColour; }
+            get { return SettingsModel.Instance.EnumDeclarationColour; }
             set
             {
-                Settings.SetMigraDocEnumDeclarationColour(value.R, value.G, value.B);
-                Settings.EnumDeclarationColour = value;
+                SettingsModel.Instance.SetMigraDocEnumDeclarationColour(value.R, value.G, value.B);
+                SettingsModel.Instance.EnumDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color InterfaceDeclarationColour
         {
-            get { return Settings.InterfaceDeclarationColour; }
+            get { return SettingsModel.Instance.InterfaceDeclarationColour; }
             set
             {
-                Settings.SetMigraDocInterfaceDeclarationColour(value.R, value.G, value.B);
-                Settings.InterfaceDeclarationColour = value;
+                SettingsModel.Instance.SetMigraDocInterfaceDeclarationColour(value.R, value.G, value.B);
+                SettingsModel.Instance.InterfaceDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
 
         public Color StructDeclarationColour
         {
-            get { return Settings.StructDeclarationColour; }
+            get { return SettingsModel.Instance.StructDeclarationColour; }
             set
             {
-                Settings.SetMigraDocStructDeclarationColour(value.R, value.G, value.B);
-                Settings.StructDeclarationColour = value;
+                SettingsModel.Instance.SetMigraDocStructDeclarationColour(value.R, value.G, value.B);
+                SettingsModel.Instance.StructDeclarationColour = value;
                 OnPropertyChanged();
             }
         }
@@ -89,94 +88,94 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
-        public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
+        public ObservableCollection<string> Fonts { get => SettingsModel.Instance.Fonts; }
 
         public string SelectedFont
         {
-            get => Settings.SelectedFont;
+            get => SettingsModel.Instance.SelectedFont;
             set
             {
-                Settings.SelectedFont = value;
+                SettingsModel.Instance.SelectedFont = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle ObjectDeclarationStyle
         {
-            get => Settings.ObjectDeclarationStyle;
+            get => SettingsModel.Instance.ObjectDeclarationStyle;
             set
             {
-                Settings.ObjectDeclarationStyle = value;
+                SettingsModel.Instance.ObjectDeclarationStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle ObjectDefinitionStyle
         {
-            get => Settings.ObjectDefinitionStyle;
+            get => SettingsModel.Instance.ObjectDefinitionStyle;
             set
             {
-                Settings.ObjectDefinitionStyle = value;
+                SettingsModel.Instance.ObjectDefinitionStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberHeadingStyle
         {
-            get => Settings.MemberHeadingStyle;
+            get => SettingsModel.Instance.MemberHeadingStyle;
             set
             {
-                Settings.MemberHeadingStyle = value;
+                SettingsModel.Instance.MemberHeadingStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberStyle
         {
-            get => Settings.MemberStyle;
+            get => SettingsModel.Instance.MemberStyle;
             set
             {
-                Settings.MemberStyle = value;
+                SettingsModel.Instance.MemberStyle = value;
                 OnPropertyChanged();
             }
-        } 
-        
+        }
+
         public FontDeclarationStyle MemberTypeStyle
         {
-            get => Settings.MemberTypeStyle;
+            get => SettingsModel.Instance.MemberTypeStyle;
             set
             {
-                Settings.MemberTypeStyle = value;
+                SettingsModel.Instance.MemberTypeStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public FontDeclarationStyle MemberDefinitionStyle
         {
-            get => Settings.MemberDefinitionStyle;
+            get => SettingsModel.Instance.MemberDefinitionStyle;
             set
             {
-                Settings.MemberDefinitionStyle = value;
+                SettingsModel.Instance.MemberDefinitionStyle = value;
                 OnPropertyChanged();
             }
         }
 
         public bool GenerateTableOfContents
         {
-            get => Settings.GenerateTableOfContents;
+            get => SettingsModel.Instance.GenerateTableOfContents;
             set
             {
-                Settings.GenerateTableOfContents = value;
+                SettingsModel.Instance.GenerateTableOfContents = value;
                 OnPropertyChanged();
             }
         }
 
         public bool GeneratePageNumbers
         {
-            get => Settings.GeneratePageNumbers;
+            get => SettingsModel.Instance.GeneratePageNumbers;
             set
             {
-                Settings.GeneratePageNumbers = value;
+                SettingsModel.Instance.GeneratePageNumbers = value;
                 OnPropertyChanged();
             }
         }
@@ -193,7 +192,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         public SettingsViewModel(SettingsView settingsView)
         {
-            Settings = new SettingsModel();
             settingsView.Closing += SettingsViewClosing;
 
             colourSettingsTabView = new UCColourSettingsView();
@@ -210,28 +208,28 @@ namespace DocumentationGenerator.MVVM.ViewModel
             ShowFontSettingsCommand = new RelayCommand(ShowFontSettings);
             ShowGeneralSettingsCommand = new RelayCommand(ShowGeneralSettings);
 
-            ClassDeclarationColour = Settings.ClassDeclarationColour;
-            PrimitiveDeclarationColour = Settings.PrimitiveDeclarationColour;
-            EnumDeclarationColour = Settings.EnumDeclarationColour;
-            InterfaceDeclarationColour = Settings.InterfaceDeclarationColour;
-            StructDeclarationColour = Settings.StructDeclarationColour;
+            ClassDeclarationColour = SettingsModel.Instance.ClassDeclarationColour;
+            PrimitiveDeclarationColour = SettingsModel.Instance.PrimitiveDeclarationColour;
+            EnumDeclarationColour = SettingsModel.Instance.EnumDeclarationColour;
+            InterfaceDeclarationColour = SettingsModel.Instance.InterfaceDeclarationColour;
+            StructDeclarationColour = SettingsModel.Instance.StructDeclarationColour;
 
-            ObjectDeclarationStyle = Settings.ObjectDeclarationStyle;
+            ObjectDeclarationStyle = SettingsModel.Instance.ObjectDeclarationStyle;
 
-            ObjectDefinitionStyle = Settings.ObjectDefinitionStyle;
+            ObjectDefinitionStyle = SettingsModel.Instance.ObjectDefinitionStyle;
 
-            MemberHeadingStyle = Settings.MemberHeadingStyle;
+            MemberHeadingStyle = SettingsModel.Instance.MemberHeadingStyle;
 
-            MemberStyle = Settings.MemberStyle;
+            MemberStyle = SettingsModel.Instance.MemberStyle;
 
-            MemberTypeStyle = Settings.MemberTypeStyle;
+            MemberTypeStyle = SettingsModel.Instance.MemberTypeStyle;
 
-            MemberDefinitionStyle = Settings.MemberDefinitionStyle;
+            MemberDefinitionStyle = SettingsModel.Instance.MemberDefinitionStyle;
 
-            SelectedFont = Settings.SelectedFont;
+            SelectedFont = SettingsModel.Instance.SelectedFont;
 
-            GeneratePageNumbers = Settings.GeneratePageNumbers;
-            GenerateTableOfContents = Settings.GenerateTableOfContents;
+            GeneratePageNumbers = SettingsModel.Instance.GeneratePageNumbers;
+            GenerateTableOfContents = SettingsModel.Instance.GenerateTableOfContents;
 
             ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
             ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
@@ -249,8 +247,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void SettingsViewClosing(object? sender, CancelEventArgs e)
         {
-            if(App.Instance == null || sender == null) { return; }
-            if(!App.Instance.IsShuttingDown)
+            if (App.Instance == null || sender == null) { return; }
+            if (!App.Instance.IsShuttingDown)
             {
                 e.Cancel = true;
                 SettingsView view = (SettingsView)sender;

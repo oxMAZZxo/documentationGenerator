@@ -1,21 +1,16 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
-using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.PerformanceData;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Documents.Serialization;
 using System.Windows.Media;
 
 namespace DocumentationGenerator.MVVM.Model
 {
     public class SettingsModel
     {
-        public static SettingsModel? Instance { get; private set; }
+        public static SettingsModel Instance { get; private set; }
         public MigraDoc.DocumentObjectModel.Color MigraDocClassDeclarationColour { get; private set; }
         public MigraDoc.DocumentObjectModel.Color MigraDocPrimitiveDeclarationColour { get; private set; }
         public MigraDoc.DocumentObjectModel.Color MigraDocEnumDeclarationColour { get; private set; }
@@ -32,11 +27,12 @@ namespace DocumentationGenerator.MVVM.Model
         public FontDeclarationStyle ObjectDefinitionStyle { get; set; }
         public FontDeclarationStyle MemberHeadingStyle { get; set; }
         public FontDeclarationStyle MemberStyle { get; set; }
-        public  FontDeclarationStyle MemberTypeStyle { get; set; }
+        public FontDeclarationStyle MemberTypeStyle { get; set; }
         public FontDeclarationStyle MemberDefinitionStyle { get; set; }
         public string SelectedFont { get; set; }
         public bool GenerateTableOfContents { get; set; }
         public bool GeneratePageNumbers { get; set; }
+        public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
 
         public SettingsModel()
         {
@@ -50,56 +46,120 @@ namespace DocumentationGenerator.MVVM.Model
                 Instance = this;
             }
 
-            LoadSettings();
+            if (TryLoadSettings() == false)
+            {
+                AssignDefaultValues();
+            }
         }
 
-        private void LoadSettings()
+        private void AssignDefaultValues()
         {
-            string[] lines = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "settings.txt"));
+            ClassDeclarationColour = Color.FromRgb(0, 100, 200);
+            PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255);
+            EnumDeclarationColour = Color.FromRgb(107, 142, 35);
+            InterfaceDeclarationColour = Color.FromRgb(0, 128, 128);
+            StructDeclarationColour = Color.FromRgb(184, 134, 11);
 
-            ClassDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[1].Substring(0, 2)), Utilities.HexToByte(lines[1].Substring(2, 2)), 
-                Utilities.HexToByte(lines[1].Substring(4, 2)), Utilities.HexToByte(lines[1].Substring(6, 2)));
-            InterfaceDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[2].Substring(0, 2)), Utilities.HexToByte(lines[2].Substring(2, 2)),
-                Utilities.HexToByte(lines[2].Substring(4, 2)), Utilities.HexToByte(lines[2].Substring(6, 2)));
-            StructDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[3].Substring(0, 2)), Utilities.HexToByte(lines[3].Substring(2, 2)),
-                Utilities.HexToByte(lines[3].Substring(4, 2)), Utilities.HexToByte(lines[3].Substring(6, 2)));
-            EnumDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[4].Substring(0, 2)), Utilities.HexToByte(lines[4].Substring(2, 2)),
-                Utilities.HexToByte(lines[4].Substring(4, 2)), Utilities.HexToByte(lines[4].Substring(6, 2)));
-            PrimitiveDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[5].Substring(0, 2)), Utilities.HexToByte(lines[5].Substring(2, 2)),
-                Utilities.HexToByte(lines[5].Substring(4, 2)), Utilities.HexToByte(lines[5].Substring(6, 2)));
+            SelectedFont = Fonts[0];
+            GeneratePageNumbers = true;
+            GenerateTableOfContents = true;
 
-            string[] values = lines[7].Split(",");
-            ObjectDeclarationStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+            ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
+            ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
+            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
+            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
+            MemberStyle = new FontDeclarationStyle("14", false, false, "1");
+            MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
+        }
 
-            values = lines[8].Split(",");
-            ObjectDefinitionStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+        private bool TryLoadSettings()
+        {
+            string[] lines;
+            try
+            {
+                lines = File.ReadAllLines(Path.Combine(AppContext.BaseDirectory, "settings.txt"));
+            }
+            catch (DirectoryNotFoundException)
+            {
+                File.Create(Path.Combine(AppContext.BaseDirectory, "settings.txt")).Close();
+                return false;
+            }
+            catch (FileNotFoundException)
+            {
+                File.Create(Path.Combine(AppContext.BaseDirectory, "settings.txt")).Close();
+                return false;
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show($"The program was not able load the saved settings preferences due to an IOException.\n Exception Message:{ex.Message}");
+                return false;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show($"The program could not load the saved settings file because of unauthorised access.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"The program could not load the saved settings file due to a random error.\n Exception Message:{ex.Message}");
+                return false;
+            }
 
-            values = lines[9].Split(",");
-            MemberHeadingStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+            try
+            {
 
-            values = lines[10].Split(",");
-            MemberTypeStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+                ClassDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[1].Substring(0, 2)), Utilities.HexToByte(lines[1].Substring(2, 2)),
+                    Utilities.HexToByte(lines[1].Substring(4, 2)), Utilities.HexToByte(lines[1].Substring(6, 2)));
+                InterfaceDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[2].Substring(0, 2)), Utilities.HexToByte(lines[2].Substring(2, 2)),
+                    Utilities.HexToByte(lines[2].Substring(4, 2)), Utilities.HexToByte(lines[2].Substring(6, 2)));
+                StructDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[3].Substring(0, 2)), Utilities.HexToByte(lines[3].Substring(2, 2)),
+                    Utilities.HexToByte(lines[3].Substring(4, 2)), Utilities.HexToByte(lines[3].Substring(6, 2)));
+                EnumDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[4].Substring(0, 2)), Utilities.HexToByte(lines[4].Substring(2, 2)),
+                    Utilities.HexToByte(lines[4].Substring(4, 2)), Utilities.HexToByte(lines[4].Substring(6, 2)));
+                PrimitiveDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[5].Substring(0, 2)), Utilities.HexToByte(lines[5].Substring(2, 2)),
+                    Utilities.HexToByte(lines[5].Substring(4, 2)), Utilities.HexToByte(lines[5].Substring(6, 2)));
 
-            values = lines[11].Split(",");
-            MemberStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+                string[] values = lines[7].Split(",");
+                ObjectDeclarationStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
 
-            values = lines[12].Split(",");
-            MemberDefinitionStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+                values = lines[8].Split(",");
+                ObjectDefinitionStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
 
-            SelectedFont = lines[13];
+                values = lines[9].Split(",");
+                MemberHeadingStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
 
-            GeneratePageNumbers = Convert.ToBoolean(lines[14]);
+                values = lines[10].Split(",");
+                MemberTypeStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
 
-            GenerateTableOfContents = Convert.ToBoolean(lines[15]);
+                values = lines[11].Split(",");
+                MemberStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+
+                values = lines[12].Split(",");
+                MemberDefinitionStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
+
+                SelectedFont = lines[13];
+
+                GeneratePageNumbers = Convert.ToBoolean(lines[14]);
+
+                GenerateTableOfContents = Convert.ToBoolean(lines[15]);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Settings file was fully loaded but could not extract data.\nException Message:{ex.Message}");
+                return false;
+            }
+
+            return true;
         }
 
 
         public void SaveSettings()
         {
-            StreamWriter writer = new StreamWriter(Path.Combine(AppContext.BaseDirectory, "settings.txt"),false);
+            StreamWriter writer = new StreamWriter(Path.Combine(AppContext.BaseDirectory, "settings.txt"), false);
 
             writer.WriteLine("Colours (C,I,S,E,P):");
-            writer.WriteLine(ClassDeclarationColour.ToString().Replace("#",""));
+            writer.WriteLine(ClassDeclarationColour.ToString().Replace("#", ""));
             writer.WriteLine(InterfaceDeclarationColour.ToString().Replace("#", ""));
             writer.WriteLine(StructDeclarationColour.ToString().Replace("#", ""));
             writer.WriteLine(EnumDeclarationColour.ToString().Replace("#", ""));
@@ -123,22 +183,22 @@ namespace DocumentationGenerator.MVVM.Model
 
         public void SetMigraDocClassDeclarationColour(byte r, byte g, byte b)
         {
-            MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255,r, g, b);
+            MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
         }
 
         public void SetMigraDocPrimitiveDeclarationColour(byte r, byte g, byte b)
         {
-            MigraDocPrimitiveDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);    
+            MigraDocPrimitiveDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
         }
 
         public void SetMigraDocInterfaceDeclarationColour(byte r, byte g, byte b)
         {
-            MigraDocInterfaceDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g,b);
+            MigraDocInterfaceDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
         }
 
         public void SetMigraDocEnumDeclarationColour(byte r, byte g, byte b)
         {
-            MigraDocEnumDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255,r,g,b);
+            MigraDocEnumDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
         }
 
         public void SetMigraDocStructDeclarationColour(byte r, byte g, byte b)
