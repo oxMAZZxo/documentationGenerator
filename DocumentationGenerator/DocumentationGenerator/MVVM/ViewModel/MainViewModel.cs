@@ -162,15 +162,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void LoadFile()
         {
-            if(sourceFileReader.HasData)
-            {
-                MessageBoxResult result = MessageBox.Show($"You already has source data loaded. Would you like to clear the existing data? \nClick Yes to add data, \nClick No to clear data, \nClick Cancel to not perform any operation.","Caption",MessageBoxButton.YesNoCancel);
-                switch (result)
-                {
-                    case MessageBoxResult.No: ClearDocs(); break;
-                    case MessageBoxResult.Cancel: return;
-                }
-            }
+            if (!CheckForExistingData()) { return; }
 
             bool? valid = openFileDialog.ShowDialog();
 
@@ -190,15 +182,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void LoadDirectory()
         {
-            if (sourceFileReader.HasData)
-            {
-                MessageBoxResult result = MessageBox.Show($"You already has source data loaded. Would you like to clear the existing data? \nClick Yes to add data, \nClick No to clear data, \nClick Cancel to not perform any operation.", "Caption", MessageBoxButton.YesNoCancel);
-                switch (result)
-                {
-                    case MessageBoxResult.No: ClearDocs(); break;
-                    case MessageBoxResult.Cancel: return;
-                }
-            }
+            if(!CheckForExistingData()) { return; }
 
             bool? valid = openFolderDialog.ShowDialog();
 
@@ -208,6 +192,20 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             LoadDirectoryAsync();
 
+        }
+
+        private bool CheckForExistingData()
+        {
+            if (sourceFileReader.HasData)
+            {
+                MessageBoxResult result = MessageBox.Show($"You already has source data loaded. Would you like to clear the existing data? \nClick Yes to add data, \nClick No to clear data, \nClick Cancel to not perform any operation.", "Caption", MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.No: ClearDocs(); break;
+                    case MessageBoxResult.Cancel: return false;
+                }
+            }
+            return true;
         }
 
         private async void LoadDirectoryAsync()
