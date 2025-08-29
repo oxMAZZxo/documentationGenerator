@@ -54,7 +54,7 @@ namespace DocumentationGenerator.MVVM.Model
 
         private void AssignDefaultValues()
         {
-            ClassDeclarationColour = Color.FromRgb(0, 100, 200);
+            ClassDeclarationColour = Color.FromRgb(0, 200, 100);
             PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255);
             EnumDeclarationColour = Color.FromRgb(107, 142, 35);
             InterfaceDeclarationColour = Color.FromRgb(0, 128, 128);
