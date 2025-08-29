@@ -3,10 +3,8 @@ using DocumentationGenerator.MVVM.Model;
 using DocumentationGenerator.MVVM.View;
 using Microsoft.Win32;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Diagnostics;
 using System.Windows.Input;
 
 namespace DocumentationGenerator.MVVM.ViewModel
@@ -119,6 +117,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void ClearDocs()
         {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to clear all the loaded source files?","Warning!",MessageBoxButton.YesNo);
+            if(result == MessageBoxResult.No) { return; }
             sourceFileReader.Clear();
             view.ShowDefaultPreviewMessage();
             FileName = "The name of the file/directory loaded will be displayed here.";
