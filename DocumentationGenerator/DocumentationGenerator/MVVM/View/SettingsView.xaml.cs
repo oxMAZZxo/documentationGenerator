@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,12 @@ namespace DocumentationGenerator.MVVM.View
         {
             InitializeComponent();
             this.DataContext = new SettingsViewModel(this);
+            this.Deactivated += SettingsView_Deactivated;
+        }
+
+        private void SettingsView_Deactivated(object? sender, EventArgs e)
+        {
+            this.Hide();
         }
 
         private void OnCloseButtonClicked(object sender, RoutedEventArgs e)

@@ -69,17 +69,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             fileName = "";
             FileName = "The name of the file/directory loaded will be displayed here.";
 
-            openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
-
-            openFolderDialog = new OpenFolderDialog();
-            saveFileDialog = new SaveFileDialog();
-
-            saveFileDialog.Title = "Save the Documentation as a PDF at the desired Location";
-            saveFileDialog.DefaultExt = ".pdf";
-            saveFileDialog.Filter = "PDF (*.pdf)|*.pdf";
-            saveFileDialog.AddExtension = true;
-
+            InitDialogs();
             sourceFileReader = new SourceFileReader();
             documentationWriter = new DocumentationWriter();
 
@@ -89,6 +79,25 @@ namespace DocumentationGenerator.MVVM.ViewModel
             settingsViewModel.PropertyChanged += SettingsViewModelPropertyChanged;
 
             view.ShowDefaultPreviewMessage();
+        }
+
+        private void InitDialogs()
+        {
+            openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Select a file(s) to load.";
+            openFileDialog.Filter = "C# Files (*.cs)|*.cs";
+            openFileDialog.DefaultExt = ".cs";
+            openFileDialog.Multiselect = true;
+
+            openFolderDialog = new OpenFolderDialog();
+            openFolderDialog.Title = "Select a folder which contains source files to load.";
+            openFolderDialog.Multiselect = false;
+            
+            saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Save the Documentation as a PDF at the desired Location";
+            saveFileDialog.DefaultExt = ".pdf";
+            saveFileDialog.Filter = "PDF (*.pdf)|*.pdf";
+            saveFileDialog.AddExtension = true;
         }
 
         private void SettingsViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -117,9 +126,13 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void ClearDocs()
         {
+            if(sourceFileReader == null || !sourceFileReader.HasData) { return; }
+
             MessageBoxResult result = MessageBox.Show("Are you sure you want to clear all the loaded source files?","Warning!",MessageBoxButton.YesNo);
             if(result == MessageBoxResult.No) { return; }
+
             sourceFileReader.Clear();
+
             view.ShowDefaultPreviewMessage();
             FileName = "The name of the file/directory loaded will be displayed here.";
         }
