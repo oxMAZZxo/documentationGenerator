@@ -6,10 +6,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
         xmlns:helpers="clr-namespace:DocumentationGenerator.MVVM.Helpers"
-        mc:Ignorable="d"
+        mc:Ignorable="d" WindowStyle="None"
         Title="MainView" Height="800" Width="1000">
 
     <Window.Resources>
+        <Style x:Key="ChromeBar" TargetType="Border">
+            <Setter Property="BorderBrush" Value="WhiteSmoke"/>
+            <Setter Property="Background" Value="WhiteSmoke"/>
+        </Style>
+
+        <Style x:Key="ChromeBarButtons" TargetType="Button">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="LightGray"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="WindowCloseButton" BasedOn="{StaticResource ChromeBarButtons}" TargetType="Button">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Red"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
         <Style TargetType="Popup">
             <Style.Resources>
                 <Style TargetType="Border">
@@ -42,7 +80,7 @@
                 </Style>
             </Style.Resources>
         </Style>
-        
+
         <Style TargetType="StackPanel">
             <Style.Resources>
                 <Style TargetType="Button">
@@ -56,21 +94,6 @@
             </Style.Resources>
         </Style>
 
-        <Style x:Key="ColourPickerLabels" TargetType="Label">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Margin" Value="0,10"/>
-        </Style>
-
-        <Style x:Key="ColourPickers" TargetType="xctk:ColorPicker">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="20,0"/>
-        </Style>
-
         <Style TargetType="Label">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -78,18 +101,30 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <StackPanel Background="LightGray" Orientation="Horizontal">
-            <Button x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
-            <Button Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
-            <Button Content="Help"/>
-        </StackPanel>
+
+        <Border MouseDown="OnChromeBarMouseDown" Grid.Row="0" Style="{StaticResource ChromeBar}">
+            <Grid>
+                <!-- Window buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Style="{StaticResource ChromeBarButtons}" Content="_" Click="OnMinimizeButtonClicked"/>
+                    <Button Style="{StaticResource ChromeBarButtons}" Content="[  ]" Click="OnMaximizeButtonClicked"/>
+                    <Button Style="{StaticResource WindowCloseButton}" Content="X" Click="OnCloseButtonClicked"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
+                    <Button Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
+                    <Button Content="Help"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
 
         <!-- File Menu Popup -->
         <Popup x:Name="FilePopup" PlacementTarget="{Binding ElementName=FileButton}"
@@ -109,7 +144,7 @@
         <Label Grid.Row="1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Margin="10,10" Content="{Binding FileName}"/>
 
         <ScrollViewer Grid.Row="1"  Margin="10,70,10,0">
-            <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Grid.ColumnSpan="4" Margin="10,10"/>
+            <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="10,10"/>
         </ScrollViewer>
         
     </Grid>

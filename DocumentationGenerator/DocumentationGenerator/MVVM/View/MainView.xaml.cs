@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
 
@@ -339,6 +340,36 @@ namespace DocumentationGenerator.MVVM.View
         private void OnFileButtonClick(object sender, RoutedEventArgs e)
         {
             FilePopup.IsOpen = true;
+        }
+
+        private void OnMinimizeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            WindowState = System.Windows.WindowState.Minimized;
+        }
+
+        private void OnMaximizeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            WindowState = (WindowState == System.Windows.WindowState.Maximized) ? System.Windows.WindowState.Normal : System.Windows.WindowState.Maximized;
+            Button button = (Button)sender;
+            if(WindowState == System.Windows.WindowState.Maximized)
+            {
+                button.Content = "[]";
+            }else if(WindowState == System.Windows.WindowState.Normal)
+            {
+                button.Content = "[  ]";
+            }
+        }
+
+        private void OnCloseButtonClicked(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        // Allow dragging the window by clicking on the custom title bar
+        private void OnChromeBarMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }
