@@ -1,15 +1,12 @@
 ﻿<Window x:Class="DocumentationGenerator.MVVM.View.MainView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
-        xmlns:helpers="clr-namespace:DocumentationGenerator.MVVM.Helpers"
-        mc:Ignorable="d" WindowStyle="None"
-        Title="MainView" Height="800" Width="1000">
-
+        mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True"
+        Title="MainView" Height="800" Width="1000" ResizeMode="CanResize">
     <Window.Resources>
+             
         <Style x:Key="ChromeBar" TargetType="Border">
             <Setter Property="BorderBrush" Value="WhiteSmoke"/>
             <Setter Property="Background" Value="WhiteSmoke"/>
@@ -81,15 +78,23 @@
             </Style.Resources>
         </Style>
 
-        <Style TargetType="StackPanel">
+        <Style x:Key="ChromeBarTools" TargetType="StackPanel">
             <Style.Resources>
-                <Style TargetType="Button">
+                <Style BasedOn="{StaticResource ChromeBarButtons}" TargetType="Button">
                     <Setter Property="Height" Value="Auto"/>
                     <Setter Property="Width" Value="100"/>
                     <Setter Property="FontSize" Value="20"/>
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
                     <Setter Property="FontWeight" Value="SemiBold"/>
+                </Style>
+                <Style TargetType="Label">
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Height" Value="Auto"/>
+                    <Setter Property="Width" Value="50"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                 </Style>
             </Style.Resources>
         </Style>
@@ -102,14 +107,23 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
+
+        <Grid>
+            
+        
+            <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Border MouseDown="OnChromeBarMouseDown" Grid.Row="0" Style="{StaticResource ChromeBar}">
             <Grid>
+                <StackPanel Style="{StaticResource ChromeBarTools}" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="DG"/>
+                    <Button x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
+                    <Button Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
+                    <Button Content="Help"/>
+                </StackPanel>
                 <!-- Window buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource ChromeBarButtons}" Content="_" Click="OnMinimizeButtonClicked"/>
@@ -117,11 +131,6 @@
                     <Button Style="{StaticResource WindowCloseButton}" Content="X" Click="OnCloseButtonClicked"/>
                 </StackPanel>
                 
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
-                    <Button Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
-                    <Button Content="Help"/>
-                </StackPanel>
             </Grid>
         </Border>
 
