@@ -127,7 +127,7 @@
                 <!-- Window buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Style="{StaticResource ChromeBarButtons}" Content="_" Click="OnMinimizeButtonClicked"/>
-                    <Button Style="{StaticResource ChromeBarButtons}" Content="[  ]" Click="OnMaximizeButtonClicked"/>
+                    <Button Style="{StaticResource ChromeBarButtons}" x:Name="MaximiseButton" Content="[  ]" Click="OnMaximizeButtonClicked"/>
                     <Button Style="{StaticResource WindowCloseButton}" Content="X" Click="OnCloseButtonClicked"/>
                 </StackPanel>
                 

@@ -363,14 +363,14 @@ namespace DocumentationGenerator.MVVM.View
 
         private void OnMaximizeButtonClicked(object sender, RoutedEventArgs e)
         {
-            WindowState = (WindowState == System.Windows.WindowState.Maximized) ? System.Windows.WindowState.Normal : System.Windows.WindowState.Maximized;
-            Button button = (Button)sender;
-            if(WindowState == System.Windows.WindowState.Maximized)
+            WindowState = (WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
+
+            if(WindowState == WindowState.Maximized)
             {
-                button.Content = "[]";
-            }else if(WindowState == System.Windows.WindowState.Normal)
+                MaximiseButton.Content = "[]";
+            }else if(WindowState == WindowState.Normal)
             {
-                button.Content = "[  ]";
+                MaximiseButton.Content = "[  ]";
             }
         }
 
@@ -383,7 +383,14 @@ namespace DocumentationGenerator.MVVM.View
         private void OnChromeBarMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
+            {
                 this.DragMove();
+            }
+
+            if(e.ClickCount == 2)
+            {
+                OnMaximizeButtonClicked(sender, e);
+            }
         }
 
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
