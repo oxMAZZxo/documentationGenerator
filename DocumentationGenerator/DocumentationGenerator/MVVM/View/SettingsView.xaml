@@ -5,34 +5,8 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
-        mc:Ignorable="d"
-        Title="SettingsView" Height="450" Width="800">
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="10"/>
-                </Style>
-            </Style.Resources>
-        </Style>
-
-        <Style TargetType="ToggleButton">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="Margin" Value="1,5"/>
-            <Setter Property="Background" Value="LightGray"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="10,0,10,0"/>
-                </Style>
-            </Style.Resources>
-        </Style>
-    </Window.Resources>
+        mc:Ignorable="d" ShowInTaskbar="False"
+        Title="Settings" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -40,14 +14,27 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="5,0" Orientation="Horizontal" Grid.Row="0">
-            <ToggleButton Content="General" IsChecked="{Binding IsGeneralButtonChecked}" Command="{Binding ShowGeneralSettingsCommand}"/>
-            <ToggleButton Content="Colour" IsChecked="{Binding IsColourButtonChecked}" Command="{Binding ShowColourSettingsCommand}"/>
-            <ToggleButton Content="Fonts" IsChecked="{Binding IsFontButtonChecked}" Command="{Binding ShowFontSettingsCommand}"/>
-        </StackPanel>
-        
-        <UserControl Grid.Row="1" Content="{Binding CurrentUserControl}"/>
+        <Border BorderBrush="Transparent" Background="WhiteSmoke" 
+                CornerRadius="0,0,10,10">
+            <StackPanel Margin="5,0" Orientation="Horizontal" Grid.Row="0">
+                <ToggleButton Style="{DynamicResource TabButton}" Content="General" IsChecked="{Binding IsGeneralButtonChecked}" Command="{Binding ShowGeneralSettingsCommand}"/>
+                <ToggleButton Style="{DynamicResource TabButton}" Content="Colour" IsChecked="{Binding IsColourButtonChecked}" Command="{Binding ShowColourSettingsCommand}"/>
+                <ToggleButton Style="{DynamicResource TabButton}" Content="Fonts" IsChecked="{Binding IsFontButtonChecked}" Command="{Binding ShowFontSettingsCommand}"/>
+            </StackPanel>
+        </Border>
 
-        <Button Grid.Column="3" Grid.Row="2" Margin="40,5" Content="Close" Click="OnCloseButtonClicked"></Button>
+        <UserControl Background="WhiteSmoke" Grid.Row="1" Margin="10,10" 
+                     Content="{Binding CurrentUserControl}">
+            <UserControl.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10"/>
+                </Style>
+            </UserControl.Resources>
+        </UserControl>
+
+        <Button Style="{DynamicResource ModernButton}" Grid.Row="2" 
+                Margin="5,5" FontSize="14" Padding="10"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Content="Close" Click="OnCloseButtonClicked"></Button>
     </Grid>
 </Window>

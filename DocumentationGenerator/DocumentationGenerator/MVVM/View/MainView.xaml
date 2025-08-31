@@ -5,130 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True"
         Title="MainView" Height="800" Width="1000">
-    <Window.Resources>
-             
-        <Style x:Key="ChromeBar" TargetType="Border">
-            <Setter Property="BorderBrush" Value="WhiteSmoke"/>
-            <Setter Property="Background" Value="WhiteSmoke"/>
-        </Style>
-
-        <Style x:Key="ChromeBarButtons" TargetType="Button">
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="LightGray"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="WindowCloseButton" BasedOn="{StaticResource ChromeBarButtons}" TargetType="Button">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Red"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        
-        <Style TargetType="Popup">
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="Background" Value="LightGray"/>
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="1"/>
-                    <Setter Property="CornerRadius" Value="5"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="Width" Value="140"/>
-                    <Setter Property="Height" Value="170"/>
-                    <Style.Resources>
-                        <Style TargetType="StackPanel">
-                            <Style.Resources>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="White"/>
-                                    <Setter Property="FontSize" Value="16"/>
-                                    <Setter Property="Width" Value="Auto"/>
-                                    <Setter Property="Height" Value="40"/>
-                                    <Setter Property="Background" Value="Transparent"/>
-                                    <Setter Property="BorderBrush" Value="Transparent"/>
-                                    <Style.Resources>
-                                        <Style TargetType="Border">
-                                            <Setter Property="CornerRadius" Value="5"/>
-                                        </Style>
-                                    </Style.Resources>
-                                </Style>
-                            </Style.Resources>
-                        </Style>
-                    </Style.Resources>
-                </Style>
-            </Style.Resources>
-        </Style>
-
-        <Style x:Key="ChromeBarTools" TargetType="StackPanel">
-            <Style.Resources>
-                <Style BasedOn="{StaticResource ChromeBarButtons}" TargetType="Button">
-                    <Setter Property="Height" Value="Auto"/>
-                    <Setter Property="Width" Value="100"/>
-                    <Setter Property="FontSize" Value="20"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Setter Property="FontWeight" Value="SemiBold"/>
-                </Style>
-                <Style TargetType="Label">
-                    <Setter Property="FontSize" Value="16"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="Height" Value="Auto"/>
-                    <Setter Property="Width" Value="50"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                </Style>
-            </Style.Resources>
-        </Style>
-
-        <Style TargetType="Label">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-        </Style>
-    </Window.Resources>
-
-
-        <Grid>
-            
-        
-            <Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border MouseDown="OnChromeBarMouseDown" Grid.Row="0" Style="{StaticResource ChromeBar}">
+        <Border BorderBrush="WhiteSmoke" Background="WhiteSmoke" MouseDown="OnChromeBarMouseDown" Grid.Row="0">
             <Grid>
-                <StackPanel Style="{StaticResource ChromeBarTools}" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Label Content="DG"/>
-                    <Button x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
-                    <Button Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
-                    <Button Content="Help"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Label Content="DG">
+                        <Label.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="FontSize" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Height" Value="Auto"/>
+                                <Setter Property="Width" Value="50"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            </Style>
+                        </Label.Resources>
+                    </Label>
+                    <Button Style="{DynamicResource ChromeBarToolButtons}" x:Name="FileButton" Content="File.." Click="OnFileButtonClick"/>
+                    <Button Style="{DynamicResource ChromeBarToolButtons}" Content="Setings" Command="{Binding OpenSettingsMenuCommand}"/>
+                    <Button Style="{DynamicResource ChromeBarToolButtons}" Content="Help"/>
                 </StackPanel>
                 <!-- Window buttons -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Style="{StaticResource ChromeBarButtons}" Content="_" Click="OnMinimizeButtonClicked"/>
-                    <Button Style="{StaticResource ChromeBarButtons}" x:Name="MaximiseButton" Content="[  ]" Click="OnMaximizeButtonClicked"/>
-                    <Button Style="{StaticResource WindowCloseButton}" Content="X" Click="OnCloseButtonClicked"/>
+                    <Button Style="{DynamicResource ChromeBarDefaultButtons}" Content="_" Click="OnMinimizeButtonClicked"/>
+                    <Button Style="{DynamicResource ChromeBarDefaultButtons}" x:Name="MaximiseButton" Content="[  ]" Click="OnMaximizeButtonClicked"/>
+                    <Button Style="{DynamicResource WindowCloseButton}" Content="X" Click="OnCloseButtonClicked"/>
                 </StackPanel>
                 
             </Grid>
@@ -136,7 +42,7 @@
 
 
         <!-- File Menu Popup -->
-        <Popup x:Name="FilePopup" PlacementTarget="{Binding ElementName=FileButton}"
+        <Popup x:Name="FilePopup" Style="{DynamicResource DefaultPopup}" PlacementTarget="{Binding ElementName=FileButton}"
                Placement="Bottom" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Scroll">
             <Border>
                 <StackPanel>
@@ -150,7 +56,10 @@
             </Border>
         </Popup>
 
-        <Label Grid.Row="1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Margin="10,10" Content="{Binding FileName}"/>
+        <Label Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+               HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+               FontWeight="Bold" FontSize="20" 
+               Margin="10,10" Content="{Binding FileName}"/>
 
         <ScrollViewer Grid.Row="1"  Margin="10,70,10,10">
             <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="10,10"/>

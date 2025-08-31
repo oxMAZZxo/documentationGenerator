@@ -45,7 +45,7 @@
             <Setter Property="FontSize" Value="16"/>
         </Style>
     </UserControl.Resources>
-    <Grid Background="White">
+    <Grid>
         <Label Content="Font Family:" Height="40" FontWeight="SemiBold" Margin="30,10" FontSize="18" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <ComboBox ItemsSource="{Binding Fonts}" SelectedItem="{Binding SelectedFont}"
                   FontSize="18" VerticalContentAlignment="Center" FontWeight="SemiBold" MinWidth="50" 
