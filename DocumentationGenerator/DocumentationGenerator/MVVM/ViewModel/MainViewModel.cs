@@ -121,7 +121,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void OpenSettingsMenu()
         {
-            settingsView.Show();
+            settingsView.ShowDialog();
         }
 
         private void ClearDocs()
