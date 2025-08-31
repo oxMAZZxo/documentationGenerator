@@ -267,19 +267,21 @@ namespace DocumentationGenerator.MVVM.View
         private void WriteProperties(Declaration[]? properties, DeclarationColours colours)
         {
             if (properties == null || properties.Length == 0 || SettingsModel.Instance == null) { return; }
+            var parag = new Paragraph();
+            parag.Inlines.Add(MakeRun("Properties: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
+                Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
+            myRichTextBox.Document.Blocks.Add(parag);
 
             foreach (var prop in properties)
             {
-                var propP = new Paragraph();
-                propP.Inlines.Add(MakeRun("Property: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
-                    Color.FromRgb(1,1,1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
-                propP.Inlines.Add(MakeRun($"{prop.Type} ", SettingsModel.Instance.MemberTypeStyle.FontSize, SettingsModel.Instance.MemberTypeStyle.IsBold, 
+                parag = new Paragraph();
+                parag.Inlines.Add(MakeRun($"{prop.Type} ", SettingsModel.Instance.MemberTypeStyle.FontSize, SettingsModel.Instance.MemberTypeStyle.IsBold, 
                     GetTypeColour(prop, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
-                propP.Inlines.Add(MakeRun($"{prop.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
+                parag.Inlines.Add(MakeRun($"{prop.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
                     Color.FromRgb(1,1,1), SettingsModel.Instance.MemberStyle.IsItalic));
-                propP.Inlines.Add(MakeRun(prop.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold, 
+                parag.Inlines.Add(MakeRun(prop.Definition ?? "NO SUMMARY", SettingsModel.Instance.MemberDefinitionStyle.FontSize, SettingsModel.Instance.MemberDefinitionStyle.IsBold, 
                     Color.FromRgb(1,1,1), SettingsModel.Instance.MemberDefinitionStyle.IsItalic));
-                myRichTextBox.Document.Blocks.Add(propP);
+                myRichTextBox.Document.Blocks.Add(parag);
             }
         }
 
@@ -287,11 +289,14 @@ namespace DocumentationGenerator.MVVM.View
         {
             if (fields == null || fields.Length == 0 || SettingsModel.Instance == null) { return; }
 
+            var fieldP = new Paragraph();
+            fieldP.Inlines.Add(MakeRun("Fields: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
+                Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
+            myRichTextBox.Document.Blocks.Add(fieldP);
+
             foreach (var field in fields)
             {
-                var fieldP = new Paragraph();
-                fieldP.Inlines.Add(MakeRun("Field: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
-                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
+                fieldP = new Paragraph();
                 fieldP.Inlines.Add(MakeRun($"{field.Type} ", SettingsModel.Instance.MemberTypeStyle.FontSize, SettingsModel.Instance.MemberTypeStyle.IsBold,
                     GetTypeColour(field, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
                 fieldP.Inlines.Add(MakeRun($"{field.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
@@ -306,11 +311,14 @@ namespace DocumentationGenerator.MVVM.View
         {
             if (methods == null || methods.Length == 0 || SettingsModel.Instance == null) { return; }
 
+            var methodP = new Paragraph();
+            methodP.Inlines.Add(MakeRun("Methods: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
+                Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
+            myRichTextBox.Document.Blocks.Add(methodP);
+
             foreach (var m in methods)
             {
-                var methodP = new Paragraph();
-                methodP.Inlines.Add(MakeRun("Method: ", SettingsModel.Instance.MemberHeadingStyle.FontSize, SettingsModel.Instance.MemberHeadingStyle.IsBold,
-                    Color.FromRgb(1, 1, 1), SettingsModel.Instance.MemberHeadingStyle.IsItalic));
+                methodP = new Paragraph();
                 methodP.Inlines.Add(MakeRun($"{m.Type} ", SettingsModel.Instance.MemberTypeStyle.FontSize, SettingsModel.Instance.MemberTypeStyle.IsBold,
                     GetTypeColour(m, colours), SettingsModel.Instance.MemberTypeStyle.IsItalic));
                 methodP.Inlines.Add(MakeRun($"{m.Name} - ", SettingsModel.Instance.MemberStyle.FontSize, SettingsModel.Instance.MemberStyle.IsBold,
@@ -473,7 +481,7 @@ namespace DocumentationGenerator.MVVM.View
                 if (this == Empty) { return "RECT {Empty}"; }
                 return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
             }
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is Rect)) { return false; }
                 return (this == (RECT)obj);
