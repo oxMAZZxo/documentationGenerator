@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" WindowStyle="None" AllowsTransparency="True"
-        Title="MainView" Height="800" Width="1000" ResizeMode="CanResize">
+        Title="MainView" Height="800" Width="1000">
     <Window.Resources>
              
         <Style x:Key="ChromeBar" TargetType="Border">
@@ -152,7 +152,7 @@
 
         <Label Grid.Row="1" HorizontalAlignment="Left" FontWeight="Bold" FontSize="20" Margin="10,10" Content="{Binding FileName}"/>
 
-        <ScrollViewer Grid.Row="1"  Margin="10,70,10,0">
+        <ScrollViewer Grid.Row="1"  Margin="10,70,10,10">
             <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="10,10"/>
         </ScrollViewer>
         
