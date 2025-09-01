@@ -17,8 +17,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private SaveFileDialog saveFileDialog;
         private SourceFileReader sourceFileReader;
         private DocumentationWriter documentationWriter;
-        private SettingsView settingsView { get; }
-        private MainView view { get; }
+        private SettingsView settingsView;
+        private MainView view;
 
         public string FileName 
         { 
