@@ -35,6 +35,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         public ICommand SaveDocsCommand { get; set; }
         public ICommand ClearDocsCommand { get; set; }
         public ICommand OpenSettingsMenuCommand { get; set; }
+        public ICommand ExitAppCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -65,6 +66,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             LoadDirectoryCommand = new RelayCommand(LoadDirectory);
             ClearDocsCommand = new RelayCommand(ClearDocs);
             OpenSettingsMenuCommand = new RelayCommand(OpenSettingsMenu);
+            ExitAppCommand = new RelayCommand(ExitApp);
 
             fileName = "";
             FileName = "The name of the file/directory loaded will be displayed here.";
@@ -79,6 +81,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
             settingsViewModel.PropertyChanged += SettingsViewModelPropertyChanged;
 
             view.ShowDefaultPreviewMessage();
+        }
+
+        private void ExitApp()
+        {
+            view.Close();
         }
 
         private void InitDialogs()
