@@ -33,7 +33,7 @@
         </UserControl>
 
         <Button Style="{DynamicResource ModernButton}" Grid.Row="2" 
-                Margin="5,5" FontSize="14" Padding="10"
+                Margin="5,5" FontSize="16" FontWeight="Light"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
                 Content="Close" Click="OnCloseButtonClicked"></Button>
     </Grid>
