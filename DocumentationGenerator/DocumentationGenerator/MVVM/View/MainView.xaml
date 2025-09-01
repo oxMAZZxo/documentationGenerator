@@ -42,16 +42,16 @@
 
 
         <!-- File Menu Popup -->
-        <Popup x:Name="FilePopup" Style="{DynamicResource DefaultPopup}" PlacementTarget="{Binding ElementName=FileButton}"
+        <Popup x:Name="FilePopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=FileButton}"
                Placement="Bottom" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Scroll">
             <Border>
                 <StackPanel>
-                    <Button Content="Load File/s" ToolTip="Load a file or multiple files selected from a directory." Command="{Binding LoadFileCommand}"/>
-                    <Button Content="Load Directory" ToolTip="Load a directory of source files." Command="{Binding LoadDirectoryCommand}"/>
-                    <Button Content="Save Doc.." ToolTip="Save Loaded Documentation to a PDF in given location." Command="{Binding SaveDocsCommand}"/>
-                    <Button Content="Clear Docs" ToolTip="Will Clear All files that have been loaded." Command="{Binding ClearDocsCommand}"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Load File/s" ToolTip="Load a file(s) from a directory." Command="{Binding LoadFileCommand}"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Load Directory" ToolTip="Load a directory of source files." Command="{Binding LoadDirectoryCommand}"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Save Doc.." ToolTip="Click to save ALL DATA that is loaded into a PDF, at any location you want." Command="{Binding SaveDocsCommand}"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Clear Docs" ToolTip="Click to clear ALL DATA that has been loaded." Command="{Binding ClearDocsCommand}"/>
                     <Separator/>
-                    <Button Content="Exit"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Exit" Command="{Binding ExitAppCommand}"/>
                 </StackPanel>
             </Border>
         </Popup>

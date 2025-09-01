@@ -1,15 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Style x:Key="DefaultPopup" TargetType="Popup">
+    <Style x:Key="DefaultPopupMenu" TargetType="Popup">
         <Style.Resources>
             <Style TargetType="Border">
+                <Setter Property="Padding" Value="5"/>
                 <Setter Property="Background" Value="LightGray"/>
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="CornerRadius" Value="5"/>
                 <Setter Property="BorderBrush" Value="Transparent"/>
                 <Setter Property="Width" Value="140"/>
-                <Setter Property="Height" Value="170"/>
+                <Setter Property="Height" Value="Auto"/>
                 <Style.Resources>
                     <Style TargetType="StackPanel">
                         <Style.Resources>

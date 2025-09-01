@@ -5,7 +5,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
-        mc:Ignorable="d" ShowInTaskbar="False"
+        mc:Ignorable="d" WindowStyle="ToolWindow" ResizeMode="CanResize"
         Title="Settings" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>

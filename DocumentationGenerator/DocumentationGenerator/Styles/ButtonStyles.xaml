@@ -69,4 +69,21 @@
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
+
+    <Style x:Key="PopupMenuButtons" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+        <Setter Property="FontSize" Value="16"/>
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="CornerRadius" Value="5"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="LightBlue"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            
+        </Style.Resources>
+    </Style>
 </ResourceDictionary>
