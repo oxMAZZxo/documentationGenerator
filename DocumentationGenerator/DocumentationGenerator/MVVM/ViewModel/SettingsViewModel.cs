@@ -18,7 +18,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private UserControl colourSettingsTabView;
         private UserControl fontSettingsTabView;
         private UserControl generalSettingsTabView;
-
+        private SettingsTabs selectedTab;
 
         public Color ClassDeclarationColour
         {
@@ -85,6 +85,17 @@ namespace DocumentationGenerator.MVVM.ViewModel
             {
                 currentUserControl = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public SettingsTabs SelectedTab
+        {
+            get => selectedTab;
+            set
+            {
+                selectedTab = value;
+                OnPropertyChanged();
+                ChangeUserControl();
             }
         }
 
@@ -180,14 +191,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
-        public bool IsColourButtonChecked { get; set; }
-        public bool IsFontButtonChecked { get; set; }
-        public bool IsGeneralButtonChecked { get; set; }
-
-        public ICommand ShowColourSettingsCommand { get; set; }
-        public ICommand ShowFontSettingsCommand { get; set; }
-        public ICommand ShowGeneralSettingsCommand { get; set; }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public SettingsViewModel(SettingsView settingsView)
@@ -201,12 +204,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             currentUserControl = generalSettingsTabView;
             CurrentUserControl = generalSettingsTabView;
 
-            IsGeneralButtonChecked = true;
-            OnPropertyChanged("IsGeneralButtonChecked");
-
-            ShowColourSettingsCommand = new RelayCommand(ShowColourSettings);
-            ShowFontSettingsCommand = new RelayCommand(ShowFontSettings);
-            ShowGeneralSettingsCommand = new RelayCommand(ShowGeneralSettings);
+            SelectedTab = SettingsTabs.General;
 
             ClassDeclarationColour = SettingsModel.Instance.ClassDeclarationColour;
             PrimitiveDeclarationColour = SettingsModel.Instance.PrimitiveDeclarationColour;
@@ -256,36 +254,32 @@ namespace DocumentationGenerator.MVVM.ViewModel
             }
         }
 
-        private void ShowColourSettings()
+        private void ChangeUserControl()
         {
-            CurrentUserControl = colourSettingsTabView;
-            IsGeneralButtonChecked = false;
-            IsFontButtonChecked = false;
-            OnPropertyChanged("IsFontButtonChecked");
-            OnPropertyChanged("IsGeneralButtonChecked");
-        }
-
-        private void ShowFontSettings()
-        {
-            CurrentUserControl = fontSettingsTabView;
-            IsGeneralButtonChecked = false;
-            IsColourButtonChecked = false;
-            OnPropertyChanged("IsColourButtonChecked");
-            OnPropertyChanged("IsGeneralButtonChecked");
-        }
-
-        private void ShowGeneralSettings()
-        {
-            CurrentUserControl = generalSettingsTabView;
-            IsFontButtonChecked = false;
-            IsColourButtonChecked = false;
-            OnPropertyChanged("IsColourButtonChecked");
-            OnPropertyChanged("IsFontButtonChecked");
+            switch (SelectedTab)
+            {
+                case SettingsTabs.General:
+                    CurrentUserControl = generalSettingsTabView;
+                    break;
+                case SettingsTabs.Colours:
+                    CurrentUserControl = colourSettingsTabView;
+                    break;
+                case SettingsTabs.Fonts:
+                    CurrentUserControl = fontSettingsTabView;
+                    break;
+            }
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public enum SettingsTabs
+    {
+        General,
+        Colours,
+        Fonts
     }
 }

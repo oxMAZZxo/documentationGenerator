@@ -5,8 +5,13 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentationGenerator.MVVM.View"
+        xmlns:helper="clr-namespace:DocumentationGenerator.MVVM.Helpers"
+        xmlns:viewModel="clr-namespace:DocumentationGenerator.MVVM.ViewModel"
         mc:Ignorable="d" WindowStyle="ToolWindow" ResizeMode="CanResize"
         Title="Settings" Height="450" Width="800">
+    <Window.Resources>
+        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -17,9 +22,9 @@
         <Border BorderBrush="Transparent" Background="WhiteSmoke" 
                 CornerRadius="0,0,10,10">
             <StackPanel Margin="5,0" Orientation="Horizontal" Grid.Row="0">
-                <ToggleButton Style="{DynamicResource TabButton}" Content="General" IsChecked="{Binding IsGeneralButtonChecked}" Command="{Binding ShowGeneralSettingsCommand}"/>
-                <ToggleButton Style="{DynamicResource TabButton}" Content="Colour" IsChecked="{Binding IsColourButtonChecked}" Command="{Binding ShowColourSettingsCommand}"/>
-                <ToggleButton Style="{DynamicResource TabButton}" Content="Fonts" IsChecked="{Binding IsFontButtonChecked}" Command="{Binding ShowFontSettingsCommand}"/>
+                <RadioButton Style="{DynamicResource TabRadioButton}" Content="General" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static viewModel:SettingsTabs.General}}"></RadioButton>
+                <RadioButton Style="{DynamicResource TabRadioButton}" Content="Colours" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static viewModel:SettingsTabs.Colours}}"></RadioButton>
+                <RadioButton Style="{DynamicResource TabRadioButton}" Content="General" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static viewModel:SettingsTabs.Fonts}}"></RadioButton>
             </StackPanel>
         </Border>
 
