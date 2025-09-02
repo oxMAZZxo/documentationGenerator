@@ -201,9 +201,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             fontSettingsTabView = new UCFontSettingsView();
             generalSettingsTabView = new UCGeneralSettingsView();
 
-            currentUserControl = generalSettingsTabView;
-            CurrentUserControl = generalSettingsTabView;
-
             SelectedTab = SettingsTabs.General;
 
             ClassDeclarationColour = SettingsModel.Instance.ClassDeclarationColour;
@@ -213,17 +210,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
             StructDeclarationColour = SettingsModel.Instance.StructDeclarationColour;
 
             ObjectDeclarationStyle = SettingsModel.Instance.ObjectDeclarationStyle;
-
             ObjectDefinitionStyle = SettingsModel.Instance.ObjectDefinitionStyle;
-
             MemberHeadingStyle = SettingsModel.Instance.MemberHeadingStyle;
-
             MemberStyle = SettingsModel.Instance.MemberStyle;
-
             MemberTypeStyle = SettingsModel.Instance.MemberTypeStyle;
-
             MemberDefinitionStyle = SettingsModel.Instance.MemberDefinitionStyle;
-
             SelectedFont = SettingsModel.Instance.SelectedFont;
 
             GeneratePageNumbers = SettingsModel.Instance.GeneratePageNumbers;
