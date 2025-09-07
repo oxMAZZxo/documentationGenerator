@@ -33,4 +33,10 @@ namespace DocumentationGenerator.MVVM.Helpers
         }
 
     }
+
+    public enum XmlTag
+    {
+        summary,
+        returns
+    }
 }

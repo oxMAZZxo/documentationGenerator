@@ -92,7 +92,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         {
             openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Select a file(s) to load.";
-            openFileDialog.Filter = "C# Files (*.cs)|*.cs";
+            openFileDialog.Filter = "C# Files (*.cs)|*.cs|Visual Basic Files (*.vb)|*.vb|C++ Files (*.cpp)|*.cpp";
             openFileDialog.DefaultExt = ".cs";
             openFileDialog.Multiselect = true;
 
@@ -182,7 +182,15 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private async void LoadFileAsync()
         {
-            await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames);
+            ProgLanguage progLanguage = ProgLanguage.CSharp;
+
+            switch (openFileDialog.FilterIndex)
+            {
+                case 2: progLanguage = ProgLanguage.VisualBasic; break;
+                case 3: progLanguage = ProgLanguage.CPP; break;
+            }
+
+            await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames,progLanguage);
 
             FileName = $"File Name: {openFileDialog.SafeFileName}";
         }
@@ -217,7 +225,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private async void LoadDirectoryAsync()
         {
-            await sourceFileReader.ReadSourceDirectory(openFolderDialog.FolderName);
+            await sourceFileReader.ReadSourceDirectory(openFolderDialog.FolderName,ProgLanguage.CSharp);
 
             FileName = $"Directory: {openFolderDialog.SafeFolderName}";
 
