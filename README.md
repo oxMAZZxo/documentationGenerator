@@ -4,17 +4,17 @@
 
 ---
 
+## Why I Built This
+Writing technical documentation can be repetitive—especially when the code is already self-documented.  
+This tool bridges the gap by turning XML comments into formal documentation, streamlining workflows and reducing busywork. 
+
+---
+
 ## Features
 - **Flexible Input** – Select individual files or scan entire directories  
 - **Automated Parsing** – Reads XML comments directly from C# source code  
 - **Documentation Output** – Generates organized, ready-to-use PDF documents  
-- **Scalable Design** – Handles projects of any size, from single scripts to large codebases  
 
----
-
-## Why I Built This
-Writing technical documentation can be repetitive—especially when the code is already self-documented.  
-This tool bridges the gap by turning XML comments into formal documentation, streamlining workflows and reducing busywork. 
 
 ## Future Plans
 I am planning to add support for multiple programming languages including C++, Vb.NET and more.
