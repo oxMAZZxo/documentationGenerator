@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Diagnostics;
 
 namespace DocumentationGenerator.MVVM.Helpers
 {
@@ -245,7 +246,17 @@ namespace DocumentationGenerator.MVVM.Helpers
                 }
             }
 
-            return new ClassDeclaration(className, classDefinition, newMethods, newFields, newProperties);
+            List<string> baseTypes = new List<string>();
+            if(classDec.BaseList != null && classDec.BaseList.Types.Count > 0)
+            {
+                foreach(BaseTypeSyntax baseType in classDec.BaseList.Types)
+                {
+                    baseTypes.Add(baseType.ToString());
+                }
+
+            }
+
+            return new ClassDeclaration(className, classDefinition, baseTypes.ToArray(), newMethods, newFields, newProperties);
         }
 
         /// <summary>

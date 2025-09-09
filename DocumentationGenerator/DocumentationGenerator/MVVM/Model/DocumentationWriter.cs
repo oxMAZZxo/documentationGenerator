@@ -1,8 +1,7 @@
 using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Visitors;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
-using System.Security.AccessControl;
+using System.IO;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -34,10 +33,27 @@ namespace DocumentationGenerator.MVVM.Model
 
             Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling);
 
-            
+            //Microsoft.Msagl.Drawing.Graph graph = new
+            //Microsoft.Msagl.Drawing.Graph("");
+            //graph.AddEdge("A", "B");
+            //graph.AddEdge("A", "B");
+            //graph.FindNode("A").Attr.FillColor =
+            //Microsoft.Msagl.Drawing.Color.Red;
+            //graph.FindNode("B").Attr.FillColor =
+            //Microsoft.Msagl.Drawing.Color.Blue;
+            //Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer
+            //= new Microsoft.Msagl.GraphViewerGdi.GraphRenderer
+            //(graph);
+            //renderer.CalculateLayout();
+            //int width = 500;
+            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, (int)(graph.Height *
+            //(width / graph.Width)), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+            //renderer.Render(bitmap);
+            //bitmap.Save("C:/Users/mario/Desktop/image.png");
+            //document.AddSection().AddImage("C:/Users/mario/Desktop/image.png");
 
             // Add TOC before main content
-            if(documentStyling.GenerateTableOfContents) 
+            if (documentStyling.GenerateTableOfContents) 
             {
                 List<string> tocEntries = new List<string>();
 
@@ -97,6 +113,8 @@ namespace DocumentationGenerator.MVVM.Model
 
             // Save the document.
             pdfRenderer.Save(path);
+
+            File.Delete("C:/Users/mario/Desktop/image.png");
 
             return alterations;
         }
@@ -331,6 +349,11 @@ namespace DocumentationGenerator.MVVM.Model
                 formatted.Font.Color = declarationColours.ClassDeclarationColour;
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
+                if (current.BaseTypes != null && current.BaseTypes.Length > 0)
+                {
+                    WriteClassInheritancesAndInterfaces(current,paragraph,declarationColours);
+                }
+
                 paragraph.Style = ObjectDefinitionStyle;
 
                 if (current.Properties != null && current.Properties.Length > 0)
@@ -354,6 +377,62 @@ namespace DocumentationGenerator.MVVM.Model
                     WriteMethods(current.Methods,declarationColours ,section);
                 }
             }
+        }
+
+        private void WriteClassInheritancesAndInterfaces(ClassDeclaration current, Paragraph paragraph, DeclarationColours declarationColours)
+        {
+            FormattedText formatted;
+            
+            if (current.BaseTypes[0][0] == 'I')
+            {
+                WriteInterfaceImplementations(false,current,paragraph,declarationColours);
+                return;
+            }
+            else
+            {
+                paragraph.AddText($"\nInherits ");
+                formatted = paragraph.AddFormattedText($"{current.BaseTypes[0]}");
+                formatted.Font.Bold = true;
+                formatted.Font.Italic = false;
+                formatted.Color = declarationColours.ClassDeclarationColour;
+            }
+
+            if(current.BaseTypes.Length > 1)
+            {
+                WriteInterfaceImplementations(true,current,paragraph,declarationColours);
+            }
+            
+            
+        }
+
+        private void WriteInterfaceImplementations(bool skipFirst, ClassDeclaration current, Paragraph paragraph, DeclarationColours declarationColours)
+        {
+            string interfaces = "";
+            if (!skipFirst)
+            {
+                interfaces = $"{current.BaseTypes[0]}";
+            }
+            if (current.BaseTypes.Length > 1)
+            {
+                interfaces += ", ";
+                for (int i = 1; i < current.BaseTypes.Length; i++)
+                {
+                    if (i == current.BaseTypes.Length - 1)
+                    {
+                        interfaces += $"{current.BaseTypes[i]}";
+                    }
+                    else
+                    {
+                        interfaces += $"{current.BaseTypes[i]}, ";
+                    }
+                }
+            }
+
+            paragraph.AddText($"\nImplements ");
+            FormattedText formatted = paragraph.AddFormattedText($"{interfaces}");
+            formatted.Font.Bold = true;
+            formatted.Font.Italic = false;
+            formatted.Color = declarationColours.InterfaceDeclarationColour;
         }
 
         private void WriteMethods(Declaration[] methods, DeclarationColours declarationColours, Section section)

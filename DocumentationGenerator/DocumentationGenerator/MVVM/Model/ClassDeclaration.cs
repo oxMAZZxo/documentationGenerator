@@ -13,14 +13,17 @@ namespace DocumentationGenerator.MVVM.Model
     {
         public string Name { get; }
         public string? Definition { get; }
+        public string[] BaseTypes { get; set; }
         public Declaration[]? Methods { get; set; }
         public Declaration[]? Fields { get; set; }
         public Declaration[]? Properties { get; set; }
+        public string[]? ImplementedInterfaces { get; set; }
 
-        public ClassDeclaration(string name, string? Definition, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations)
+        public ClassDeclaration(string name, string? Definition, string[] baseTypes, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations)
         {
             this.Name = name;
             this.Definition = Definition;
+            this.BaseTypes = baseTypes;
             this.Methods = methodDeclarations;
             this.Fields = fieldDeclarations;
             this.Properties = propertiesDeclarations;
