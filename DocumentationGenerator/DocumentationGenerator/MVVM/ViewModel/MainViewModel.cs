@@ -150,17 +150,17 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if (valid.HasValue && valid.Value == true)
             {
-                if(SettingsModel.Instance == null) { MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); return; }
-                
+                if (SettingsModel.Instance == null) { MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); return; }
+
                 DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
-                    SettingsModel.Instance.MigraDocEnumDeclarationColour,SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
-                    SettingsModel.Instance.MigraDocInterfaceDeclarationColour,SettingsModel.Instance.MigraDocStructDeclarationColour);
+                    SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
+                    SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
 
                 DeclarationFontStyles declarationFontStyles = new DeclarationFontStyles(SettingsModel.Instance.SelectedFont, SettingsModel.Instance.ObjectDeclarationStyle,
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
-                    SettingsModel.Instance.MemberStyle,SettingsModel.Instance.MemberDefinitionStyle);
+                    SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles,SettingsModel.Instance.GenerateTableOfContents,SettingsModel.Instance.GeneratePageNumbers);
+                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers);
 
                 documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
