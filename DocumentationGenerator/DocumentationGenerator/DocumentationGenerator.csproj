@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Icons\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +25,23 @@
 </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Icons\Doc Gen Icon Rounded Corners.png" />
+    <None Remove="Icons\Doc Gen Icon.png" />
+    <None Remove="Icons\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Icons\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\Doc Gen Icon Rounded Corners.png" />
+    <Resource Include="Icons\Doc Gen Icon.png" />
+    <Resource Include="Icons\favicon.ico" />
   </ItemGroup>
 
 </Project>
