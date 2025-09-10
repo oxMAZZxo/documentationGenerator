@@ -184,11 +184,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
         {
             ProgLanguage progLanguage = ProgLanguage.CSharp;
 
-            switch (openFileDialog.FilterIndex)
-            {
-                case 2: progLanguage = ProgLanguage.VisualBasic; break;
-                case 3: progLanguage = ProgLanguage.CPP; break;
-            }
+            //switch (openFileDialog.FilterIndex)
+            //{
+            //    //case 2: progLanguage = ProgLanguage.VisualBasic; break;
+            //    //case 3: progLanguage = ProgLanguage.CPP; break;
+            //}
 
             await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames,progLanguage);
 
