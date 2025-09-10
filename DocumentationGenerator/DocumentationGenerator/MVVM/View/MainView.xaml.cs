@@ -2,7 +2,6 @@
 using DocumentationGenerator.MVVM.ViewModel;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -38,13 +37,18 @@ namespace DocumentationGenerator.MVVM.View
 
         public void UpdateRichTextBox(ParsedSourceResults parsedSourceResults)
         {
-            if (SettingsModel.Instance == null) { System.Windows.MessageBox.Show("Cannot Display Preview since the settings have not been initialised."); return; }
+            if (SettingsModel.Instance == null) { MessageBox.Show("Cannot Display Preview since the settings have not been initialised."); return; }
 
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
 
-             UpdatePreviewRichTextBox(parsedSourceResults,declarationColours);
+            myRichTextBox.Document.Blocks.Clear();
+
+            WriteClassesPreview(parsedSourceResults.Classes, declarationColours);
+            WriteInterfacesPreview(parsedSourceResults.Interfaces, declarationColours);
+            WriteEnumsPreview(parsedSourceResults.Enums, declarationColours);
+            WriteStructsPreview(parsedSourceResults.Structs, declarationColours);
         }
 
         public void ShowDefaultPreviewMessage()
@@ -142,16 +146,6 @@ namespace DocumentationGenerator.MVVM.View
             p.Inlines.Add(MakeRun($"Definition: {def}", style.FontSize, style.IsBold, Color.FromRgb(0,0,0), style.IsItalic));
         }
 
-        private void UpdatePreviewRichTextBox(ParsedSourceResults results, DeclarationColours colours)
-        {
-            myRichTextBox.Document.Blocks.Clear();
-
-            WriteClassesPreview(results.Classes, colours);
-            WriteInterfacesPreview(results.Interfaces, colours);
-            WriteEnumsPreview(results.Enums, colours);
-            WriteStructsPreview(results.Structs, colours);
-        }
-
         private void WriteClassesPreview(List<ClassDeclaration> classes, DeclarationColours colours)
         {
             if(SettingsModel.Instance == null) { return; }
@@ -164,6 +158,10 @@ namespace DocumentationGenerator.MVVM.View
                 p.Inlines.Add(MakeRun(currentClass.Name, SettingsModel.Instance.ObjectDeclarationStyle.FontSize,
                 SettingsModel.Instance.ObjectDeclarationStyle.IsBold, SettingsModel.Instance.ClassDeclarationColour,
                 SettingsModel.Instance.ObjectDeclarationStyle.IsItalic));
+                if (currentClass.BaseTypes != null && currentClass.BaseTypes.Length > 0)
+                {
+                    WriteClassInheritancesAndInterfaces(currentClass, p, colours);
+                }
                 myRichTextBox.Document.Blocks.Add(p);
 
                 var defP = new Paragraph();
@@ -176,6 +174,60 @@ namespace DocumentationGenerator.MVVM.View
 
                 WriteMethods(currentClass.Methods, colours);
             }
+        }
+
+        private void WriteClassInheritancesAndInterfaces(ClassDeclaration currentClass, Paragraph paragraph, DeclarationColours colours)
+        {
+            if (currentClass.BaseTypes[0][0] == 'I')
+            {
+                WriteInterfaceImplementations(false, currentClass, paragraph, colours);
+                return;
+            }
+            else
+            {
+                paragraph.Inlines.Add(MakeRun("\nInherits ", SettingsModel.Instance.ObjectDefinitionStyle.FontSize,
+                    SettingsModel.Instance.ObjectDefinitionStyle.IsBold, Color.FromRgb(0,0,0),
+                    SettingsModel.Instance.ObjectDefinitionStyle.IsItalic));
+                paragraph.Inlines.Add(MakeRun(currentClass.BaseTypes[0], SettingsModel.Instance.ObjectDeclarationStyle.FontSize,
+                SettingsModel.Instance.ObjectDeclarationStyle.IsBold, SettingsModel.Instance.ClassDeclarationColour,
+                SettingsModel.Instance.ObjectDeclarationStyle.IsItalic));
+            }
+
+            if (currentClass.BaseTypes.Length > 1)
+            {
+                WriteInterfaceImplementations(true, currentClass, paragraph, colours);
+            }
+        }
+
+        private void WriteInterfaceImplementations(bool skipFirst, ClassDeclaration currentClass, Paragraph paragraph, DeclarationColours colours)
+        {
+            string interfaces = "";
+            if (!skipFirst)
+            {
+                interfaces = $"{currentClass.BaseTypes[0]}";
+                interfaces += ", ";
+            }
+            if (currentClass.BaseTypes.Length > 1)
+            {
+                for (int i = 1; i < currentClass.BaseTypes.Length; i++)
+                {
+                    if (i == currentClass.BaseTypes.Length - 1)
+                    {
+                        interfaces += $"{currentClass.BaseTypes[i]}";
+                    }
+                    else
+                    {
+                        interfaces += $"{currentClass.BaseTypes[i]}, ";
+                    }
+                }
+            }
+
+            paragraph.Inlines.Add(MakeRun("\nImplements ", SettingsModel.Instance.ObjectDefinitionStyle.FontSize,
+                    SettingsModel.Instance.ObjectDefinitionStyle.IsBold, Color.FromRgb(0, 0, 0),
+                    SettingsModel.Instance.ObjectDefinitionStyle.IsItalic));
+            paragraph.Inlines.Add(MakeRun(interfaces, SettingsModel.Instance.ObjectDeclarationStyle.FontSize,
+            SettingsModel.Instance.ObjectDeclarationStyle.IsBold, SettingsModel.Instance.InterfaceDeclarationColour,
+            SettingsModel.Instance.ObjectDeclarationStyle.IsItalic));
         }
 
         private void WriteInterfacesPreview(List<InterfaceDeclaration> interfaces, DeclarationColours colours)
@@ -407,7 +459,9 @@ namespace DocumentationGenerator.MVVM.View
 
         private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
         {
+
             MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+
             int MONITOR_DEFAULTTONEAREST = 0x00000002;
             IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
             if (monitor != IntPtr.Zero)

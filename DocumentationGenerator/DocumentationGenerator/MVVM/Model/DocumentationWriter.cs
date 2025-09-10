@@ -348,11 +348,12 @@ namespace DocumentationGenerator.MVVM.Model
                 FormattedText formatted = paragraph.AddFormattedText(current.Name);
                 formatted.Font.Color = declarationColours.ClassDeclarationColour;
 
-                paragraph = section.AddParagraph($"Definition: {current.Definition}");
                 if (current.BaseTypes != null && current.BaseTypes.Length > 0)
                 {
                     WriteClassInheritancesAndInterfaces(current,paragraph,declarationColours);
                 }
+
+                paragraph = section.AddParagraph($"Definition: {current.Definition}");
 
                 paragraph.Style = ObjectDefinitionStyle;
 
@@ -390,10 +391,9 @@ namespace DocumentationGenerator.MVVM.Model
             }
             else
             {
-                paragraph.AddText($"\nInherits ");
+                formatted = paragraph.AddFormattedText($"\nInherits ");
+                formatted.Style = ObjectStyle;
                 formatted = paragraph.AddFormattedText($"{current.BaseTypes[0]}");
-                formatted.Font.Bold = true;
-                formatted.Font.Italic = false;
                 formatted.Color = declarationColours.ClassDeclarationColour;
             }
 
@@ -401,8 +401,6 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 WriteInterfaceImplementations(true,current,paragraph,declarationColours);
             }
-            
-            
         }
 
         private void WriteInterfaceImplementations(bool skipFirst, ClassDeclaration current, Paragraph paragraph, DeclarationColours declarationColours)
@@ -411,10 +409,10 @@ namespace DocumentationGenerator.MVVM.Model
             if (!skipFirst)
             {
                 interfaces = $"{current.BaseTypes[0]}";
+                interfaces += ", ";
             }
             if (current.BaseTypes.Length > 1)
             {
-                interfaces += ", ";
                 for (int i = 1; i < current.BaseTypes.Length; i++)
                 {
                     if (i == current.BaseTypes.Length - 1)
@@ -428,10 +426,10 @@ namespace DocumentationGenerator.MVVM.Model
                 }
             }
 
-            paragraph.AddText($"\nImplements ");
-            FormattedText formatted = paragraph.AddFormattedText($"{interfaces}");
-            formatted.Font.Bold = true;
-            formatted.Font.Italic = false;
+            FormattedText formatted = paragraph.AddFormattedText($"\nImplements ");
+            formatted.Style = ObjectStyle;
+
+            formatted = paragraph.AddFormattedText($"{interfaces}");
             formatted.Color = declarationColours.InterfaceDeclarationColour;
         }
 

@@ -253,7 +253,6 @@ namespace DocumentationGenerator.MVVM.Model
 
         public void HandleCustomTypes()
         {
-            Thread.Sleep(5000);
             var enumNames = new HashSet<string>(Enums.Select(e => e.Name));
             var structNames = new HashSet<string>(Structs.Select(s => s.Name));
             var interfaceNames = new HashSet<string>(Interfaces.Select(i => i.Name));
