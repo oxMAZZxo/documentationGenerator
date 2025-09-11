@@ -29,9 +29,8 @@ namespace DocumentationGenerator.MVVM.Model
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentStyling documentStyling)
+        public bool WritePDFDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentStyling documentStyling)
         {
-
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
 

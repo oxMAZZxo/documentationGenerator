@@ -37,10 +37,21 @@
                 <StackPanel>
                     <Button Style="{DynamicResource PopupMenuButtons}" Content="Load File/s" ToolTip="Load a file(s) from a directory." Command="{Binding LoadFileCommand}"/>
                     <Button Style="{DynamicResource PopupMenuButtons}" Content="Load Directory" ToolTip="Load a directory of source files." Command="{Binding LoadDirectoryCommand}"/>
-                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Save Doc.." ToolTip="Click to save ALL DATA that is loaded into a PDF, at any location you want." Command="{Binding SaveDocsCommand}"/>
+                    <Button x:Name="ExportButton" Style="{DynamicResource PopupMenuButtons}" Content="Export >" Click="OnExportButtonClick"/>
                     <Button Style="{DynamicResource PopupMenuButtons}" Content="Clear Docs" ToolTip="Click to clear ALL DATA that has been loaded." Command="{Binding ClearDocsCommand}"/>
                     <Separator/>
                     <Button Style="{DynamicResource PopupMenuButtons}" Content="Exit" Command="{Binding ExitAppCommand}"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <!-- Export Menu Popup -->
+        <Popup x:Name="ExportPopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=ExportButton}"
+               Placement="Right" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade">
+            <Border BorderBrush="Black" BorderThickness="1">
+                <StackPanel>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Save to PDF." ToolTip="Click to save ALL DATA that is loaded into a PDF, at any location you want." Command="{Binding ExportPDFDocumentationCommand}" Click="OnExportMenuButtonClicked"/>
+                    <Button Style="{DynamicResource PopupMenuButtons}" Content="Save to HTML." ToolTip="Click if you want to save the documentation in a website format which can be ready to host." Command="{Binding ExportHTMLDocumentationCommand}" Click="OnExportMenuButtonClicked"/>
                 </StackPanel>
             </Border>
         </Popup>

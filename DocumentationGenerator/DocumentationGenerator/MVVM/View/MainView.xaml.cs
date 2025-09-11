@@ -2,6 +2,7 @@
 using DocumentationGenerator.MVVM.ViewModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -560,5 +561,18 @@ namespace DocumentationGenerator.MVVM.View
 
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
+
+
+        private void OnExportButtonClick(object sender, RoutedEventArgs e)
+        {
+            ExportPopup.IsOpen = true;
+        }
+
+        private void OnExportMenuButtonClicked(object sender, RoutedEventArgs e)
+        {
+            // Close both popups
+            FilePopup.IsOpen = false;
+            ExportPopup.IsOpen = false;
+        }
     }
 }

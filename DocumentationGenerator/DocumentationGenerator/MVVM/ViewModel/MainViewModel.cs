@@ -32,7 +32,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         public ICommand LoadFileCommand { get; set; }
         public ICommand LoadDirectoryCommand { get; set; }
-        public ICommand SaveDocsCommand { get; set; }
+        public ICommand ExportPDFDocumentationCommand { get; set; }
+        public ICommand ExportHTMLDocumentationCommand { get; set; }
         public ICommand ClearDocsCommand { get; set; }
         public ICommand OpenSettingsMenuCommand { get; set; }
         public ICommand ExitAppCommand { get; set; }
@@ -62,7 +63,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
             view = mainView;
             
             LoadFileCommand = new RelayCommand(LoadFile);
-            SaveDocsCommand = new RelayCommand(SaveDocs);
+            ExportPDFDocumentationCommand = new RelayCommand(ExportPDFDocumentation);
+            ExportHTMLDocumentationCommand = new RelayCommand(ExportHTMLDocumentation);
             LoadDirectoryCommand = new RelayCommand(LoadDirectory);
             ClearDocsCommand = new RelayCommand(ClearDocs);
             OpenSettingsMenuCommand = new RelayCommand(OpenSettingsMenu);
@@ -81,6 +83,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
             settingsViewModel.PropertyChanged += SettingsViewModelPropertyChanged;
 
             view.ShowDefaultPreviewMessage();
+        }
+
+        private void ExportHTMLDocumentation()
+        {
+            throw new NotImplementedException();
         }
 
         private void ExitApp()
@@ -144,7 +151,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             FileName = "The name of the file/directory loaded will be displayed here.";
         }
 
-        private void SaveDocs()
+        private void ExportPDFDocumentation()
         {
             bool? valid = saveFileDialog.ShowDialog();
 
@@ -164,7 +171,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers, 
                     SettingsModel.Instance.AddDocumentRelationshipGraph,SettingsModel.Instance.PrintBaseTypesToDocument);
 
-                documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
+                documentationWriter.WritePDFDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
 
                 MessageBox.Show("Doc has been created successfully!");
