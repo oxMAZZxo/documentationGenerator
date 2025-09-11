@@ -190,6 +190,27 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+            
+        public bool AddDocumentRelationshipGraph
+        {
+            get => SettingsModel.Instance.AddDocumentRelationshipGraph;
+
+            set
+            {
+                SettingsModel.Instance.AddDocumentRelationshipGraph = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool PrintBaseTypesToDocument
+        {
+            get => SettingsModel.Instance.PrintBaseTypesToDocument;
+            set
+            {
+                SettingsModel.Instance.PrintBaseTypesToDocument = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -219,6 +240,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             GeneratePageNumbers = SettingsModel.Instance.GeneratePageNumbers;
             GenerateTableOfContents = SettingsModel.Instance.GenerateTableOfContents;
+            AddDocumentRelationshipGraph = SettingsModel.Instance.AddDocumentRelationshipGraph;
+            PrintBaseTypesToDocument = SettingsModel.Instance.PrintBaseTypesToDocument;
 
             ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
             ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;

@@ -32,6 +32,8 @@ namespace DocumentationGenerator.MVVM.Model
         public string SelectedFont { get; set; }
         public bool GenerateTableOfContents { get; set; }
         public bool GeneratePageNumbers { get; set; }
+        public bool AddDocumentRelationshipGraph { get; set; }
+        public bool PrintBaseTypesToDocument { get; set; }
         public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
 
         public SettingsModel()
@@ -63,6 +65,8 @@ namespace DocumentationGenerator.MVVM.Model
             SelectedFont = Fonts[0];
             GeneratePageNumbers = true;
             GenerateTableOfContents = true;
+            AddDocumentRelationshipGraph = true;
+            PrintBaseTypesToDocument = true;
 
             ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
             ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
@@ -143,6 +147,10 @@ namespace DocumentationGenerator.MVVM.Model
 
                 GenerateTableOfContents = Convert.ToBoolean(lines[15]);
 
+                AddDocumentRelationshipGraph = Convert.ToBoolean(lines[16]);
+
+                PrintBaseTypesToDocument = Convert.ToBoolean(lines[17]);
+
             }
             catch (Exception ex)
             {
@@ -176,6 +184,8 @@ namespace DocumentationGenerator.MVVM.Model
             writer.WriteLine(SelectedFont);
             writer.WriteLine(GeneratePageNumbers.ToString());
             writer.WriteLine(GenerateTableOfContents.ToString());
+            writer.WriteLine(AddDocumentRelationshipGraph.ToString());
+            writer.WriteLine(PrintBaseTypesToDocument.ToString());
 
             writer.Close();
             writer.Dispose();

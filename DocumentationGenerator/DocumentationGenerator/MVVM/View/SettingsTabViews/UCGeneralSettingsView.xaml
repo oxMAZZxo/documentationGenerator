@@ -22,8 +22,10 @@
     </UserControl.Resources>
     <Grid>
         <StackPanel Orientation="Vertical">
-            <CheckBox Content="Generate Page Numbers" IsChecked="{Binding GeneratePageNumbers}"/>
-            <CheckBox Content="Generate Table Of Contents" IsChecked="{Binding GenerateTableOfContents}"/>
+            <CheckBox Content="Generate Page Numbers." IsChecked="{Binding GeneratePageNumbers}"/>
+            <CheckBox Content="Generate Table Of Contents." IsChecked="{Binding GenerateTableOfContents}"/>
+            <CheckBox Content="Add Object Relationship graph to Document." IsChecked="{Binding AddDocumentRelationshipGraph}"/>
+            <CheckBox Content="Print Base Types to Document." IsChecked="{Binding PrintBaseTypesToDocument}"/>
         </StackPanel>
     </Grid>
 </UserControl>

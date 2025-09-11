@@ -160,7 +160,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers, true);
+                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, 
+                    SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers, 
+                    SettingsModel.Instance.AddDocumentRelationshipGraph,SettingsModel.Instance.PrintBaseTypesToDocument);
 
                 documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);

@@ -1,7 +1,9 @@
+using DocumentationGenerator.MVVM.Helpers;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
+using System.Diagnostics;
 using System.IO;
 
 namespace DocumentationGenerator.MVVM.Model
@@ -50,7 +52,7 @@ namespace DocumentationGenerator.MVVM.Model
 
             if (documentStyling.GenerateRelationshipGraph)
             {
-                string graphPath = GenerateRelationshipGraph(classes, interfaces, documentStyling.DeclarationColours);
+                string graphPath = GenerateRelationshipGraph(classes, interfaces, documentStyling.DeclarationColours,path);
                 Image image = document.AddSection().AddImage(graphPath);
                 image.Width = 500;
             }
@@ -60,7 +62,7 @@ namespace DocumentationGenerator.MVVM.Model
             if (classes != null && classes.Length > 0)
             {
                 alterations = true;
-                WriteClasses(classes,documentStyling.DeclarationColours, document);
+                WriteClasses(classes,documentStyling.DeclarationColours, document, documentStyling.PrintBaseTypes);
             }
 
             if(structs != null && structs.Length > 0)
@@ -107,7 +109,7 @@ namespace DocumentationGenerator.MVVM.Model
             return alterations;
         }
 
-        private string GenerateRelationshipGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours)
+        private string GenerateRelationshipGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours, string path)
         {
             Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
 
@@ -120,14 +122,14 @@ namespace DocumentationGenerator.MVVM.Model
                         foreach(string type in dec.BaseTypes)
                         {
                             Microsoft.Msagl.Drawing.Edge edge = graph.AddEdge(dec.Name, type);
-                            edge.SourceNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.AliceBlue;
+                            edge.SourceNode.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.ClassDeclarationColour);
                             if (type[0] == 'I')
                             {
-                                edge.TargetNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Yellow;
+                                edge.TargetNode.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.InterfaceDeclarationColour);
                             }
                             else
                             {
-                                edge.TargetNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.AliceBlue;
+                                edge.TargetNode.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.ClassDeclarationColour);
                             }
                         }
                     }
@@ -140,7 +142,7 @@ namespace DocumentationGenerator.MVVM.Model
                 {
 
                     Microsoft.Msagl.Drawing.Node node = graph.AddNode(dec.Name);
-                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Yellow;
+                    node.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.InterfaceDeclarationColour);
 
                 }
             }
@@ -153,8 +155,19 @@ namespace DocumentationGenerator.MVVM.Model
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             
             renderer.Render(bitmap);
-            bitmap.Save("C:/Users/mario/Desktop/image.png");
-            return "C:/Users/mario/Desktop/image.png";
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+
+            string imagePath = "";
+            if (directoryInfo.Parent != null)
+            {
+                imagePath = Path.Combine(directoryInfo.Parent.FullName, "graph.png");
+
+                bitmap.Save(imagePath);
+            }else
+            {
+                Debug.WriteLine($"Directory '{directoryInfo.Parent}' does not exist, therefore could not save the image.");
+            }
+            return imagePath;
         }
 
         private void AddTableOfContents(Document document, List<string> entryNames)
@@ -373,7 +386,7 @@ namespace DocumentationGenerator.MVVM.Model
             }
         }
 
-        private void WriteClasses(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document)
+        private void WriteClasses(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, bool printBaseTypes)
         {
             Section section;
             foreach (ClassDeclaration current in classDeclarations)
@@ -386,7 +399,7 @@ namespace DocumentationGenerator.MVVM.Model
                 FormattedText formatted = paragraph.AddFormattedText(current.Name);
                 formatted.Font.Color = declarationColours.ClassDeclarationColour;
 
-                if (current.BaseTypes != null && current.BaseTypes.Length > 0)
+                if (printBaseTypes && current.BaseTypes != null && current.BaseTypes.Length > 0)
                 {
                     WriteClassInheritancesAndInterfaces(current,paragraph,declarationColours);
                 }

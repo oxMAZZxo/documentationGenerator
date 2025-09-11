@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Xceed.Wpf.Toolkit.Core.Converters;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -11,14 +10,16 @@ namespace DocumentationGenerator.MVVM.Model
         public bool GenerateTableOfContents { get; set; }
         public bool GeneratePageNumbers { get; set; }
         public bool GenerateRelationshipGraph { get; set; }
+        public bool PrintBaseTypes { get; set; }
 
-        public DocumentStyling(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph)
+        public DocumentStyling(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes)
         {
             DeclarationColours = declarationColours;
             DeclarationFonts = declarationFonts;
             GenerateTableOfContents = generateTableOfContents;
             GeneratePageNumbers = generatePageNumbers;
             GenerateRelationshipGraph = generateRelationshipGraph;
+            PrintBaseTypes = printBaseTypes;
         }
     }
 

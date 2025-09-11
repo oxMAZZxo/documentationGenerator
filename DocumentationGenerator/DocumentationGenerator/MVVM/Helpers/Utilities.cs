@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace DocumentationGenerator.MVVM.Helpers
             return (byte)((high << 4) + low);
         }
 
-        private static int HexCharToInt(char c)
+        public static int HexCharToInt(char c)
         {
             if (c >= '0' && c <= '9')
                 return c - '0';
@@ -30,6 +31,16 @@ namespace DocumentationGenerator.MVVM.Helpers
                 return c - 'a' + 10;
 
             throw new ArgumentException("Invalid hex character: " + c);
+        }
+
+        public static Microsoft.Msagl.Drawing.Color UIntColourToMSAGLColour(uint r, uint g, uint b)
+        {
+            return new Microsoft.Msagl.Drawing.Color(Convert.ToByte(r),Convert.ToByte(g),Convert.ToByte(b));
+        }
+
+        public static Microsoft.Msagl.Drawing.Color MigraDocColourToMSAGLColour(MigraDoc.DocumentObjectModel.Color color)
+        {
+            return new Microsoft.Msagl.Drawing.Color(Convert.ToByte(color.R), Convert.ToByte(color.G), Convert.ToByte(color.B));
         }
 
     }
