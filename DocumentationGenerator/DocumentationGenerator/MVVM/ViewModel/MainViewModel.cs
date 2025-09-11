@@ -160,10 +160,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers);
+                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers, true);
 
                 documentationWriter.WriteDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
+
+                MessageBox.Show("Doc has been created successfully!");
             }
         }
 
