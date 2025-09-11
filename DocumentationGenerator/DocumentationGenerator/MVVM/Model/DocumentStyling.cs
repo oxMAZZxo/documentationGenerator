@@ -10,13 +10,15 @@ namespace DocumentationGenerator.MVVM.Model
         public DeclarationFontStyles DeclarationFonts { get; set; }
         public bool GenerateTableOfContents { get; set; }
         public bool GeneratePageNumbers { get; set; }
+        public bool GenerateRelationshipGraph { get; set; }
 
-        public DocumentStyling(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers)
+        public DocumentStyling(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph)
         {
             DeclarationColours = declarationColours;
             DeclarationFonts = declarationFonts;
             GenerateTableOfContents = generateTableOfContents;
             GeneratePageNumbers = generatePageNumbers;
+            GenerateRelationshipGraph = generateRelationshipGraph;
         }
     }
 

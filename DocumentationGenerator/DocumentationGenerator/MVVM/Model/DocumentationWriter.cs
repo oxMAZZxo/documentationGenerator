@@ -1,4 +1,5 @@
 using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System.IO;
@@ -28,29 +29,11 @@ namespace DocumentationGenerator.MVVM.Model
         /// <returns></returns>
         public bool WriteDocumentation(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentStyling documentStyling)
         {
+
             if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
             Document document = new Document();
 
             Styles styles = InitialiseDocumentStyles(document.Styles, documentStyling);
-
-            //Microsoft.Msagl.Drawing.Graph graph = new
-            //Microsoft.Msagl.Drawing.Graph("");
-            //graph.AddEdge("A", "B");
-            //graph.AddEdge("A", "B");
-            //graph.FindNode("A").Attr.FillColor =
-            //Microsoft.Msagl.Drawing.Color.Red;
-            //graph.FindNode("B").Attr.FillColor =
-            //Microsoft.Msagl.Drawing.Color.Blue;
-            //Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer
-            //= new Microsoft.Msagl.GraphViewerGdi.GraphRenderer
-            //(graph);
-            //renderer.CalculateLayout();
-            //int width = 500;
-            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, (int)(graph.Height *
-            //(width / graph.Width)), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-            //renderer.Render(bitmap);
-            //bitmap.Save("C:/Users/mario/Desktop/image.png");
-            //document.AddSection().AddImage("C:/Users/mario/Desktop/image.png");
 
             // Add TOC before main content
             if (documentStyling.GenerateTableOfContents) 
@@ -63,6 +46,13 @@ namespace DocumentationGenerator.MVVM.Model
                 if (enums != null) { tocEntries.AddRange(enums.Select(e => e.Name)); }
 
                 AddTableOfContents(document, tocEntries); 
+            }
+
+            if (documentStyling.GenerateRelationshipGraph)
+            {
+                string graphPath = GenerateRelationshipGraph(classes, interfaces, documentStyling.DeclarationColours);
+                Image image = document.AddSection().AddImage(graphPath);
+                image.Width = 500;
             }
             
 
@@ -114,9 +104,57 @@ namespace DocumentationGenerator.MVVM.Model
             // Save the document.
             pdfRenderer.Save(path);
 
-            File.Delete("C:/Users/mario/Desktop/image.png");
-
             return alterations;
+        }
+
+        private string GenerateRelationshipGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours)
+        {
+            Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
+
+            if(classes != null && classes.Length > 0)
+            {
+                foreach(ClassDeclaration dec in classes)
+                {
+                    if (dec.BaseTypes != null && dec.BaseTypes.Length > 0)
+                    {
+                        foreach(string type in dec.BaseTypes)
+                        {
+                            Microsoft.Msagl.Drawing.Edge edge = graph.AddEdge(dec.Name, type);
+                            edge.SourceNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.AliceBlue;
+                            if (type[0] == 'I')
+                            {
+                                edge.TargetNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Yellow;
+                            }
+                            else
+                            {
+                                edge.TargetNode.Attr.FillColor = Microsoft.Msagl.Drawing.Color.AliceBlue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (interfaces != null && interfaces.Length > 0)
+            {
+                foreach (InterfaceDeclaration dec in interfaces)
+                {
+
+                    Microsoft.Msagl.Drawing.Node node = graph.AddNode(dec.Name);
+                    node.Attr.FillColor = Microsoft.Msagl.Drawing.Color.Yellow;
+
+                }
+            }
+
+
+            Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+            renderer.CalculateLayout();
+            int width = 1920;
+            int height = 1080;
+            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            
+            renderer.Render(bitmap);
+            bitmap.Save("C:/Users/mario/Desktop/image.png");
+            return "C:/Users/mario/Desktop/image.png";
         }
 
         private void AddTableOfContents(Document document, List<string> entryNames)
