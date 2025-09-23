@@ -10,8 +10,12 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        <Border BorderBrush="WhiteSmoke" Background="WhiteSmoke" MouseDown="OnChromeBarMouseDown" Grid.Row="0">
+        <Border Grid.ColumnSpan="2" BorderBrush="WhiteSmoke" Background="WhiteSmoke" MouseDown="OnChromeBarMouseDown" Grid.Row="0">
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <Image Source="/Icons/Doc Gen Icon Rounded Corners.png" Margin="3"/>
@@ -31,7 +35,7 @@
 
 
         <!-- File Menu Popup -->
-        <Popup x:Name="FilePopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=FileButton}"
+        <Popup Grid.ColumnSpan="2" x:Name="FilePopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=FileButton}"
                Placement="Bottom" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Scroll">
             <Border>
                 <StackPanel>
@@ -46,7 +50,7 @@
         </Popup>
 
         <!-- Export Menu Popup -->
-        <Popup x:Name="ExportPopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=ExportButton}"
+        <Popup Grid.ColumnSpan="2" x:Name="ExportPopup" Style="{DynamicResource DefaultPopupMenu}" PlacementTarget="{Binding ElementName=ExportButton}"
                Placement="Right" AllowsTransparency="True" StaysOpen="False" PopupAnimation="Fade">
             <Border BorderBrush="Black" BorderThickness="1">
                 <StackPanel>
@@ -56,12 +60,24 @@
             </Border>
         </Popup>
 
-        <Label Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+        <Label Grid.ColumnSpan="2" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Top"
                HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
                FontWeight="Bold" FontSize="20" 
                Margin="10,10" Content="{Binding FileName}"/>
+        
+        <Label Content="Project Name:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="10,50" FontSize="20"></Label>
 
-        <ScrollViewer Grid.Row="1"  Margin="10,70,10,10">
+        <Label Content="Project Description:" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Margin="10,95" FontSize="20"></Label>
+
+        <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Height="30" Margin="10,50" Text="{Binding ProjectName}" ></TextBox>
+
+        <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Height="30" Margin="10,95" Text="{Binding ProjectDescription}"></TextBox>
+
+        <ScrollViewer Grid.ColumnSpan="2" Grid.Row="1"  Margin="10,150,10,10">
             <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="10,10"/>
         </ScrollViewer>
         

@@ -25,9 +25,11 @@
 </ItemGroup>
 
   <ItemGroup>
+    <None Remove="HTML Doc Templates\homePageStyles.css" />
     <None Remove="Icons\Doc Gen Icon Rounded Corners.png" />
     <None Remove="Icons\Doc Gen Icon.png" />
     <None Remove="Icons\favicon.ico" />
+    <None Remove="HTML Doc Templates\helper.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +41,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="HTML Doc Templates\homePageStyles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Icons\Doc Gen Icon Rounded Corners.png" />
     <Resource Include="Icons\Doc Gen Icon.png" />
     <Resource Include="Icons\favicon.ico" />
+    <Content Include="HTML Doc Templates\helper.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

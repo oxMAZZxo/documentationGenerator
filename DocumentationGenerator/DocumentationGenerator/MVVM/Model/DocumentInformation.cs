@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace DocumentationGenerator.MVVM.Model
 {
-    public class DocumentStyling
+    public class DocumentInformation
     {
         public DeclarationColours DeclarationColours { get; set; }
         public DeclarationFontStyles DeclarationFonts { get; set; }
@@ -11,8 +11,10 @@ namespace DocumentationGenerator.MVVM.Model
         public bool GeneratePageNumbers { get; set; }
         public bool GenerateRelationshipGraph { get; set; }
         public bool PrintBaseTypes { get; set; }
+        public string ProjectName { get; set; }
+        public string ProjectDescription { get; set; }
 
-        public DocumentStyling(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes)
+        public DocumentInformation(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
         {
             DeclarationColours = declarationColours;
             DeclarationFonts = declarationFonts;
@@ -20,6 +22,8 @@ namespace DocumentationGenerator.MVVM.Model
             GeneratePageNumbers = generatePageNumbers;
             GenerateRelationshipGraph = generateRelationshipGraph;
             PrintBaseTypes = printBaseTypes;
+            ProjectName = projectName;
+            ProjectDescription = projectDescription;
         }
     }
 

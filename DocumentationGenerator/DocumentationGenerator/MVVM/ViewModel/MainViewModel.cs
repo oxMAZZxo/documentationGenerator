@@ -30,6 +30,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
             } 
         }
 
+        public string ProjectName { get; set; }
+        public string ProjectDescription { get; set; }
+
         public ICommand LoadFileCommand { get; set; }
         public ICommand LoadDirectoryCommand { get; set; }
         public ICommand ExportPDFDocumentationCommand { get; set; }
@@ -85,10 +88,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             view.ShowDefaultPreviewMessage();
         }
 
-        private void ExportHTMLDocumentation()
-        {
-            throw new NotImplementedException();
-        }
+
 
         private void ExitApp()
         {
@@ -150,6 +150,26 @@ namespace DocumentationGenerator.MVVM.ViewModel
             view.ShowDefaultPreviewMessage();
             FileName = "The name of the file/directory loaded will be displayed here.";
         }
+        
+        private void ExportHTMLDocumentation()
+        {
+            openFolderDialog.ShowDialog();
+            
+            DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
+                    SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
+                    SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
+
+                DeclarationFontStyles declarationFontStyles = new DeclarationFontStyles(SettingsModel.Instance.SelectedFont, SettingsModel.Instance.ObjectDeclarationStyle,
+                    SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
+                    SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
+
+                DocumentInformation docInfo = new DocumentInformation(declarationColours, declarationFontStyles,
+                    SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
+                    SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
+
+            documentationWriter.WriteHTMLDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
+                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
+        }
 
         private void ExportPDFDocumentation()
         {
@@ -167,12 +187,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentStyling documentStyling = new DocumentStyling(declarationColours, declarationFontStyles, 
-                    SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers, 
-                    SettingsModel.Instance.AddDocumentRelationshipGraph,SettingsModel.Instance.PrintBaseTypesToDocument);
+                DocumentInformation documentInfo = new DocumentInformation(declarationColours, declarationFontStyles,
+                    SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
+                    SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument,ProjectName,ProjectDescription);
 
                 documentationWriter.WritePDFDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
-                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentStyling);
+                    sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentInfo);
 
                 MessageBox.Show("Doc has been created successfully!");
             }
