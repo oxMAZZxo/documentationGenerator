@@ -167,7 +167,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
                     SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
 
-            documentationWriter.WriteHTMLDocumentation(openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
+            documentationWriter.WriteDocumentation(DocumentationType.HTML,openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
         }
 
@@ -191,7 +191,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
                     SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument,ProjectName,ProjectDescription);
 
-                documentationWriter.WritePDFDocumentation(saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
+                documentationWriter.WriteDocumentation(DocumentationType.PDF, saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentInfo);
 
                 MessageBox.Show("Doc has been created successfully!");

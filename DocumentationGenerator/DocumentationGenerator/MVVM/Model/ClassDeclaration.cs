@@ -17,9 +17,9 @@ namespace DocumentationGenerator.MVVM.Model
         public Declaration[]? Methods { get; set; }
         public Declaration[]? Fields { get; set; }
         public Declaration[]? Properties { get; set; }
-        public string[]? ImplementedInterfaces { get; set; }
+        public string? RelationshipGraphPath { get; set; }
 
-        public ClassDeclaration(string name, string? Definition, string[] baseTypes, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations)
+        public ClassDeclaration(string name, string? Definition, string[] baseTypes, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations, string? relationshipGraphPath = null)
         {
             this.Name = name;
             this.Definition = Definition;
@@ -27,6 +27,7 @@ namespace DocumentationGenerator.MVVM.Model
             this.Methods = methodDeclarations;
             this.Fields = fieldDeclarations;
             this.Properties = propertiesDeclarations;
+            this.RelationshipGraphPath = relationshipGraphPath;
         }
     }
 
