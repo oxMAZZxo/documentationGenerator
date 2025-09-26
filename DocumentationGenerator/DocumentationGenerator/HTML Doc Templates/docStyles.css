@@ -104,9 +104,9 @@ body {
     background: linear-gradient(180deg, #fbfdff, #f7fbff)
 }
 
-.member-body p {
-    margin: 8px 0
-}
+    .member-body p {
+        margin: 8px 0
+    }
 
 .member-footer {
     font-size: 13px;
