@@ -55,73 +55,31 @@
                     <h2>Properties</h2>
 
                     <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ IsAttacking</button>
+                        <button class="member-toggle" onclick="toggleMember(this)">◈ Example Property</button>
                         <div class="member-body">
-                            <p><strong>Signature:</strong> <code>bool IsAttacking</code></p>
-                            <p>Base implementation of a weapon attacking. Should be overriden.</p>
-                            <div class="member-footer">Reimplemented in: <a href="#">Gun</a>, <a href="#">Melee</a>
-                            </div>
+                            <p><strong>Signature:</strong> <code>type ExampleProperty</code></p>
+                            <p>The description of the example property will go here.</p>
                         </div>
                     </article>
+    </div>
 
-                    <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ GetAttackInterval()</button>
-                        <div class="member-body">
-                            <p><strong>Signature:</strong> <code>float GetAttackInterval()</code></p>
-                            <p>Gets the cooldown interval between attacks.</p>
-                        </div>
-                    </article>
+    <div>
+        <h2>Functions & Methods</h2>
 
-                    <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ Flip()</button>
-                        <div class="member-body">
-                            <p><strong>Signature:</strong> <code>void Flip()</code></p>
-                            <p>Flips the weapon horizontally, typically used when the player turns direction.</p>
-                        </div>
-                    </article>
-                </div>
+        <article class="member">
+            <button class="member-toggle" onclick="toggleMember(this)">◈ Attack()</button>
+            <div class="member-body">
+                <p><strong>Signature:</strong> <code>virtual bool Attack()</code></p>
+                <p>Base implementation of a weapon attacking. Should be overriden.</p>
+            </div>
+        </article>
+    </div>
+    </section>
 
-                <div>
-                    <h2>Functions & Methods</h2>
-
-                    <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ Attack()</button>
-                        <div class="member-body">
-                            <p><strong>Signature:</strong> <code>virtual bool Attack()</code></p>
-                            <p>Base implementation of a weapon attacking. Should be overriden.</p>
-                            <div class="member-footer">Reimplemented in: <a href="#">Gun</a>, <a href="#">Melee</a>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ GetAttackInterval()</button>
-                        <div class="member-body">
-                            <p><strong>Signature:</strong> <code>float GetAttackInterval()</code></p>
-                            <p>Gets the cooldown interval between attacks.</p>
-                        </div>
-                    </article>
-
-                    <article class="member">
-                        <button class="member-toggle" onclick="toggleMember(this)">◈ Flip()</button>
-                        <div class="member-body">
-                            <p><strong>Signature:</strong> <code>void Flip()</code></p>
-                            <p>Flips the weapon horizontally, typically used when the player turns direction.</p>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <section class="details">
-                <h2>Detailed Description</h2>
-                <p>Abstract base class for all weapon types. Defines shared behavior such as damage, attack interval,
-                    flipping, and ownership.</p>
-            </section>
-
-            <footer class="doc-footer">
-                <small>Generated from: <code>Core/Weapon.cs</code></small>
-            </footer>
-        </main>
+    <footer class="doc-footer">
+        <small>Generated from: <code>Core/Weapon.cs</code></small>
+    </footer>
+    </main>
     </div>
 </body>
 
