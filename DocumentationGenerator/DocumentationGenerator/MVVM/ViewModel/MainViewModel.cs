@@ -169,6 +169,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             documentationWriter.WriteDocumentation(DocumentationType.HTML,openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
+
+            MessageBox.Show("Exported Successfully");
         }
 
         private void ExportPDFDocumentation()

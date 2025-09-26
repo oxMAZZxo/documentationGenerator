@@ -90,7 +90,6 @@ namespace DocumentationGenerator.MVVM.Model
             if (docInfo.GenerateRelationshipGraph)
             {
                 docInfo.GlobalRelationshipGraph = GenerateRelationshipGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours, outputPath);
-                
             }
 
             if(type == DocumentationType.PDF)
