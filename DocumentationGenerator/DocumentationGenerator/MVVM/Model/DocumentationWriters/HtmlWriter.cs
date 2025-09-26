@@ -21,6 +21,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
+            
             GenerateHomePage(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
             GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
 
@@ -36,7 +37,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(fullName, "objs"));
             if (classes != null && classes.Length > 0)
             {
-                //GenerateClasses(objsDirectory.FullName, classes, docInfo);
+                GenerateClasses(objsDirectory.FullName, classes, docInfo);
             }
         }
 
@@ -85,15 +86,147 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             foreach (ClassDeclaration current in classes)
             {
                 string classOutput = "";
-                StreamWriter streamWriter = new StreamWriter(File.Create(Path.Combine(outputPath, $"{current.Name}.html")));
-                classOutput = GenerateClassTopBody(current);
+                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(outputPath, $"{current.Name}.html")));
+                classOutput = GenerateClassPage(current);
+                writer.Write(classOutput);
+                
             }
         }
 
-        private string GenerateClassTopBody(ClassDeclaration current)
+        private string GenerateClassPage(ClassDeclaration current)
         {
-            //string output = @$"";
-            throw new NotImplementedException();
+            string output = @$"<!DOCTYPE html>
+<html lang=""en"">
+
+<head>
+    <meta charset=""utf-8"" />
+    <meta name=""viewport"" content=""width=device-width,initial-scale=1"" />
+    <title>Everybody Bleeds: {current.Name}</title>
+
+    <link rel=""stylesheet"" href=""../docStyles.css"">
+    <link rel=""stylesheet"" href=""../sidebar.css"">
+    <script src=""../docsHelpers.js"" defer></script>
+</head>
+
+<body>
+    <div class=""page"">
+        <aside class=""sidebar"">
+            <a href=""../"" class=""brand"">
+                <h2>Everybody Bleeds</h2>
+            </a>
+
+        
+
+        <main class=""content"">
+            <header class=""doc-header"">
+                <h1>{current.Name} </h1>
+                <p class=""lead"">{current.Definition}</p>
+            </header>
+
+            <section class=""diagrams"">
+                <div class=""diagram-placeholder""><img src="""" alt=""Diagram""></div>
+            </section>
+
+            <section class=""members"">
+                {GenerateProperties(current.Properties)}
+                {GenerateMethods(current.Methods)}
+            </section>
+
+            <footer class=""doc-footer"">
+                <small>Generated from: <code>Core/Weapon.cs</code></small>
+            </footer>
+            </main>
+            </div>
+        </body>
+
+        </html>";
+
+
+            return output;
+        }
+
+        private string GenerateMethods(Declaration[]? methods)
+        {
+            if (methods == null || methods.Length == 0) { return ""; }
+
+            string output = $@"<div>
+                    <h2>Properties</h2>
+
+                    {GetAllMethods(methods)}
+                </div>";
+
+            return output;
+        }
+
+        private string GetAllMethods(Declaration[] methods)
+        {
+            string output = $@"";
+
+            foreach (Declaration method in methods)
+            {
+                output += $@"<article class=""member"">
+                        <button class=""member-toggle"" onclick=""toggleMember(this)"">◈ {method.Name}</button>
+                        <div class=""member-body"">
+                            <p><strong>Signature:</strong> <code>{method.Type} {method.Name}({GetMethodParameters(method.Parameters)})</code></p>
+                            <p>{method.Definition}</p>
+                        </div>
+                    </article>
+";
+            }
+
+            return output;
+        }
+
+        private string GetMethodParameters(string[]? parameters)
+        {
+            if(parameters == null || parameters.Length == 0) { return ""; }
+            string output = "";
+
+            for(int i = 0; i < parameters.Length; i++)
+            {
+                if(i == parameters.Length -1)
+                {
+                    output += parameters[i];
+                }
+                else
+                {
+                    output += parameters[i] + ", ";
+                }
+            }
+
+            return output;
+        }
+
+        private string GenerateProperties(Declaration[]? properties)
+        {
+            if(properties == null || properties.Length == 0) { return ""; }
+
+            string output = $@"<div>
+                    <h2>Properties</h2>
+
+                    {GetAllProperties(properties)}
+                </div>";
+
+            return output;
+        }
+
+        private string GetAllProperties(Declaration[] properties)
+        {
+            string output = $@"";
+
+            foreach(Declaration property in properties)
+            {
+                output += $@"<article class=""member"">
+                        <button class=""member-toggle"" onclick=""toggleMember(this)"">◈ {property.Name}</button>
+                        <div class=""member-body"">
+                            <p><strong>Signature:</strong> <code>{property.Type} {property.Name}</code></p>
+                            <p>{property.Definition}</p>
+                        </div>
+                    </article>
+";
+            }
+
+            return output;
         }
 
         private string GenerateSideBar(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docinfo)
