@@ -3,8 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Diagnostics;
+using DocumentationGenerator.MVVM.Helpers;
 
-namespace DocumentationGenerator.MVVM.Helpers
+namespace DocumentationGenerator.MVVM.Model.LanguageParsers
 {
     public static class CSharpDeclarationsParser
     {
@@ -196,7 +197,7 @@ namespace DocumentationGenerator.MVVM.Helpers
             IEnumerable<PropertyDeclarationSyntax> properties = classDec.Members.OfType<PropertyDeclarationSyntax>();
             IEnumerable<FieldDeclarationSyntax> fields = classDec.Members.OfType<FieldDeclarationSyntax>();
             IEnumerable<MethodDeclarationSyntax> methods = classDec.Members.OfType<MethodDeclarationSyntax>();
-
+            
             Declaration[]? newProperties = null;
             Declaration[]? newFields = null;
             Declaration[]? newMethods = null;
@@ -237,11 +238,27 @@ namespace DocumentationGenerator.MVVM.Helpers
                 newMethods = new Declaration[methods.Count()];
 
                 index = 0;
-
+                
                 foreach (MethodDeclarationSyntax method in methods)
                 {
+                    string[]? parameters = null;
+                    if (method.ParameterList.Parameters.Count > 0)
+                    {
+                        parameters = new string[method.ParameterList.Parameters.Count];
+                        for (int i = 0; i < method.ParameterList.Parameters.Count; i++)
+                        {
+                            parameters[i] = method.ParameterList.Parameters[i].ToString();
+                        }
+
+                    }
                     newMethods[index] = new Declaration(method.Identifier.Text, GetXML(method, XmlTag.summary),
                         method.ReturnType.ToString(), GetXML(method, XmlTag.returns), IsPrimitiveType(method.ReturnType.ToString()));
+
+                    if(parameters != null && parameters.Length > 0)
+                    {
+                        newMethods[index].Parameters = parameters;
+                    }
+
                     index++;
                 }
             }

@@ -42,6 +42,7 @@ namespace DocumentationGenerator.MVVM.Model
         public string? Definition { get; set; }
         public string? ReturnDefinition { get; set; }
         public bool? IsTypePrimitive { get; set; }
+        public string[]? Parameters { get; set; }
         public ObjectType? WhatIsType { get; set; }
 
         public Declaration(string name, string? definition, string? type = null, string? returns = null, bool? isTypePrimitive = null, ObjectType? objDeclaration = null)

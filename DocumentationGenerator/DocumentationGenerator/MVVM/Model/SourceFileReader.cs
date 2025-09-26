@@ -1,8 +1,9 @@
-using DocumentationGenerator.MVVM.Helpers;
+using DocumentationGenerator.MVVM.Model.LanguageParsers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Diagnostics;
+using System.Drawing.Design;
 using System.IO;
 
 namespace DocumentationGenerator.MVVM.Model
@@ -70,6 +71,8 @@ namespace DocumentationGenerator.MVVM.Model
             {
                 HasData = true;
             }
+
+            
         }
 
         /// <summary>
