@@ -21,9 +21,9 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
-            
-            GenerateHomePage(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
-            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
+            string sidebar = GenerateSideBar(classes, enums, interfaces, structs,docInfo);
+            GenerateHomePage(outputPath.FullName, sidebar, docInfo);
+            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, sidebar,docInfo);
 
             if (docInfo.GenerateRelationshipGraph)
             {
@@ -32,16 +32,16 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return true;
         }
 
-        private void GenerateObjPages(string fullName, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+        private void GenerateObjPages(string fullName, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, string sideBar ,DocumentInformation docInfo)
         {
             DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(fullName, "objs"));
             if (classes != null && classes.Length > 0)
             {
-                GenerateClasses(objsDirectory.FullName, classes, docInfo);
+                GenerateClasses(objsDirectory.FullName, classes, sideBar, docInfo);
             }
         }
 
-        private string GenerateHomePage(string outputPath, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+        private string GenerateHomePage(string outputPath, string sidebar, DocumentInformation docInfo)
         {
             string filePath = Path.Combine(outputPath, "index.html");
 
@@ -62,7 +62,14 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
                 <body> 
                 
-                {GenerateSideBar(classes, enums, interfaces, structs,docInfo)} 
+
+                    <aside class=""sidebar"">
+                <a href=""./"">
+                    <h2>{docInfo.ProjectName}</h2>
+                </a>
+
+                {sidebar}
+            </aside> 
 
                 <!-- Main Content -->
                     <div class=""content"">
@@ -81,21 +88,19 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return filePath;
         }
 
-        private void GenerateClasses(string outputPath,ClassDeclaration[] classes, DocumentInformation docInfo)
+        private void GenerateClasses(string outputPath,ClassDeclaration[] classes,string sidebar ,DocumentInformation docInfo)
         {
             foreach (ClassDeclaration current in classes)
             {
-                string classOutput = "";
                 StreamWriter writer = new StreamWriter(File.Create(Path.Combine(outputPath, $"{current.Name}.html")));
-                classOutput = GenerateClassPage(current);
+                string classOutput = GenerateClassPage(current, sidebar,docInfo);
                 writer.Write(classOutput);
                 writer.Close();
                 writer.Dispose();
-                
             }
         }
 
-        private string GenerateClassPage(ClassDeclaration current)
+        private string GenerateClassPage(ClassDeclaration current, string sidebar, DocumentInformation docInfo)
         {
             string output = @$"<!DOCTYPE html>
 <html lang=""en"">
@@ -103,7 +108,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 <head>
     <meta charset=""utf-8"" />
     <meta name=""viewport"" content=""width=device-width,initial-scale=1"" />
-    <title>Everybody Bleeds: {current.Name}</title>
+    <title>Everybody Bleeds Documentation: {current.Name}</title>
 
     <link rel=""stylesheet"" href=""../docStyles.css"">
     <link rel=""stylesheet"" href=""../sidebar.css"">
@@ -114,8 +119,10 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
     <div class=""page"">
         <aside class=""sidebar"">
             <a href=""../"" class=""brand"">
-                <h2>Everybody Bleeds</h2>
+                <h2>{docInfo.ProjectName}</h2>
             </a>
+
+            {sidebar}
         </aside>
         
 
@@ -130,7 +137,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             </section>
 
             <section class=""members"">
-                {GenerateProperties(current.Properties)}
+                {GenerateVariables(current.Properties)}
                 {GenerateMethods(current.Methods)}
             </section>
 
@@ -199,7 +206,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
-        private string GenerateProperties(Declaration[]? properties)
+        private string GenerateVariables(Declaration[]? properties)
         {
             if(properties == null || properties.Length == 0) { return ""; }
 
@@ -234,42 +241,38 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
         private string GenerateSideBar(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docinfo)
         {
             string output = "";
-            output = @$"<aside class=""sidebar"">
-                            <a href=""./"">
-                                <h2>{docinfo.ProjectName}</h2>
-                            </a>
+            output = @$"
                             <div class=""nav-section"">
                 ";
 
             if (classes != null && classes.Length > 0)
             {
-                output += WriteSiderbarClasses(classes);
+                output += WriteSidebarClasses(classes);
             }
 
             if (interfaces != null && interfaces.Length > 0)
             {
-                output += WriteSiderbarInterfaces(interfaces);
+                output += WriteSidebarInterfaces(interfaces);
             }
 
             if (structs != null && structs.Length > 0)
             {
-                output += WriteSiderbarStructs(structs);
+                output += WriteSidebarStructs(structs);
             }
 
             if (enums != null && enums.Length > 0)
             {
-                output += WriteSiderbarEnums(enums);
+                output += WriteSidebarEnums(enums);
             }
 
 
             output += @"
-                </div>
-            </aside>";
+                </div>";
 
             return output;
         }
 
-        private string WriteSiderbarStructs(StructDeclaration[] structs)
+        private string WriteSidebarStructs(StructDeclaration[] structs)
         {
             string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('structs')"">Structs <span class=""arrow"">▼</span></button>
             <div id=""structs"" class=""nav-links"">
@@ -288,7 +291,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
-        private string WriteSiderbarInterfaces(InterfaceDeclaration[] interfaces)
+        private string WriteSidebarInterfaces(InterfaceDeclaration[] interfaces)
         {
 
             string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('interfaces')"">Interfaces <span class=""arrow"">▼</span></button>
@@ -308,7 +311,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
-        private string WriteSiderbarEnums(EnumDeclaration[] enums)
+        private string WriteSidebarEnums(EnumDeclaration[] enums)
         {
             string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('enums')"">Enums <span class=""arrow"">▼</span></button>
             <div id=""enums"" class=""nav-links"">
@@ -327,7 +330,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
-        private string WriteSiderbarClasses(ClassDeclaration[] classes)
+        private string WriteSidebarClasses(ClassDeclaration[] classes)
         {
             string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('classes')"">Classes <span class=""arrow"">▼</span></button>
             <div id=""classes"" class=""nav-links"">
