@@ -17,10 +17,10 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             DirectoryInfo outputPath = Directory.CreateDirectory(Path.Combine(path, $"{docInfo.ProjectName} Documentation"));
 
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputPath.FullName, "helper.js"), true);
-            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputPath.FullName, "docHelpers.js"), true);
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), Path.Combine(outputPath.FullName, "docsHelpers.js"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
-            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
-            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
             
             GenerateHomePage(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
             GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, docInfo);
@@ -89,6 +89,8 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 StreamWriter writer = new StreamWriter(File.Create(Path.Combine(outputPath, $"{current.Name}.html")));
                 classOutput = GenerateClassPage(current);
                 writer.Write(classOutput);
+                writer.Close();
+                writer.Dispose();
                 
             }
         }
@@ -114,7 +116,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             <a href=""../"" class=""brand"">
                 <h2>Everybody Bleeds</h2>
             </a>
-
+        </aside>
         
 
         <main class=""content"">
@@ -133,13 +135,13 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             </section>
 
             <footer class=""doc-footer"">
-                <small>Generated from: <code>Core/Weapon.cs</code></small>
+                <small>Generated from: <code>Source</code></small>
             </footer>
-            </main>
-            </div>
-        </body>
+        </main>
+    </div>
+</body>
 
-        </html>";
+</html>";
 
 
             return output;

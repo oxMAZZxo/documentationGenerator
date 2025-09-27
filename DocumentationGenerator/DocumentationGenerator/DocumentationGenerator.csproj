@@ -25,7 +25,10 @@
 </ItemGroup>
 
   <ItemGroup>
+    <None Remove="HTML Doc Templates\docsHelpers.js" />
+    <None Remove="HTML Doc Templates\docStyles.css" />
     <None Remove="HTML Doc Templates\homePageStyles.css" />
+    <None Remove="HTML Doc Templates\sidebar.css" />
     <None Remove="Icons\Doc Gen Icon Rounded Corners.png" />
     <None Remove="Icons\Doc Gen Icon.png" />
     <None Remove="Icons\favicon.ico" />
@@ -33,6 +36,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="HTML Doc Templates\docsHelpers.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\docStyles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\sidebar.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icons\favicon.ico" />
   </ItemGroup>
 
