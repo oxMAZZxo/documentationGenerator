@@ -21,9 +21,12 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
-            string sidebar = GenerateSideBar(classes, enums, interfaces, structs,docInfo);
-            GenerateHomePage(outputPath.FullName, sidebar, docInfo);
-            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, sidebar,docInfo);
+
+            string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs,docInfo);
+            GenerateHomePage(outputPath.FullName, homepageSideBar, docInfo);
+
+            string objSideBar = GenerateSideBarForObjs(classes, enums, interfaces, structs, docInfo);
+            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, objSideBar,docInfo);
 
             if (docInfo.GenerateRelationshipGraph)
             {
@@ -237,7 +240,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
             return output;
         }
-
+        #region Sidebar For Home Page
         private string GenerateSideBar(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docinfo)
         {
             string output = "";
@@ -347,5 +350,119 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 ";
             return output;
         }
+        #endregion
+
+
+        #region Sidebar For Object Pages
+        private string GenerateSideBarForObjs(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docinfo)
+        {
+            string output = "";
+            output = @$"
+                            <div class=""nav-section"">
+                ";
+
+            if (classes != null && classes.Length > 0)
+            {
+                output += WriteSidebarClassesForObjs(classes);
+            }
+
+            if (interfaces != null && interfaces.Length > 0)
+            {
+                output += WriteSidebarInterfacesForObjs(interfaces);
+            }
+
+            if (structs != null && structs.Length > 0)
+            {
+                output += WriteSidebarStructsForObjs(structs);
+            }
+
+            if (enums != null && enums.Length > 0)
+            {
+                output += WriteSidebarEnumsForObjs(enums);
+            }
+
+
+            output += @"
+                </div>";
+
+            return output;
+        }
+
+        private string WriteSidebarStructsForObjs(StructDeclaration[] structs)
+        {
+            string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('structs')"">Structs <span class=""arrow"">▼</span></button>
+            <div id=""structs"" class=""nav-links"">
+                    ";
+
+
+            foreach (StructDeclaration current in structs)
+            {
+                output += @$"<a href=""./{current.Name}.html"">{current.Name}</a>";
+            }
+
+
+            output += @"       </div>
+                ";
+
+            return output;
+        }
+
+        private string WriteSidebarInterfacesForObjs(InterfaceDeclaration[] interfaces)
+        {
+
+            string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('interfaces')"">Interfaces <span class=""arrow"">▼</span></button>
+            <div id=""interfaces"" class=""nav-links"">
+                    ";
+
+
+            foreach (InterfaceDeclaration current in interfaces)
+            {
+                output += @$"<a href=""./{current.Name}.html"">{current.Name}</a>";
+            }
+
+
+            output += @"       </div>
+                ";
+
+            return output;
+        }
+
+        private string WriteSidebarEnumsForObjs(EnumDeclaration[] enums)
+        {
+            string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('enums')"">Enums <span class=""arrow"">▼</span></button>
+            <div id=""enums"" class=""nav-links"">
+                    ";
+
+
+            foreach (EnumDeclaration current in enums)
+            {
+                output += @$"<a href=""./{current.Name}.html"">{current.Name}</a>";
+            }
+
+
+            output += @"       </div>
+                ";
+
+            return output;
+        }
+
+        private string WriteSidebarClassesForObjs(ClassDeclaration[] classes)
+        {
+            string output = @$"<button class=""toggle-btn"" onclick=""toggleMenu('classes')"">Classes <span class=""arrow"">▼</span></button>
+            <div id=""classes"" class=""nav-links"">
+                    ";
+
+
+            foreach (ClassDeclaration current in classes)
+            {
+                output += @$"<a href=""./{current.Name}.html"">{current.Name}</a>";
+            }
+
+
+            output += @"       </div>
+                ";
+            return output;
+        }
+        #endregion
     }
 }
