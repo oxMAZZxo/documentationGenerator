@@ -40,7 +40,50 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(fullName, "objs"));
             if (classes != null && classes.Length > 0)
             {
-                GenerateClasses(objsDirectory.FullName, classes, sideBar, docInfo);
+                foreach (ClassDeclaration current in classes)
+                {
+                    StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                    string classOutput = GeneratePage(current.Name,current.Definition, sideBar,docInfo, current.Properties, current.Methods);
+                    writer.Write(classOutput);
+                    writer.Close();
+                    writer.Dispose();
+                }
+            }
+
+            if (interfaces != null && interfaces.Length > 0)
+            {
+                foreach (InterfaceDeclaration current in interfaces)
+                {
+                    StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                    string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
+                    writer.Write(classOutput);
+                    writer.Close();
+                    writer.Dispose();
+                }
+            }
+
+            if (structs != null && structs.Length > 0)
+            {
+                foreach (StructDeclaration current in structs)
+                {
+                    StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                    string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
+                    writer.Write(classOutput);
+                    writer.Close();
+                    writer.Dispose();
+                }
+            }
+
+            if (enums != null && enums.Length > 0)
+            {
+                foreach (EnumDeclaration current in enums)
+                {
+                    StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                    string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, null, null, current.EnumMembers);
+                    writer.Write(classOutput);
+                    writer.Close();
+                    writer.Dispose();
+                }
             }
         }
 
@@ -91,19 +134,8 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return filePath;
         }
 
-        private void GenerateClasses(string outputPath,ClassDeclaration[] classes,string sidebar ,DocumentInformation docInfo)
-        {
-            foreach (ClassDeclaration current in classes)
-            {
-                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(outputPath, $"{current.Name}.html")));
-                string classOutput = GenerateClassPage(current, sidebar,docInfo);
-                writer.Write(classOutput);
-                writer.Close();
-                writer.Dispose();
-            }
-        }
 
-        private string GenerateClassPage(ClassDeclaration current, string sidebar, DocumentInformation docInfo)
+        private string GeneratePage(string objectName, string? objectDefinition, string sidebar, DocumentInformation docInfo, Declaration[]? properties = null, Declaration[]? methods = null, Declaration[]? enumMembers = null)
         {
             string output = @$"<!DOCTYPE html>
 <html lang=""en"">
@@ -111,7 +143,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 <head>
     <meta charset=""utf-8"" />
     <meta name=""viewport"" content=""width=device-width,initial-scale=1"" />
-    <title>Everybody Bleeds Documentation: {current.Name}</title>
+    <title>Everybody Bleeds Documentation: {objectName}</title>
 
     <link rel=""stylesheet"" href=""../docStyles.css"">
     <link rel=""stylesheet"" href=""../sidebar.css"">
@@ -131,8 +163,8 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
         <main class=""content"">
             <header class=""doc-header"">
-                <h1>{current.Name} </h1>
-                <p class=""lead"">{current.Definition}</p>
+                <h1>{objectName} </h1>
+                <p class=""lead"">{objectDefinition}</p>
             </header>
 
             <section class=""diagrams"">
@@ -140,8 +172,9 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             </section>
 
             <section class=""members"">
-                {GenerateVariables(current.Properties)}
-                {GenerateMethods(current.Methods)}
+                {GenerateProperties(properties)}
+                {GenerateMethods(methods)}
+                {GenerateEnumMembers(enumMembers)}
             </section>
 
             <footer class=""doc-footer"">
@@ -157,12 +190,44 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
+        private string GenerateEnumMembers(Declaration[]? enumMembers)
+        {
+            if (enumMembers == null || enumMembers.Length == 0) { return ""; }
+
+            string output = $@"<div>
+                    <h2>Enum Members</h2>
+
+                    {GetAllEnumMembers(enumMembers)}
+                </div>";
+
+            return output;
+        }
+
+        private string GetAllEnumMembers(Declaration[] enumMembers)
+        {
+            string output = $@"";
+
+            foreach (Declaration member in enumMembers)
+            {
+                output += $@"<article class=""member"">
+                        <button class=""member-toggle"" onclick=""toggleMember(this)"">◈ {member.Name}</button>
+                        <div class=""member-body"">
+                            <p><strong>Signature:</strong> <code>{member.Name}</code></p>
+                            <p>{member.Definition}</p>
+                        </div>
+                    </article>
+";
+            }
+
+            return output;
+        }
+
         private string GenerateMethods(Declaration[]? methods)
         {
             if (methods == null || methods.Length == 0) { return ""; }
 
             string output = $@"<div>
-                    <h2>Properties</h2>
+                    <h2>Methods</h2>
 
                     {GetAllMethods(methods)}
                 </div>";
@@ -209,7 +274,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return output;
         }
 
-        private string GenerateVariables(Declaration[]? properties)
+        private string GenerateProperties(Declaration[]? properties)
         {
             if(properties == null || properties.Length == 0) { return ""; }
 
@@ -240,6 +305,8 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
             return output;
         }
+
+
         #region Sidebar For Home Page
         private string GenerateSideBar(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docinfo)
         {
