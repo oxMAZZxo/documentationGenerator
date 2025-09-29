@@ -13,7 +13,7 @@ namespace DocumentationGenerator.MVVM.Model
         public bool PrintBaseTypes { get; set; }
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
-        public string? GlobalRelationshipGraph { get; set; }
+        public string? GlobalRelationshipGraphPath { get; set; }
 
         public DocumentInformation(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription, string? globalRelationshipGraph = null)
         {
@@ -25,7 +25,7 @@ namespace DocumentationGenerator.MVVM.Model
             PrintBaseTypes = printBaseTypes;
             ProjectName = projectName;
             ProjectDescription = projectDescription;
-            GlobalRelationshipGraph = globalRelationshipGraph;
+            GlobalRelationshipGraphPath = globalRelationshipGraph;
         }
     }
 

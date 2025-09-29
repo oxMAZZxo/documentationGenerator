@@ -46,9 +46,9 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 AddTableOfContentsToPDF(document, tocEntries);
             }
 
-            if (docInfo.GlobalRelationshipGraph != null)
+            if (docInfo.GlobalRelationshipGraphPath != null)
             {   
-                Image image = document.AddSection().AddImage(docInfo.GlobalRelationshipGraph);
+                Image image = document.AddSection().AddImage(docInfo.GlobalRelationshipGraphPath);
                 image.Width = 500;
             }
 

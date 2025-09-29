@@ -21,17 +21,16 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
+            if(docInfo.GenerateRelationshipGraph && docInfo.GlobalRelationshipGraphPath != null)
+            {
+                File.Copy(docInfo.GlobalRelationshipGraphPath, Path.Combine(outputPath.FullName, "globalRelationshipGraph.png"), true);
+            }
 
             string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs,docInfo);
             GenerateHomePage(outputPath.FullName, homepageSideBar, docInfo);
 
             string objSideBar = GenerateSideBarForObjs(classes, enums, interfaces, structs, docInfo);
             GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, objSideBar,docInfo);
-
-            if (docInfo.GenerateRelationshipGraph)
-            {
-                // string graphPath = GenerateRelationshipGraph(classes, interfaces, documentStyling.DeclarationColours, path);
-            }
             return true;
         }
 
@@ -90,7 +89,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
         private string GenerateHomePage(string outputPath, string sidebar, DocumentInformation docInfo)
         {
             string filePath = Path.Combine(outputPath, "index.html");
-
+            
             File.Create(filePath).Close();
             StreamWriter streamWriter = new StreamWriter(filePath, false);
 
@@ -121,6 +120,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                     <div class=""content"">
                         <h1>{docInfo.ProjectName}</h1>
                         <p>{docInfo.ProjectDescription}</p>
+                        {GetGlobalRelationshipGraph(docInfo.GenerateRelationshipGraph)}
                     </div>
                 </body>
 
@@ -134,6 +134,11 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return filePath;
         }
 
+        private string GetGlobalRelationshipGraph(bool generateRelationshipGraph)
+        {
+            if(generateRelationshipGraph) { return ""; }
+            return @$"<img src=""./globalRelationshipGraph.png"" alt=""Global Relationship Graph"">";
+        }
 
         private string GeneratePage(string objectName, string? objectDefinition, string sidebar, DocumentInformation docInfo, Declaration[]? properties = null, Declaration[]? methods = null, Declaration[]? enumMembers = null)
         {

@@ -87,20 +87,27 @@ namespace DocumentationGenerator.MVVM.Model
 
         public bool WriteDocumentation(DocumentationType type, string outputPath, ClassDeclaration[]? classDeclarations, EnumDeclaration[]? enumDeclarations, InterfaceDeclaration[]? interfaceDeclarations, StructDeclaration[]? structDeclarations, DocumentInformation docInfo)
         {
+            bool valid = false;
             if (docInfo.GenerateRelationshipGraph)
             {
-                docInfo.GlobalRelationshipGraph = GenerateRelationshipGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours, outputPath);
+                docInfo.GlobalRelationshipGraphPath = GenerateRelationshipGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours, outputPath);
             }
 
             if(type == DocumentationType.PDF)
             {
-                return pdfWriter.Write(outputPath, classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
+                valid = pdfWriter.Write(outputPath, classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
             }
             else
             {
-                return htmlWriter.Write(outputPath, classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
+                valid = htmlWriter.Write(outputPath, classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
             }
 
+            if(docInfo.GenerateRelationshipGraph && docInfo.GlobalRelationshipGraphPath != null)
+            {
+                File.Delete(docInfo.GlobalRelationshipGraphPath);
+            }
+
+            return valid;
         }
 
     }
