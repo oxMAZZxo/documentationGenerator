@@ -1,14 +1,10 @@
 using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model.DocumentationWriters;
-using Microsoft.CodeAnalysis;
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Shapes;
-using MigraDoc.Rendering;
-using PdfSharp.Pdf;
-using System;
 using System.Diagnostics;
 using System.IO;
-using System.Security.AccessControl;
+using Microsoft.Msagl.Drawing;
+using Microsoft.Msagl.GraphViewerGdi;
+using System.Drawing;
 
 namespace DocumentationGenerator.MVVM.Model
 {
@@ -23,9 +19,9 @@ namespace DocumentationGenerator.MVVM.Model
             htmlWriter = new HtmlWriter();
         }
 
-        private string GenerateRelationshipGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours, string path)
+        private string GenerateGlobalRelationshipGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours, string path)
         {
-            Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
+            Graph globalGraph = new Graph("");
 
             if (classes != null && classes.Length > 0)
             {
@@ -35,7 +31,7 @@ namespace DocumentationGenerator.MVVM.Model
                     {
                         foreach (string type in dec.BaseTypes)
                         {
-                            Microsoft.Msagl.Drawing.Edge edge = graph.AddEdge(dec.Name, type);
+                            Edge edge = globalGraph.AddEdge(dec.Name, type);
                             edge.SourceNode.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.ClassDeclarationColour);
                             if (type[0] == 'I')
                             {
@@ -55,18 +51,18 @@ namespace DocumentationGenerator.MVVM.Model
                 foreach (InterfaceDeclaration dec in interfaces)
                 {
 
-                    Microsoft.Msagl.Drawing.Node node = graph.AddNode(dec.Name);
+                    Node node = globalGraph.AddNode(dec.Name);
                     node.Attr.FillColor = Utilities.MigraDocColourToMSAGLColour(declarationColours.InterfaceDeclarationColour);
 
                 }
             }
 
 
-            Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+            GraphRenderer renderer = new GraphRenderer(globalGraph);
             renderer.CalculateLayout();
             int width = 1920;
             int height = 1080;
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             renderer.Render(bitmap);
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
@@ -90,7 +86,7 @@ namespace DocumentationGenerator.MVVM.Model
             bool valid = false;
             if (docInfo.GenerateRelationshipGraph)
             {
-                docInfo.GlobalRelationshipGraphPath = GenerateRelationshipGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours, outputPath);
+                docInfo.GlobalRelationshipGraphPath = GenerateGlobalRelationshipGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours, outputPath);
             }
 
             if(type == DocumentationType.PDF)
@@ -116,23 +112,5 @@ namespace DocumentationGenerator.MVVM.Model
     {
         PDF,
         HTML
-    }
-
-    public struct DeclarationColours
-    {
-        public Color ClassDeclarationColour { get; set; }
-        public Color EnumDeclarationColour { get; set; }
-        public Color PrimitiveDeclarationColour { get; set; }
-        public Color InterfaceDeclarationColour { get; set; }
-        public Color StructDeclarationColour { get; set; }
-
-        public DeclarationColours(Color classDeclarationColour, Color enumDeclarationColour, Color primitiveDeclarationColour, Color interfaceDeclarationColour, Color structDeclarationColour)
-        {
-            ClassDeclarationColour = classDeclarationColour;
-            EnumDeclarationColour = enumDeclarationColour;
-            PrimitiveDeclarationColour = primitiveDeclarationColour;
-            InterfaceDeclarationColour = interfaceDeclarationColour;
-            StructDeclarationColour = structDeclarationColour;
-        }
     }
 }
