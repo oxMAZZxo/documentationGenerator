@@ -4,7 +4,6 @@ using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using DocumentationGenerator.MVVM.ViewModel;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;

@@ -70,6 +70,10 @@ body {
     font-size: 14px
 }
 
+.diagrams img {
+    width: 30%;
+}
+
 /* members list */
 .members h2 {
     margin-top: 8px
