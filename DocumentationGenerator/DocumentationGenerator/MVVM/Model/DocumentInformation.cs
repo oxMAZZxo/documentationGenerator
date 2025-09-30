@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace DocumentationGenerator.MVVM.Model
 {
-    public class DocumentInformation
+    public class DocumentInformation : IDisposable
     {
         public DeclarationColours DeclarationColours { get; set; }
         public DeclarationFontStyles DeclarationFonts { get; set; }
@@ -27,6 +27,19 @@ namespace DocumentationGenerator.MVVM.Model
             PrintBaseTypes = printBaseTypes;
             ProjectName = projectName;
             ProjectDescription = projectDescription;
+        }
+
+        public void Dispose()
+        {
+            if(IndividualObjsGraphs != null)
+            {
+                IndividualObjsGraphs.Clear();
+            }
+
+            if(GlobalInheritanceGraph != null)
+            {
+                GlobalInheritanceGraph.Dispose();
+            }
         }
     }
 
