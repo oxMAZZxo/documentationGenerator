@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Printing;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
@@ -21,20 +23,34 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
-            if(docInfo.GenerateRelationshipGraph && docInfo.GlobalRelationshipGraphPath != null)
+
+            if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
             {
-                File.Copy(docInfo.GlobalRelationshipGraphPath, Path.Combine(outputPath.FullName, "globalRelationshipGraph.png"), true);
+                SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputPath);
             }
 
-            string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs,docInfo);
+            string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs, docInfo);
             GenerateHomePage(outputPath.FullName, homepageSideBar, docInfo);
 
             string objSideBar = GenerateSideBarForObjs(classes, enums, interfaces, structs, docInfo);
-            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, objSideBar,docInfo);
+            GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, objSideBar, docInfo);
             return true;
         }
 
-        private void GenerateObjPages(string fullName, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, string sideBar ,DocumentInformation docInfo)
+        private void SaveBitmaps(Bitmap globalInheritanceGraph, Dictionary<string, Bitmap> individualGraphs, DirectoryInfo outputPath)
+        {
+            globalInheritanceGraph.Save(Path.Combine(outputPath.FullName, "globalInheritanceGraph.png"));
+
+            DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(outputPath.FullName, "objGraphs"));
+
+            foreach(string o in individualGraphs.Keys)
+            {
+                Bitmap bitmap = individualGraphs[o];
+                bitmap.Save(Path.Combine(objsDirectory.FullName, $"{o}_Graph.png"));
+            }
+        }
+
+        private void GenerateObjPages(string fullName, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, string sideBar, DocumentInformation docInfo)
         {
             DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(fullName, "objs"));
             if (classes != null && classes.Length > 0)
@@ -42,7 +58,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 foreach (ClassDeclaration current in classes)
                 {
                     StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
-                    string classOutput = GeneratePage(current.Name,current.Definition, sideBar,docInfo, current.Properties, current.Methods);
+                    string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
                     writer.Write(classOutput);
                     writer.Close();
                     writer.Dispose();
@@ -89,7 +105,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
         private string GenerateHomePage(string outputPath, string sidebar, DocumentInformation docInfo)
         {
             string filePath = Path.Combine(outputPath, "index.html");
-            
+
             File.Create(filePath).Close();
             StreamWriter streamWriter = new StreamWriter(filePath, false);
 
@@ -109,19 +125,19 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 
 
                     <aside class=""sidebar"">
-                <a href=""./"">
-                    <h2>{docInfo.ProjectName}</h2>
-                </a>
+                    <a href=""./"">
+                        <h2>{docInfo.ProjectName}</h2>
+                    </a>
 
-                {sidebar}
-            </aside> 
+                    {sidebar}
+                    </aside> 
 
-                <!-- Main Content -->
-                    <div class=""content"">
-                        <h1>{docInfo.ProjectName}</h1>
-                        <p>{docInfo.ProjectDescription}</p>
-                        {GetGlobalRelationshipGraph(docInfo.GenerateRelationshipGraph)}
-                    </div>
+                    <!-- Main Content -->
+                        <div class=""content"">
+                            <h1>{docInfo.ProjectName}</h1>
+                            <p>{docInfo.ProjectDescription}</p>
+                            {GetGlobalRelationshipGraph(docInfo.GenerateInheritanceGraphs)}
+                        </div>
                 </body>
 
                 </html>";
@@ -134,10 +150,10 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             return filePath;
         }
 
-        private string GetGlobalRelationshipGraph(bool generateRelationshipGraph)
+        private string GetGlobalRelationshipGraph(bool generateHomePageGraph)
         {
-            if(generateRelationshipGraph) { return ""; }
-            return @$"<img src=""./globalRelationshipGraph.png"" alt=""Global Relationship Graph"">";
+            if (!generateHomePageGraph) { return ""; }
+            return @$"<img src=""./globalInheritanceGraph.png"" alt=""Global Relationship Graph"">";
         }
 
         private string GeneratePage(string objectName, string? objectDefinition, string sidebar, DocumentInformation docInfo, Declaration[]? properties = null, Declaration[]? methods = null, Declaration[]? enumMembers = null)
@@ -170,11 +186,10 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             <header class=""doc-header"">
                 <h1>{objectName} </h1>
                 <p class=""lead"">{objectDefinition}</p>
+                
             </header>
 
-            <section class=""diagrams"">
-                <div class=""diagram-placeholder""><img src="""" alt=""Diagram""></div>
-            </section>
+            {GetObjDiagram(objectName, docInfo)}
 
             <section class=""members"">
                 {GenerateProperties(properties)}
@@ -193,6 +208,14 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
 
             return output;
+        }
+
+        private object GetObjDiagram(string objectName,DocumentInformation docInfo)
+        {
+            if (docInfo.IndividualObjsGraphs != null && !docInfo.IndividualObjsGraphs.ContainsKey(objectName)) { return ""; }
+            return @$"            <section class=""diagrams"">
+                <div class=""diagram-placeholder""><img src=""../objGraphs/{objectName}_Graph.png"" alt=""Graph""></div>
+            </section>";
         }
 
         private string GenerateEnumMembers(Declaration[]? enumMembers)
@@ -261,12 +284,12 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
         private string GetMethodParameters(string[]? parameters)
         {
-            if(parameters == null || parameters.Length == 0) { return ""; }
+            if (parameters == null || parameters.Length == 0) { return ""; }
             string output = "";
 
-            for(int i = 0; i < parameters.Length; i++)
+            for (int i = 0; i < parameters.Length; i++)
             {
-                if(i == parameters.Length -1)
+                if (i == parameters.Length - 1)
                 {
                     output += parameters[i];
                 }
@@ -281,7 +304,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
         private string GenerateProperties(Declaration[]? properties)
         {
-            if(properties == null || properties.Length == 0) { return ""; }
+            if (properties == null || properties.Length == 0) { return ""; }
 
             string output = $@"<div>
                     <h2>Properties</h2>
@@ -296,7 +319,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
         {
             string output = $@"";
 
-            foreach(Declaration property in properties)
+            foreach (Declaration property in properties)
             {
                 output += $@"<article class=""member"">
                         <button class=""member-toggle"" onclick=""toggleMember(this)"">◈ {property.Name}</button>

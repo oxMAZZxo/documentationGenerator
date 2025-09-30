@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 
 namespace DocumentationGenerator.MVVM.Model
@@ -9,23 +10,23 @@ namespace DocumentationGenerator.MVVM.Model
         public DeclarationFontStyles DeclarationFonts { get; set; }
         public bool GenerateTableOfContents { get; set; }
         public bool GeneratePageNumbers { get; set; }
-        public bool GenerateRelationshipGraph { get; set; }
+        public bool GenerateInheritanceGraphs { get; set; }
         public bool PrintBaseTypes { get; set; }
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
-        public string? GlobalRelationshipGraphPath { get; set; }
+        public Bitmap? GlobalInheritanceGraph { get; set; }
+        public Dictionary<string, Bitmap>? IndividualObjsGraphs { get; set; }
 
-        public DocumentInformation(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription, string? globalRelationshipGraph = null)
+        public DocumentInformation(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
         {
             DeclarationColours = declarationColours;
             DeclarationFonts = declarationFonts;
             GenerateTableOfContents = generateTableOfContents;
             GeneratePageNumbers = generatePageNumbers;
-            GenerateRelationshipGraph = generateRelationshipGraph;
+            GenerateInheritanceGraphs = generateRelationshipGraph;
             PrintBaseTypes = printBaseTypes;
             ProjectName = projectName;
             ProjectDescription = projectDescription;
-            GlobalRelationshipGraphPath = globalRelationshipGraph;
         }
     }
 

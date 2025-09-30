@@ -4,6 +4,7 @@ using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,9 +47,11 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 AddTableOfContentsToPDF(document, tocEntries);
             }
 
-            if (docInfo.GlobalRelationshipGraphPath != null)
-            {   
-                Image image = document.AddSection().AddImage(docInfo.GlobalRelationshipGraphPath);
+            if (docInfo.GlobalInheritanceGraph != null)
+            {
+                string imgPath = Path.Combine(path, "globalInheritanceGraph.png");
+                docInfo.GlobalInheritanceGraph.Save(imgPath);
+                Image image = document.AddSection().AddImage(imgPath);
                 image.Width = 500;
             }
 
