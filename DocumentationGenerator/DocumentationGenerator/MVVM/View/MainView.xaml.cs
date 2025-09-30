@@ -1,5 +1,6 @@
 ﻿using DocumentationGenerator.MVVM.Model;
 using DocumentationGenerator.MVVM.Model.Declarations;
+using DocumentationGenerator.MVVM.Model.DocumentInformation;
 using DocumentationGenerator.MVVM.ViewModel;
 using System.Runtime.InteropServices;
 using System.Windows;

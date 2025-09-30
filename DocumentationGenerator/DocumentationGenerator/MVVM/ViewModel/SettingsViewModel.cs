@@ -1,5 +1,6 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model;
+using DocumentationGenerator.MVVM.Model.DocumentInformation;
 using DocumentationGenerator.MVVM.View;
 using DocumentationGenerator.MVVM.View.SettingsTabViews;
 using System.Collections.ObjectModel;

@@ -1,5 +1,5 @@
-﻿using DocumentationGenerator.MVVM.Model;
-using DocumentationGenerator.MVVM.Model.Declarations;
+﻿using DocumentationGenerator.MVVM.Model.Declarations;
+using DocumentationGenerator.MVVM.Model.DocumentInformation;
 using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.GraphViewerGdi;
 using System.Diagnostics;

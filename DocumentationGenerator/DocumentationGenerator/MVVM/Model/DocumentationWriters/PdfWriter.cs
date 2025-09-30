@@ -1,14 +1,12 @@
 ﻿using DocumentationGenerator.MVVM.Model.Declarations;
+using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+
 
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {

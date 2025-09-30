@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MigraDoc.DocumentObjectModel;
 
-namespace DocumentationGenerator.MVVM.Model
+namespace DocumentationGenerator.MVVM.Model.DocumentInfo
 {
     public struct DeclarationColours
     {

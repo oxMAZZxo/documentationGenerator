@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.CompilerServices;
 
-namespace DocumentationGenerator.MVVM.Model
+namespace DocumentationGenerator.MVVM.Model.DocumentInfo
 {
     public class DocumentInformation : IDisposable
     {
