@@ -141,7 +141,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
         private void ClearDocs()
         {
             if(sourceFileReader == null || !sourceFileReader.HasData) { return; }
-
+            
             MessageBoxResult result = MessageBox.Show("Are you sure you want to clear all the loaded source files?","Warning!",MessageBoxButton.YesNo);
             if(result == MessageBoxResult.No) { return; }
 
@@ -153,6 +153,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
         
         private void ExportHTMLDocumentation()
         {
+            if (!sourceFileReader.HasData)
+            {
+                MessageBox.Show("You cannot export to PDF, since no source data has been loaded");
+                return;
+            }
+
             openFolderDialog.ShowDialog();
             
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
@@ -175,6 +181,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private void ExportPDFDocumentation()
         {
+            if (!sourceFileReader.HasData)
+            {
+                MessageBox.Show("You cannot export to PDF, since no source data has been loaded");
+                return;
+            }
+
             bool? valid = saveFileDialog.ShowDialog();
 
             if (valid.HasValue && valid.Value == true)
