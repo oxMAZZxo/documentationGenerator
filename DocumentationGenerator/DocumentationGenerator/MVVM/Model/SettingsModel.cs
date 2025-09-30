@@ -1,5 +1,5 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
-using DocumentationGenerator.MVVM.Model.DocumentInformation;
+using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
