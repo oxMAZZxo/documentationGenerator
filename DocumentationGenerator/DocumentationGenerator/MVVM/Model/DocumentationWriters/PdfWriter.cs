@@ -6,8 +6,6 @@ using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System.IO;
 
-
-
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
     public class PdfWriter

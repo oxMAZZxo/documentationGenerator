@@ -1,5 +1,6 @@
 ﻿using DocumentationGenerator.MVVM.Helpers;
 using DocumentationGenerator.MVVM.Model;
+using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using DocumentationGenerator.MVVM.View;
 using Microsoft.Win32;
 using System.ComponentModel;

@@ -1,13 +1,8 @@
 ﻿using DocumentationGenerator.MVVM.Model.Declarations;
-using System;
-using System.Collections.Generic;
+using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+
 
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
