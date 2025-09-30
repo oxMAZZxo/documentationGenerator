@@ -1,4 +1,5 @@
 using DocumentationGenerator.MVVM.Helpers;
+using DocumentationGenerator.MVVM.Model.Declarations;
 using DocumentationGenerator.MVVM.Model.DocumentationWriters;
 using System.Diagnostics;
 using System.IO;

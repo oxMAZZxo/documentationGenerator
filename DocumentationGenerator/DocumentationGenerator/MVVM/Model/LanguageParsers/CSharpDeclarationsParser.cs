@@ -1,9 +1,9 @@
-﻿using DocumentationGenerator.MVVM.Model;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Diagnostics;
 using DocumentationGenerator.MVVM.Helpers;
+using DocumentationGenerator.MVVM.Model.Declarations;
 
 namespace DocumentationGenerator.MVVM.Model.LanguageParsers
 {

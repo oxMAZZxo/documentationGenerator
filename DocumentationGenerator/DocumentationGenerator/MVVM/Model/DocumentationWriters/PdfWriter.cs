@@ -1,4 +1,5 @@
-﻿using MigraDoc.DocumentObjectModel;
+﻿using DocumentationGenerator.MVVM.Model.Declarations;
+using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;

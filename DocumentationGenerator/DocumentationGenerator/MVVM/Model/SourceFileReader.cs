@@ -1,3 +1,4 @@
+using DocumentationGenerator.MVVM.Model.Declarations;
 using DocumentationGenerator.MVVM.Model.LanguageParsers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

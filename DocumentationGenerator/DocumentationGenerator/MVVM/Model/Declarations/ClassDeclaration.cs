@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DocumentationGenerator.MVVM.Model
+namespace DocumentationGenerator.MVVM.Model.Declarations
 {
     /// <summary>
     /// A Class Declaration is a class that is declared within a script file (.cs for example), and can store the classes name, and definition (if has one), along with its fields, properties and methods (and functions).
@@ -20,12 +20,12 @@ namespace DocumentationGenerator.MVVM.Model
 
         public ClassDeclaration(string name, string? Definition, string[] baseTypes, Declaration[]? methodDeclarations, Declaration[]? fieldDeclarations, Declaration[]? propertiesDeclarations)
         {
-            this.Name = name;
+            Name = name;
             this.Definition = Definition;
-            this.BaseTypes = baseTypes;
-            this.Methods = methodDeclarations;
-            this.Fields = fieldDeclarations;
-            this.Properties = propertiesDeclarations;
+            BaseTypes = baseTypes;
+            Methods = methodDeclarations;
+            Fields = fieldDeclarations;
+            Properties = propertiesDeclarations;
         }
     }
 
@@ -45,12 +45,12 @@ namespace DocumentationGenerator.MVVM.Model
 
         public Declaration(string name, string? definition, string? type = null, string? returns = null, bool? isTypePrimitive = null, ObjectType? objDeclaration = null)
         {
-            this.Name = name;
-            this.Type = type;
-            this.Definition = definition;
-            this.ReturnDefinition = returns;
-            this.IsTypePrimitive = isTypePrimitive;
-            this.WhatIsType = objDeclaration;
+            Name = name;
+            Type = type;
+            Definition = definition;
+            ReturnDefinition = returns;
+            IsTypePrimitive = isTypePrimitive;
+            WhatIsType = objDeclaration;
         }
     }
 

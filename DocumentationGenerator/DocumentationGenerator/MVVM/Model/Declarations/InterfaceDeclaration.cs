@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DocumentationGenerator.MVVM.Model
+namespace DocumentationGenerator.MVVM.Model.Declarations
 {
     public struct InterfaceDeclaration
     {
@@ -15,10 +15,10 @@ namespace DocumentationGenerator.MVVM.Model
         
         public InterfaceDeclaration(string name, string? definition, Declaration[]? properties, Declaration[]? methods)
         {
-            this.Name = name;
-            this.Definition = definition;
-            this.Properties = properties;
-            this.Methods = methods;
+            Name = name;
+            Definition = definition;
+            Properties = properties;
+            Methods = methods;
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace DocumentationGenerator.MVVM.Model
+namespace DocumentationGenerator.MVVM.Model.Declarations
 {
     public struct EnumDeclaration
     {
