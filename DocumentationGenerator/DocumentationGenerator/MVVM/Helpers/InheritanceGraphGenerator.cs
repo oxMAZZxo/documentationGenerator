@@ -48,14 +48,13 @@ namespace DocumentationGenerator.MVVM.Helpers
                 }
             }
 
-
+            
             GraphRenderer renderer = new GraphRenderer(globalGraph);
             renderer.CalculateLayout();
-            int width = 1920;
-            int height = 1080;
-            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            renderer.Render(bitmap);
             
+            Bitmap bitmap = new Bitmap(Convert.ToInt32(globalGraph.BoundingBox.Width), Convert.ToInt32(globalGraph.BoundingBox.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            renderer.Render(bitmap);
+
             return bitmap;
         }
 
@@ -127,7 +126,7 @@ namespace DocumentationGenerator.MVVM.Helpers
 
                 renderer.CalculateLayout();
 
-                Bitmap bitmap = new Bitmap(800, 800, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                Bitmap bitmap = new Bitmap(Convert.ToInt32(graph.BoundingBox.Width) * 2, Convert.ToInt32(graph.BoundingBox.Height) * 2, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
                 renderer.Render(bitmap);
                 bitmaps.Add(graphName, bitmap);
