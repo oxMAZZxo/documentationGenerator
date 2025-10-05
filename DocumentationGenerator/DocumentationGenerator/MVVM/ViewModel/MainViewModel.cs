@@ -171,9 +171,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 return;
             }
 
-            FileName = "Exporting. Please Wait......";
-
-
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -209,8 +206,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); 
                 return; 
             }
-
-            FileName = "Exporting. Please Wait......";
 
                 DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
