@@ -151,13 +151,24 @@ namespace DocumentationGenerator.MVVM.Model.LanguageParsers
 
                 foreach (MethodDeclarationSyntax method in methods)
                 {
-                    newMethods[index] = new Declaration(
-                        method.Identifier.Text,
-                        GetXML(method, XmlTag.summary),
-                        method.ReturnType.ToString(),
-                        GetXML(method, XmlTag.returns),
-                        IsPrimitiveType(method.ReturnType.ToString())
-                    );
+                    string[]? parameters = null;
+                    if (method.ParameterList.Parameters.Count > 0)
+                    {
+                        parameters = new string[method.ParameterList.Parameters.Count];
+                        for (int i = 0; i < method.ParameterList.Parameters.Count; i++)
+                        {
+                            parameters[i] = method.ParameterList.Parameters[i].ToString();
+                        }
+
+                    }
+                    newMethods[index] = new Declaration(method.Identifier.Text, GetXML(method, XmlTag.summary),
+                        method.ReturnType.ToString(), GetXML(method, XmlTag.returns), IsPrimitiveType(method.ReturnType.ToString()));
+
+                    if (parameters != null && parameters.Length > 0)
+                    {
+                        newMethods[index].Parameters = parameters;
+                    }
+
                     index++;
                 }
             }
