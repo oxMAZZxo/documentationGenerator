@@ -165,6 +165,15 @@ namespace DocumentationGenerator.MVVM.ViewModel
             
             if((valid.HasValue && valid.Value == false) || !valid.HasValue) { return; }
 
+            if (SettingsModel.Instance == null)
+            {
+                MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null.");
+                return;
+            }
+
+            FileName = "Exporting. Please Wait......";
+
+
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -195,7 +204,13 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if ((valid.HasValue && valid.Value == false) || !valid.HasValue) { return; }
 
-                if (SettingsModel.Instance == null) { MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); return; }
+            if (SettingsModel.Instance == null) 
+            { 
+                MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); 
+                return; 
+            }
+
+            FileName = "Exporting. Please Wait......";
 
                 DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
