@@ -4,6 +4,7 @@ using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using DocumentationGenerator.MVVM.View;
 using Microsoft.Win32;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -160,8 +161,10 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 return;
             }
 
-            openFolderDialog.ShowDialog();
+            bool? valid = openFolderDialog.ShowDialog();
             
+            if((valid.HasValue && valid.Value == false) || !valid.HasValue) { return; }
+
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -177,7 +180,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             documentationWriter.WriteDocumentation(DocumentationType.HTML,openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
 
-            MessageBox.Show("Exported Successfully");
+            Process.Start("explorer.exe", openFolderDialog.FolderName);
         }
 
         private void ExportPDFDocumentation()
@@ -190,8 +193,8 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             bool? valid = saveFileDialog.ShowDialog();
 
-            if (valid.HasValue && valid.Value == true)
-            {
+            if ((valid.HasValue && valid.Value == false) || !valid.HasValue) { return; }
+
                 if (SettingsModel.Instance == null) { MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); return; }
 
                 DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
@@ -209,8 +212,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 documentationWriter.WriteDocumentation(DocumentationType.PDF, saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentInfo);
 
-                MessageBox.Show("Doc has been created successfully!");
-            }
+                Process.Start("explorer.exe", openFolderDialog.FolderName);
+
+            
         }
 
         private void LoadFile()
