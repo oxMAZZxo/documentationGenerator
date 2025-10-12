@@ -5,6 +5,7 @@ using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System.IO;
+using System.Linq;
 
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
@@ -44,9 +45,10 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 AddTableOfContentsToPDF(document, tocEntries);
             }
 
-            if (docInfo.GlobalInheritanceGraph != null)
+            string? parentDirectory = Path.GetDirectoryName(path);
+            if (docInfo.GlobalInheritanceGraph != null && parentDirectory != null)
             {
-                string imgPath = Path.Combine(path, "globalInheritanceGraph.png");
+                string imgPath = Path.Combine(parentDirectory, "globalInheritanceGraph.png");
                 docInfo.GlobalInheritanceGraph.Save(imgPath);
                 Image image = document.AddSection().AddImage(imgPath);
                 image.Width = 500;
@@ -57,7 +59,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             if (classes != null && classes.Length > 0)
             {
                 alterations = true;
-                WriteClassesToPDF(classes, docInfo.DeclarationColours, document, docInfo.PrintBaseTypes);
+                WriteClassesToPDF(classes, docInfo.DeclarationColours, document, docInfo);
             }
 
             if (structs != null && structs.Length > 0)
@@ -320,7 +322,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             }
         }
 
-        private void WriteClassesToPDF(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, bool printBaseTypes)
+        private void WriteClassesToPDF(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo)
         {
             Section section;
             foreach (ClassDeclaration current in classDeclarations)
@@ -333,9 +335,15 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 FormattedText formatted = paragraph.AddFormattedText(current.Name);
                 formatted.Font.Color = declarationColours.ClassDeclarationColour;
 
-                if (printBaseTypes && current.BaseTypes != null && current.BaseTypes.Length > 0)
+                if (docInfo.PrintBaseTypes && current.BaseTypes != null && current.BaseTypes.Length > 0)
                 {
                     WriteClassInheritancesAndInterfacesToPDF(current, paragraph, declarationColours);
+                }
+
+                if(docInfo.GenerateInheritanceGraphs && docInfo.IndividualObjsGraphs != null && docInfo.IndividualObjsGraphs.ContainsKey(current.Name))
+                {
+                    //System.Drawing.Bitmap currentGraph = docInfo.IndividualObjsGraphs[current.Name];
+                    //currentGraph
                 }
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
