@@ -16,9 +16,11 @@ namespace DocumentationGenerator.MVVM.Model.DocumentInfo
         public string ProjectDescription { get; set; }
         public Bitmap? GlobalInheritanceGraph { get; set; }
         public Dictionary<string, Bitmap>? IndividualObjsGraphs { get; set; }
+        public string SavePath { get;  }
 
-        public DocumentInformation(DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
+        public DocumentInformation(string savePath , DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
         {
+            SavePath = savePath;
             DeclarationColours = declarationColours;
             DeclarationFonts = declarationFonts;
             GenerateTableOfContents = generateTableOfContents;

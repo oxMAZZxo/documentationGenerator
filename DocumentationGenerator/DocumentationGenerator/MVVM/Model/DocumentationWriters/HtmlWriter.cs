@@ -8,11 +8,11 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
     public class HtmlWriter
     {
-        public bool Write(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+        public bool Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
+            if (string.IsNullOrEmpty(docInfo.SavePath) || string.IsNullOrWhiteSpace(docInfo.SavePath)) { return false; }
 
-            DirectoryInfo outputPath = Directory.CreateDirectory(Path.Combine(path, $"{docInfo.ProjectName} Documentation"));
+            DirectoryInfo outputPath = Directory.CreateDirectory(Path.Combine(docInfo.SavePath, $"{docInfo.ProjectName} Documentation"));
 
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputPath.FullName, "helper.js"), true);
             File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), Path.Combine(outputPath.FullName, "docsHelpers.js"), true);

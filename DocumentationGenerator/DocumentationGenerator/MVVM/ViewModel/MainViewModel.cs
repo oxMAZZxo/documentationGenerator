@@ -179,11 +179,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentInformation docInfo = new DocumentInformation(declarationColours, declarationFontStyles,
+                DocumentInformation docInfo = new DocumentInformation(openFolderDialog.FolderName, declarationColours, declarationFontStyles,
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
                     SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
 
-            documentationWriter.WriteDocumentation(DocumentationType.HTML,openFolderDialog.FolderName, sourceFileReader.Classes.ToArray(),
+            documentationWriter.WriteDocumentation(DocumentationType.HTML, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
 
             Process.Start("explorer.exe", openFolderDialog.FolderName);
@@ -215,11 +215,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
                     SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
 
-                DocumentInformation documentInfo = new DocumentInformation(declarationColours, declarationFontStyles,
+                DocumentInformation documentInfo = new DocumentInformation(saveFileDialog.FileName, declarationColours, declarationFontStyles,
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
                     SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument,ProjectName,ProjectDescription);
 
-                documentationWriter.WriteDocumentation(DocumentationType.PDF, saveFileDialog.FileName, sourceFileReader.Classes.ToArray(),
+                documentationWriter.WriteDocumentation(DocumentationType.PDF, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentInfo);
 
                 Process.Start("explorer.exe", openFolderDialog.FolderName);

@@ -6,6 +6,7 @@ using MigraDoc.Rendering;
 using PdfSharp.Pdf;
 using System.IO;
 using System.Linq;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 
 namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 {
@@ -25,12 +26,14 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
         /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
         /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
         /// <returns></returns>
-        public bool Write(string path, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+        public bool Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrWhiteSpace(path)) { return false; }
+            if (string.IsNullOrEmpty(docInfo.SavePath) || string.IsNullOrWhiteSpace(docInfo.SavePath)) { return false; }
             Document document = new Document();
 
             Styles styles = InitialiseDocumentStylesForPDF(document.Styles, docInfo);
+
+            AddFirstPage(document, docInfo.ProjectName);
 
             // Add TOC before main content
             if (docInfo.GenerateTableOfContents)
@@ -45,15 +48,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                 AddTableOfContentsToPDF(document, tocEntries);
             }
 
-            string? parentDirectory = Path.GetDirectoryName(path);
-            if (docInfo.GlobalInheritanceGraph != null && parentDirectory != null)
-            {
-                string imgPath = Path.Combine(parentDirectory, "globalInheritanceGraph.png");
-                docInfo.GlobalInheritanceGraph.Save(imgPath);
-                Image image = document.AddSection().AddImage(imgPath);
-                image.Width = 500;
-            }
-
+            AddIntroPage(document, docInfo);
 
             bool alterations = false;
             if (classes != null && classes.Length > 0)
@@ -101,9 +96,42 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
             // Add sample-specific heading with sample project helper function.
 
             // Save the document.
-            pdfRenderer.Save(path);
+            pdfRenderer.Save(docInfo.SavePath);
 
             return alterations;
+        }
+
+        private void AddIntroPage(Document document, DocumentInformation docInfo)
+        {
+            Section section = document.AddSection();
+            Paragraph paragraph = section.AddParagraph($"{docInfo.ProjectName}");
+            paragraph.Format.Font.Color = Color.FromRgb(0,0,0);
+
+            paragraph.Style = ObjectStyle;
+
+            paragraph = section.AddParagraph(docInfo.ProjectDescription);
+            paragraph.Style = ObjectDefinitionStyle;
+
+
+            paragraph = section.AddParagraph("Global Inheritance Graph");
+            paragraph.Style = ObjectStyle;
+
+            string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath);
+            if (docInfo.GlobalInheritanceGraph != null && parentDirectory != null)
+            {
+                string imgPath = Path.Combine(parentDirectory, "globalInheritanceGraph.png");
+                docInfo.GlobalInheritanceGraph.Save(imgPath);
+                Image image = section.AddImage(imgPath);
+                image.Width = 500;
+            }
+        }
+
+        private void AddFirstPage(Document document, string projectName)
+        {
+            Section section = document.AddSection();
+            Paragraph paragraph = section.AddParagraph($"{projectName} Documentation");
+            paragraph.Format.Font.Size = 30;
+            paragraph.Format.Font.Bold = true;
         }
 
         private void AddTableOfContentsToPDF(Document document, List<string> entryNames)
@@ -324,6 +352,7 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
 
         private void WriteClassesToPDF(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo)
         {
+            string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath);
             Section section;
             foreach (ClassDeclaration current in classDeclarations)
             {
@@ -340,10 +369,12 @@ namespace DocumentationGenerator.MVVM.Model.DocumentationWriters
                     WriteClassInheritancesAndInterfacesToPDF(current, paragraph, declarationColours);
                 }
 
-                if(docInfo.GenerateInheritanceGraphs && docInfo.IndividualObjsGraphs != null && docInfo.IndividualObjsGraphs.ContainsKey(current.Name))
+                if(parentDirectory != null && docInfo.GenerateInheritanceGraphs && docInfo.IndividualObjsGraphs != null && docInfo.IndividualObjsGraphs.ContainsKey(current.Name))
                 {
-                    //System.Drawing.Bitmap currentGraph = docInfo.IndividualObjsGraphs[current.Name];
-                    //currentGraph
+                    System.Drawing.Bitmap currentGraph = docInfo.IndividualObjsGraphs[current.Name];
+                    string savePath = Path.Combine(parentDirectory, $"{current.Name}Graph.png");
+                    currentGraph.Save(savePath);
+                    section.AddImage(savePath);
                 }
 
                 paragraph = section.AddParagraph($"Definition: {current.Definition}");
