@@ -22,6 +22,7 @@ namespace DocumentationGenerator
         private MainView? mainView;
         public static App? Instance { get; private set; }
         public bool IsShuttingDown { get; private set; }
+        private WarningView warningView;
 
         public App()
         {
@@ -37,9 +38,15 @@ namespace DocumentationGenerator
             GlobalFontSettings.FontResolver = new SimpleFontResolver();
             Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             new SettingsModel();
+            
+            
             mainView = new MainView();
+            
             mainView.Show();
 
+            warningView = new WarningView();
+            warningView.Owner = mainView;
+            
             this.MainWindow = mainView;
             MainWindow.Closing += MainWindowClosing;
         }
@@ -47,8 +54,12 @@ namespace DocumentationGenerator
         private void MainWindowClosing(object? sender, CancelEventArgs e)
         {
             IsShuttingDown = true;
+            warningView.Close();
             if (SettingsModel.Instance != null) { SettingsModel.Instance.SaveSettings(); }
         }
+
+        public void ShowWarningWindow(string message) { warningView.Show(); warningView.WarningLabel.Content = message; } 
+        public void HideWarningWindow() { warningView.Hide(); } 
     }
 
 

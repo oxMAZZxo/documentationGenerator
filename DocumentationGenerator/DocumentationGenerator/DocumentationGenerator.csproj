@@ -33,6 +33,7 @@
     <None Remove="Icons\Doc Gen Icon.png" />
     <None Remove="Icons\favicon.ico" />
     <None Remove="HTML Doc Templates\helper.js" />
+    <None Remove="Icons\warning-icon.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +60,7 @@
     <Resource Include="Icons\Doc Gen Icon Rounded Corners.png" />
     <Resource Include="Icons\Doc Gen Icon.png" />
     <Resource Include="Icons\favicon.ico" />
+    <Resource Include="Icons\warning-icon.png" />
     <Content Include="HTML Doc Templates\helper.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

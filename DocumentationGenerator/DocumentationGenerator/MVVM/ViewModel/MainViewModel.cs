@@ -171,6 +171,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 return;
             }
 
+            App.Instance?.ShowWarningWindow("Please wait while exporting to HTML...");
+
+
             DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -183,8 +186,11 @@ namespace DocumentationGenerator.MVVM.ViewModel
                     SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
                     SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
 
+
             documentationWriter.WriteDocumentation(DocumentationType.HTML, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
+
+            App.Instance?.HideWarningWindow();
 
             Process.Start("explorer.exe", openFolderDialog.FolderName);
         }
@@ -206,8 +212,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
                 MessageBox.Show($"Could not save document as the settings could not be retrieved. Settings Instance is null."); 
                 return; 
             }
+            App.Instance?.ShowWarningWindow("Please wait while exporting to PDF...");
 
-                DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
+            DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                     SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                     SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
 
@@ -221,8 +228,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
                 documentationWriter.WriteDocumentation(DocumentationType.PDF, sourceFileReader.Classes.ToArray(),
                     sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), documentInfo);
+            App.Instance?.HideWarningWindow();
 
-                Process.Start("explorer.exe", openFolderDialog.FolderName);
+            Process.Start("explorer.exe", openFolderDialog.FolderName);
 
             
         }
@@ -235,13 +243,12 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
 
-            FileName = "Reading File, PLEASE WAIT...";
-
             LoadFileAsync();
         }
 
         private async void LoadFileAsync()
         {
+            App.Instance?.ShowWarningWindow("Please wait while reading file...");
             ProgLanguage progLanguage = ProgLanguage.CSharp;
 
             //switch (openFileDialog.FilterIndex)
@@ -251,7 +258,7 @@ namespace DocumentationGenerator.MVVM.ViewModel
             //}
 
             await sourceFileReader.ReadSourceFilesAsync(openFileDialog.FileNames,progLanguage);
-
+            App.Instance?.HideWarningWindow();
             FileName = $"File Name: {openFileDialog.SafeFileName}";
         }
 
@@ -262,8 +269,6 @@ namespace DocumentationGenerator.MVVM.ViewModel
             bool? valid = openFolderDialog.ShowDialog();
 
             if ((valid.HasValue && valid.Value == false) || valid.HasValue == false) { return; }
-
-            FileName = "Reading Directory, PLEASE WAIT...";
 
             LoadDirectoryAsync();
 
@@ -285,7 +290,9 @@ namespace DocumentationGenerator.MVVM.ViewModel
 
         private async void LoadDirectoryAsync()
         {
+            App.Instance?.ShowWarningWindow("Please wait while reading the directory....");
             await sourceFileReader.ReadSourceDirectory(openFolderDialog.FolderName,ProgLanguage.CSharp);
+            App.Instance?.HideWarningWindow();
 
             FileName = $"Directory: {openFolderDialog.SafeFolderName}";
 
