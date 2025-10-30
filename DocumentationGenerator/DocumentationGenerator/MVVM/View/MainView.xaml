@@ -72,10 +72,10 @@
                Margin="10,95" FontSize="20"></Label>
 
         <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                 Height="30" Margin="10,50" Text="{Binding ProjectName}" ></TextBox>
+                 Height="30" Margin="10,50" Text="{Binding ProjectName}" PreviewTextInput="OnTextBoxPreviewTextInput" ></TextBox>
 
         <TextBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                 Height="30" Margin="10,95" Text="{Binding ProjectDescription}"></TextBox>
+                 Height="30" Margin="10,95" Text="{Binding ProjectDescription}" PreviewTextInput="OnTextBoxPreviewTextInput"></TextBox>
 
         <ScrollViewer Grid.ColumnSpan="2" Grid.Row="1"  Margin="10,150,10,10">
             <RichTextBox IsReadOnly="True" x:Name="myRichTextBox" VerticalScrollBarVisibility="Auto" Grid.Row="1" Margin="10,10"/>

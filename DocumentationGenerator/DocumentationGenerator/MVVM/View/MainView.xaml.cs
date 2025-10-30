@@ -2,6 +2,7 @@
 using DocumentationGenerator.MVVM.Model.Declarations;
 using DocumentationGenerator.MVVM.Model.DocumentInfo;
 using DocumentationGenerator.MVVM.ViewModel;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Documents;
@@ -16,7 +17,7 @@ namespace DocumentationGenerator.MVVM.View
     /// </summary>
     public partial class MainView : Window
     {
-
+        private const string INVALID_CHARACTERS = @"""<>";
         public MainView()
         {
             InitializeComponent();
@@ -30,9 +31,11 @@ namespace DocumentationGenerator.MVVM.View
             HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
         }
 
+        #region PreviewUpdates
+
         public void ChangeRichTextBoxFont()
         {
-            if(SettingsModel.Instance == null) { return; }
+            if (SettingsModel.Instance == null) { return; }
 
             myRichTextBox.FontFamily = new FontFamily(SettingsModel.Instance.SelectedFont);
         }
@@ -405,6 +408,8 @@ namespace DocumentationGenerator.MVVM.View
             }
         }
 
+        #endregion
+
         private void OnFileButtonClick(object sender, RoutedEventArgs e)
         {
             FilePopup.IsOpen = true;
@@ -446,6 +451,8 @@ namespace DocumentationGenerator.MVVM.View
                 OnMaximizeButtonClicked(sender, e);
             }
         }
+
+        #region Windows_WindowControl
 
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -563,6 +570,7 @@ namespace DocumentationGenerator.MVVM.View
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
 
+        #endregion
 
         private void OnExportButtonClick(object sender, RoutedEventArgs e)
         {
@@ -574,6 +582,27 @@ namespace DocumentationGenerator.MVVM.View
             // Close both popups
             FilePopup.IsOpen = false;
             ExportPopup.IsOpen = false;
+        }
+
+        private void OnTextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (CheckCharacters(e.Text[0], INVALID_CHARACTERS))
+            {
+                e.Handled = true;
+                MessageBox.Show($"The character '{e.Text[0]}' is a banned character. You can't enter it into this textbox.");
+            }
+        }
+
+        private bool CheckCharacters(char c, string s)
+        {
+            for(int i = 0; i < s.Length; i++)
+            {
+                if(s[i] == c)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
