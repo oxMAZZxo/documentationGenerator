@@ -7,17 +7,21 @@
     xmlns:vm="using:DocumentationGenerator.ViewModels"
     Title="DocumentationGenerator"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="600"
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
+    SystemDecorations="None"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
-    <!--  Below snippet will allow the 
-    creation of a custom Window of 200x200, where there is no 
-    titlebar, no chrome bar, and the systems close, minimise and maximise buttons  -->
+    <!--
+        Below snippet will allow the
+        creation of a custom Window of 200x200, where there is no
+        titlebar, no chrome bar, and the systems close, minimise and maximise buttons
+    -->
     <!--
         Width="200"
         Height="200"
-        WindowStartupLocation="CenterScreen"
+        
         Background="Transparent"
         TransparencyBackgroundFallback="Transparent"
         ExtendClientAreaToDecorationsHint="True"
@@ -36,7 +40,7 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="50,*" RowDefinitions="200,0">
+    <Grid ColumnDefinitions="250,*" RowDefinitions="80,*">
         <Border
             Grid.Row="0"
             Grid.ColumnSpan="2"
@@ -47,14 +51,68 @@
                     <Button VerticalAlignment="Top" Content="Settings" />
                     <Button VerticalAlignment="Top" Content="Help" />
                 </StackPanel>
-                <!-- <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button Content="_" />
-                    <Button Content="[ ]" />
-                    <Button Content="X" Background="Red" Command="{Binding CloseButtonCommand}"/>
-                </StackPanel>-->
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button VerticalAlignment="Top" Content="_" />
+                    <Button VerticalAlignment="Top" Content="[ ]" />
+                    <Button
+                        VerticalAlignment="Top"
+                        Background="Red"
+                        Command="{Binding CloseButtonCommand}"
+                        Content="X" />
+                </StackPanel>
 
             </Grid>
-
         </Border>
+
+        <Label
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Loaded Data Name DIsplayed here." 
+            FontSize="20"/>          
+
+        <Label
+            Grid.Row="1"
+
+            Margin="10,50"
+
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Project Name:"
+            FontSize="20" />
+
+        <Label
+            Grid.Row="1"
+            Margin="10,95"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Content="Project Description:"
+            FontSize="20" />
+
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="2"
+            Height="30"
+            Margin="10,50"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top" />
+
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="2"
+            Height="30"
+            Margin="10,95"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top" />
+
+        <ScrollViewer
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="10,150,10,10"
+            >
+            <TextBox Watermark="Ttype some text." 
+            HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap"/>
+        </ScrollViewer>
     </Grid>
 </Window>
