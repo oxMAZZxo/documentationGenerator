@@ -10,7 +10,23 @@
     d:DesignWidth="800"
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
-    mc:Ignorable="d" ExtendClientAreaToDecorationsHint="True">
+    mc:Ignorable="d">
+    <!--  Below snippet will allow the 
+    creation of a custom Window of 200x200, where there is no 
+    titlebar, no chrome bar, and the systems close, minimise and maximise buttons  -->
+    <!--
+        Width="200"
+        Height="200"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        TransparencyBackgroundFallback="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="None"
+        BorderBrush="Transparent"
+        BorderThickness="0"
+    -->
 
     <Design.DataContext>
         <!--
@@ -24,20 +40,19 @@
         <Border
             Grid.Row="0"
             Grid.ColumnSpan="2"
-            
             BorderBrush="WhiteSmoke">
             <Grid>
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button Content="File" VerticalAlignment="Top"/>
-                    <Button Content="Settings" VerticalAlignment="Top"/>
-                    <Button Content="Help" VerticalAlignment="Top"/>
+                    <Button VerticalAlignment="Top" Content="File" />
+                    <Button VerticalAlignment="Top" Content="Settings" />
+                    <Button VerticalAlignment="Top" Content="Help" />
                 </StackPanel>
                 <!-- <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Content="_" />
                     <Button Content="[ ]" />
                     <Button Content="X" Background="Red" Command="{Binding CloseButtonCommand}"/>
-                </StackPanel> -->
-                
+                </StackPanel>-->
+
             </Grid>
 
         </Border>
