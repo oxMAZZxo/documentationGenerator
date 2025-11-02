@@ -10,7 +10,7 @@
     d:DesignWidth="800"
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico"
-    mc:Ignorable="d" >
+    mc:Ignorable="d" ExtendClientAreaToDecorationsHint="True">
 
     <Design.DataContext>
         <!--
@@ -28,15 +28,16 @@
             BorderBrush="WhiteSmoke">
             <Grid>
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button Content="File" />
-                    <Button Content="Settings" />
-                    <Button Content="Help" />
+                    <Button Content="File" VerticalAlignment="Top"/>
+                    <Button Content="Settings" VerticalAlignment="Top"/>
+                    <Button Content="Help" VerticalAlignment="Top"/>
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <!-- <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                     <Button Content="_" />
                     <Button Content="[ ]" />
-                    <Button Content="X" Background="Red" Command="CloseButtonCommand"/>
-                </StackPanel>
+                    <Button Content="X" Background="Red" Command="{Binding CloseButtonCommand}"/>
+                </StackPanel> -->
+                
             </Grid>
 
         </Border>
