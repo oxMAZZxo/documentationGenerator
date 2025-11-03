@@ -69,14 +69,12 @@
             Grid.ColumnSpan="2"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Content="Loaded Data Name DIsplayed here." 
-            FontSize="20"/>          
+            Content="Loaded Data Name DIsplayed here."
+            FontSize="20" />
 
         <Label
             Grid.Row="1"
-
             Margin="10,50"
-
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Content="Project Name:"
@@ -96,7 +94,8 @@
             Height="30"
             Margin="10,50"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Top" />
+            VerticalAlignment="Top" 
+            Watermark="Enter this projects name."/>
 
         <TextBox
             Grid.Row="1"
@@ -104,15 +103,18 @@
             Height="30"
             Margin="10,95"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Top" />
+            VerticalAlignment="Top" 
+            Watermark="Describe this projects in a few short words."/>
 
         <ScrollViewer
             Grid.Row="1"
             Grid.ColumnSpan="2"
-            Margin="10,150,10,10"
-            >
-            <TextBox Watermark="Ttype some text." 
-            HorizontalAlignment="Stretch" VerticalAlignment="Top" TextWrapping="Wrap"/>
+            Margin="10,150,10,10">
+            <TextBox
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                TextWrapping="Wrap"
+                Watermark="Ttype some text." />
         </ScrollViewer>
     </Grid>
 </Window>
