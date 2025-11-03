@@ -9,10 +9,11 @@
     d:DesignHeight="450"
     d:DesignWidth="600"
     x:DataType="vm:MainWindowViewModel"
-    Icon="/Assets/avalonia-logo.ico"
+    Icon="/Assets/Doc Gen Icon.png"
     SystemDecorations="None"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    PointerPressed="OnChromeBarPointerDown" DoubleTapped="OnWindowDoubleTap">
     <!--
         Below snippet will allow the
         creation of a custom Window of 200x200, where there is no
@@ -39,24 +40,55 @@
         -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
+    <Window.Styles>
+        <Style Selector="Button.ChromeButton">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
 
-    <Grid ColumnDefinitions="250,*" RowDefinitions="80,*">
+        <Style Selector="Button.CloseButton">
+            <Setter Property="CornerRadius" Value="5,0,5,5"/>
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="Red" />
+            </Style>
+        </Style>
+    </Window.Styles>
+    <Grid ColumnDefinitions="250,*" RowDefinitions="50,*">
         <Border
             Grid.Row="0"
             Grid.ColumnSpan="2"
             BorderBrush="WhiteSmoke">
             <Grid>
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Button VerticalAlignment="Top" Content="File" />
-                    <Button VerticalAlignment="Top" Content="Settings" />
-                    <Button VerticalAlignment="Top" Content="Help" />
+                    <Image
+                        Margin="3"
+                        VerticalAlignment="Top"
+                        Source="avares://DocumentationGenerator/Assets/Doc Gen Icon Rounded Corners.png" />
+                    <Button Classes="ChromeButton" Content="File" />
+                    <Button Classes="ChromeButton" Content="Settings" />
+                    <Button Classes="ChromeButton" Content="Help" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button VerticalAlignment="Top" Content="_" />
-                    <Button VerticalAlignment="Top" Content="[ ]" />
                     <Button
-                        VerticalAlignment="Top"
-                        Background="Red"
+                        Width="50"
+                        Height="50"
+                        Classes="ChromeButton"
+                        Content="_" Click="OnMinimiseButtonClicked"/>
+                    <Button x:Name="MaximiseButton"
+                        Width="50"
+                        Height="50"
+                        Classes="ChromeButton"
+                        Content="[ ]" Click="OnMaximiseButtonClicked"/>
+                    <Button
+                        Width="50"
+                        Height="50"
+                        Classes="ChromeButton CloseButton"
                         Command="{Binding CloseButtonCommand}"
                         Content="X" />
                 </StackPanel>
@@ -94,8 +126,8 @@
             Height="30"
             Margin="10,50"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Top" 
-            Watermark="Enter this projects name."/>
+            VerticalAlignment="Top"
+            Watermark="Enter this projects name." />
 
         <TextBox
             Grid.Row="1"
@@ -103,8 +135,8 @@
             Height="30"
             Margin="10,95"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Top" 
-            Watermark="Describe this projects in a few short words."/>
+            VerticalAlignment="Top"
+            Watermark="Describe this projects in a few short words." />
 
         <ScrollViewer
             Grid.Row="1"
@@ -113,6 +145,7 @@
             <TextBox
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
+                AcceptsReturn="True"
                 TextWrapping="Wrap"
                 Watermark="Ttype some text." />
         </ScrollViewer>
