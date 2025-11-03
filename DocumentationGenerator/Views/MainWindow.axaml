@@ -1,37 +1,19 @@
-<Window
-    x:Class="DocumentationGenerator.Views.MainWindow"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:DocumentationGenerator.ViewModels"
-    Title="DocumentationGenerator"
-    d:DesignHeight="450"
-    d:DesignWidth="600"
-    x:DataType="vm:MainWindowViewModel"
-    Icon="/Assets/Doc Gen Icon.png"
-    SystemDecorations="None"
-    WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d"
-    PointerPressed="OnChromeBarPointerDown" DoubleTapped="OnWindowDoubleTap">
-    <!--
-        Below snippet will allow the
-        creation of a custom Window of 200x200, where there is no
-        titlebar, no chrome bar, and the systems close, minimise and maximise buttons
-    -->
-    <!--
-        Width="200"
-        Height="200"
-        
-        Background="Transparent"
-        TransparencyBackgroundFallback="Transparent"
+<Window x:Class="DocumentationGenerator.Views.MainWindow"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DocumentationGenerator.ViewModels"
+        Title="DocumentationGenerator"
+        MinWidth="500"
+        MinHeight="500"
+        d:DesignHeight="400"
+        d:DesignWidth="500"
+        x:DataType="vm:MainWindowViewModel"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="-1"
-        SystemDecorations="None"
-        BorderBrush="Transparent"
-        BorderThickness="0"
-    -->
+        Icon="/Assets/Doc Gen Icon.png"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
 
     <Design.DataContext>
         <!--
@@ -40,6 +22,7 @@
         -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
+
     <Window.Styles>
         <Style Selector="Button.ChromeButton">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -49,105 +32,51 @@
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="CornerRadius" Value="5" />
         </Style>
 
         <Style Selector="Button.CloseButton">
-            <Setter Property="CornerRadius" Value="5,0,5,5"/>
+            <Setter Property="CornerRadius" Value="5,0,5,5" />
             <Style Selector="^:pointerover /template/ ContentPresenter">
                 <Setter Property="Background" Value="Red" />
             </Style>
         </Style>
     </Window.Styles>
     <Grid ColumnDefinitions="250,*" RowDefinitions="50,*">
-        <Border
-            Grid.Row="0"
-            Grid.ColumnSpan="2"
-            BorderBrush="WhiteSmoke">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="WhiteSmoke">
             <Grid>
                 <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                    <Image
-                        Margin="3"
-                        VerticalAlignment="Top"
-                        Source="avares://DocumentationGenerator/Assets/Doc Gen Icon Rounded Corners.png" />
+                    <Image Margin="3" VerticalAlignment="Top" Source="avares://DocumentationGenerator/Assets/Doc Gen Icon Rounded Corners.png" />
                     <Button Classes="ChromeButton" Content="File" />
                     <Button Classes="ChromeButton" Content="Settings" />
                     <Button Classes="ChromeButton" Content="Help" />
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                    <Button
-                        Width="50"
-                        Height="50"
-                        Classes="ChromeButton"
-                        Content="_" Click="OnMinimiseButtonClicked"/>
-                    <Button x:Name="MaximiseButton"
-                        Width="50"
-                        Height="50"
-                        Classes="ChromeButton"
-                        Content="[ ]" Click="OnMaximiseButtonClicked"/>
-                    <Button
-                        Width="50"
-                        Height="50"
-                        Classes="ChromeButton CloseButton"
-                        Command="{Binding CloseButtonCommand}"
-                        Content="X" />
-                </StackPanel>
+
 
             </Grid>
         </Border>
 
-        <Label
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Loaded Data Name DIsplayed here."
-            FontSize="20" />
+        <Label Grid.Row="1" Grid.ColumnSpan="2" Margin="10"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Content="Loaded File/Directory name will be displayed here."
+               FontSize="20" />
 
-        <Label
-            Grid.Row="1"
-            Margin="10,50"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Project Name:"
-            FontSize="20" />
+        <Label Grid.Row="1" Margin="10,50" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Content="Project Name:" FontSize="20" />
 
-        <Label
-            Grid.Row="1"
-            Margin="10,95"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Content="Project Description:"
-            FontSize="20" />
+        <Label Grid.Row="1" Margin="10,95" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Content="Project Description:" FontSize="20" />
 
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="2"
-            Height="30"
-            Margin="10,50"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Watermark="Enter this projects name." />
+        <TextBox Grid.Row="1" Grid.Column="2" Height="30"
+                 Margin="10,50" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Watermark="Enter this projects name." />
 
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="2"
-            Height="30"
-            Margin="10,95"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Watermark="Describe this projects in a few short words." />
+        <TextBox Grid.Row="1" Grid.Column="2" Height="30"
+                 Margin="10,95" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Watermark="Describe this projects in a few short words." />
 
-        <ScrollViewer
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="10,150,10,10">
-            <TextBox
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Top"
-                AcceptsReturn="True"
-                TextWrapping="Wrap"
-                Watermark="Ttype some text." />
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="10,150,10,10">
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" AcceptsReturn="True"
+                     TextWrapping="Wrap" Watermark="Ttype some text." />
         </ScrollViewer>
     </Grid>
 </Window>
