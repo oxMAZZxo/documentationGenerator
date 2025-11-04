@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using DocumentationGenerator.ViewModels;
 
@@ -15,5 +16,10 @@ public partial class SettingsWindowView : Window
     private void OnCloseButtonClicked(object? sender, RoutedEventArgs e)
     {
         this.Hide();
+    }
+
+    private void OnTopGridPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        this.BeginMoveDrag(e);
     }
 }
