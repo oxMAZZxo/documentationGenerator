@@ -33,15 +33,18 @@ public class SettingsViewModel : BaseViewModel
             OnPropertyChanged(nameof(SelectedTab));
         }
     }
-
+    public bool GeneratePageNumbers { get; set; }
+    public bool GenerateTableOfContents { get; set; }
+    public bool AddDocumentRelationshipGraph { get; set; }
+    public bool PrintBaseTypesToDocument { get; set; }
 
     public SettingsViewModel()
     {
         UC_GeneralSettings = new UCGeneralSettings();
         UC_ColourSettings = new UCColourSettings();
         UC_FontSettings = new UCFontSettings();
-        SelectedTab = SettingsTab.General;
-
+        SelectedTab = SettingsTab.Colours;
+        
     }
 
     private void ChangeUC()
