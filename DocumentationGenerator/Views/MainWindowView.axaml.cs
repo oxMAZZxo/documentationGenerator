@@ -59,7 +59,13 @@ public partial class MainWindowView : Window
 
     private void OnFileButtonClicked(object? sender, RoutedEventArgs e)
     {
-        FilePopup.Open();
+        if(FilePopup.IsOpen)
+        {
+            FilePopup.Close();
+        }else
+        {
+            FilePopup.Open();
+        }        
     }
 
     private void OnExportButtonClicked(object? sender, RoutedEventArgs e)

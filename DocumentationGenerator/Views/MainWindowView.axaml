@@ -13,41 +13,11 @@
         ExtendClientAreaToDecorationsHint="True"
         Icon="/Assets/Doc Gen Icon.png"
         WindowStartupLocation="CenterScreen"
-        mc:Ignorable="d" >
+        mc:Ignorable="d">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
-
-    <Window.Styles>
-        <Style Selector="Button.ChromeButton">
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="20" />
-            <Setter Property="Height" Value="50" />
-            <Setter Property="VerticalAlignment" Value="Top" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="CornerRadius" Value="5" />
-        </Style>
-
-        <Style Selector="Button.CloseButton">
-            <Setter Property="CornerRadius" Value="5,0,5,5" />
-            <Style Selector="^:pointerover /template/ ContentPresenter">
-                <Setter Property="Background" Value="Red" />
-            </Style>
-        </Style>
-
-        <Style Selector="Button.MenuButton">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderBrush" Value="Transparent" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="5" />
-        </Style>
-    </Window.Styles>
     <Border BorderBrush="#3a3a3a" BorderThickness="1">
         <Grid ColumnDefinitions="250,*" RowDefinitions="50,*">
             <StackPanel Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Orientation="Horizontal">
@@ -60,6 +30,11 @@
             <Popup x:Name="FilePopup" Grid.ColumnSpan="2" Focusable="True"
                    Placement="BottomEdgeAlignedLeft"
                    PlacementTarget="{Binding ElementName=FileButton}">
+                <Popup.Styles>
+                    <Style Selector="Border">
+                        <Setter Property="CornerRadius" Value="10" />
+                    </Style>
+                </Popup.Styles>
                 <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
                     <StackPanel>
                         <Button Classes="MenuButton" Content="Load File/s" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a file(s) from a directory." />
