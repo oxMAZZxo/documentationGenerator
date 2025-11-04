@@ -59,7 +59,7 @@
                 <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
                     <StackPanel>
                         <Button Classes="MenuButton" Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
-                        <Button Classes="MenuButton" Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
+                        <Button Classes="MenuButton" Content="Export to HTML." Command="{Binding ExportHTMLDocumentationCommand}" ToolTip.Tip="All data will be compiled into a HTML website." />
                     </StackPanel>
                 </Border>
             </Popup>
@@ -78,11 +78,11 @@
 
             <TextBox Grid.Row="1" Grid.Column="2" Height="30"
                      Margin="10,50" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                     Watermark="Enter this projects name." />
+                     Watermark="Enter this projects name." Text="{Binding ProjectName}" />
 
             <TextBox Grid.Row="1" Grid.Column="2" Height="30"
                      Margin="10,95" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                     Watermark="Describe this projects in a few short words." />
+                     Watermark="Describe this projects in a few short words." Text="{Binding ProjectDescription}" />
 
             <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="10,150,10,10">
                 <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" AcceptsReturn="True"

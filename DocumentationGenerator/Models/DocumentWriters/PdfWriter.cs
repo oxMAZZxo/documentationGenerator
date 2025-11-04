@@ -29,7 +29,7 @@ public class PdfWriter
     /// <returns></returns>
     public bool Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
     {
-        if (string.IsNullOrEmpty(docInfo.SavePath) || string.IsNullOrWhiteSpace(docInfo.SavePath)) { return false; }
+        if (string.IsNullOrEmpty(docInfo.SavePath.Path.ToString()) || string.IsNullOrWhiteSpace(docInfo.SavePath.Path.ToString())) { return false; }
         Document document = new Document();
 
         Styles styles = InitialiseDocumentStylesForPDF(document.Styles, docInfo);
@@ -97,7 +97,7 @@ public class PdfWriter
         // Add sample-specific heading with sample project helper function.
 
         // Save the document.
-        pdfRenderer.Save(docInfo.SavePath);
+        pdfRenderer.Save(docInfo.SavePath.Path.ToString());
 
         return alterations;
     }
@@ -117,7 +117,7 @@ public class PdfWriter
         paragraph = section.AddParagraph("Global Inheritance Graph");
         paragraph.Style = ObjectStyle;
 
-        string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath);
+        string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath.Path.ToString());
         if (docInfo.GlobalInheritanceGraph != null && parentDirectory != null)
         {
             string imgPath = Path.Combine(parentDirectory, "globalInheritanceGraph.png");
@@ -353,7 +353,7 @@ public class PdfWriter
 
     private void WriteClassesToPDF(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo)
     {
-        string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath);
+        string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath.Path.ToString());
         Section section;
         foreach (ClassDeclaration current in classDeclarations)
         {

@@ -1,36 +1,66 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DocumentationGenerator.Models.DocumentWriters;
 
 public class HtmlWriter
 {
-    public bool Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+    public async Task<bool> Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
     {
-        if (string.IsNullOrEmpty(docInfo.SavePath) || string.IsNullOrWhiteSpace(docInfo.SavePath)) { return false; }
+        if (string.IsNullOrEmpty(docInfo.SavePath.Path.ToString()) || string.IsNullOrWhiteSpace(docInfo.SavePath.Path.ToString())) { return false; }
 
-        DirectoryInfo outputPath = Directory.CreateDirectory(Path.Combine(docInfo.SavePath, $"{docInfo.ProjectName} Documentation"));
+        IStorageFolder? outputFolder = await docInfo.SavePath.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
+        if (outputFolder == null) { return false; }
 
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputPath.FullName, "helper.js"), true);
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), Path.Combine(outputPath.FullName, "docsHelpers.js"), true);
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputPath.FullName, "homePageStyles.css"), true);
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputPath.FullName, "sidebar.css"), true);
-        File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputPath.FullName, "docStyles.css"), true);
+        await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), outputFolder);
+        await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), outputFolder);
+        await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), outputFolder);
+        await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), outputFolder);
+        await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), outputFolder);
+        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputFolder.Path.ToString(), "helper.js"), true);
+        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), Path.Combine(outputFolder.Path.ToString(), "docsHelpers.js"), true);
+        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputFolder.Path.ToString(), "homePageStyles.css"), true);
+        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputFolder.Path.ToString(), "sidebar.css"), true);
+        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputFolder.Path.ToString(), "docStyles.css"), true);
 
         if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
         {
-            SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputPath);
+            // SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputFolder.Path.ToString());
         }
 
         string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs, docInfo);
-        GenerateHomePage(outputPath.FullName, homepageSideBar, docInfo);
+        await GenerateHomePage(outputFolder, homepageSideBar, docInfo);
 
         string objSideBar = GenerateSideBarForObjs(classes, enums, interfaces, structs, docInfo);
-        GenerateObjPages(outputPath.FullName, classes, enums, interfaces, structs, objSideBar, docInfo);
+        await GenerateObjPages(outputFolder, classes, enums, interfaces, structs, objSideBar, docInfo);
+        return true;
+    }
+
+    private async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
+    {
+        if (!File.Exists(sourceFilePath)) { return false; }
+
+        IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
+
+        if (copyFile == null) { return false; }
+
+        FileStream sourceStream = File.OpenRead(sourceFilePath);
+        Stream destinationStream = await copyFile.OpenWriteAsync();
+
+        await sourceStream.CopyToAsync(destinationStream);
+        destinationStream.Close();
+        destinationStream.Dispose();
+        sourceStream.Close();
+        await sourceStream.DisposeAsync();
+        copyFile.Dispose();
+
         return true;
     }
 
@@ -47,18 +77,24 @@ public class HtmlWriter
         }
     }
 
-    private void GenerateObjPages(string fullName, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, string sideBar, DocumentInformation docInfo)
+    private async Task GenerateObjPages(IStorageFolder parentFolder, ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, string sideBar, DocumentInformation docInfo)
     {
-        DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(fullName, "objs"));
+        IStorageFolder? folder = await parentFolder.CreateFolderAsync("objs");
+        if (folder == null) { return; }
+
         if (classes != null && classes.Length > 0)
         {
             foreach (ClassDeclaration current in classes)
             {
-                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
+                if (storageFile == null) { continue; }
+                Stream stream = await storageFile.OpenWriteAsync();
+                StreamWriter writer = new StreamWriter(stream);
                 string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                writer.Write(classOutput);
-                writer.Close();
-                writer.Dispose();
+                await writer.WriteAsync(classOutput);
+                writer.Close(); writer.Dispose();
+                stream.Close(); await stream.DisposeAsync();
+                storageFile.Dispose();
             }
         }
 
@@ -66,11 +102,16 @@ public class HtmlWriter
         {
             foreach (InterfaceDeclaration current in interfaces)
             {
-                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                
+                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
+                if (storageFile == null) { continue; }
+                Stream stream = await storageFile.OpenWriteAsync();
+                StreamWriter writer = new StreamWriter(stream);
                 string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                writer.Write(classOutput);
-                writer.Close();
-                writer.Dispose();
+                await writer.WriteAsync(classOutput);
+                writer.Close(); writer.Dispose();
+                stream.Close(); await stream.DisposeAsync();
+                storageFile.Dispose();
             }
         }
 
@@ -78,11 +119,16 @@ public class HtmlWriter
         {
             foreach (StructDeclaration current in structs)
             {
-                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                
+                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
+                if (storageFile == null) { continue; }
+                Stream stream = await storageFile.OpenWriteAsync();
+                StreamWriter writer = new StreamWriter(stream);
                 string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                writer.Write(classOutput);
-                writer.Close();
-                writer.Dispose();
+                await writer.WriteAsync(classOutput);
+                writer.Close(); writer.Dispose();
+                stream.Close(); await stream.DisposeAsync();
+                storageFile.Dispose();
             }
         }
 
@@ -90,21 +136,27 @@ public class HtmlWriter
         {
             foreach (EnumDeclaration current in enums)
             {
-                StreamWriter writer = new StreamWriter(File.Create(Path.Combine(objsDirectory.FullName, $"{current.Name}.html")));
+                
+                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
+                if (storageFile == null) { continue; }
+                Stream stream = await storageFile.OpenWriteAsync();
+                StreamWriter writer = new StreamWriter(stream);
                 string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, null, null, current.EnumMembers);
-                writer.Write(classOutput);
-                writer.Close();
-                writer.Dispose();
+                await writer.WriteAsync(classOutput);
+                writer.Close(); writer.Dispose();
+                stream.Close(); await stream.DisposeAsync();
+                storageFile.Dispose();
             }
         }
     }
 
-    private string GenerateHomePage(string outputPath, string sidebar, DocumentInformation docInfo)
+    private async Task<bool> GenerateHomePage(IStorageFolder outputPath, string sidebar, DocumentInformation docInfo)
     {
-        string filePath = Path.Combine(outputPath, "index.html");
+        // string filePath = Path.Combine(outputPath, "index.html");
+        IStorageFile? file = await outputPath.CreateFileAsync("index.html");
+        if (file == null) { return false; }
 
-        File.Create(filePath).Close();
-        StreamWriter streamWriter = new StreamWriter(filePath, false);
+        Stream stream = await file.OpenWriteAsync();
 
         string output = @$"<!DOCTYPE html>
                 <html lang=""en"">
@@ -139,12 +191,14 @@ public class HtmlWriter
 
                 </html>";
 
-
-        streamWriter.Write(output);
+        StreamWriter streamWriter = new StreamWriter(stream);
+        await streamWriter.WriteAsync(output);
         streamWriter.Close();
         streamWriter.Dispose();
-
-        return filePath;
+        stream.Close();
+        stream.Dispose();
+        file.Dispose();
+        return true;
     }
 
     private string GetGlobalRelationshipGraph(bool generateHomePageGraph)

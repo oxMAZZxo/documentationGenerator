@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 
 namespace DocumentationGenerator.Models.DocumentInfo;
 
@@ -18,9 +19,9 @@ public class DocumentInformation : IDisposable
     public string ProjectDescription { get; set; }
     public Bitmap? GlobalInheritanceGraph { get; set; }
     public Dictionary<string, Bitmap>? IndividualObjsGraphs { get; set; }
-    public string SavePath { get; }
+    public IStorageFolder SavePath { get; }
 
-    public DocumentInformation(string savePath, DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
+    public DocumentInformation(IStorageFolder savePath, DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
     {
         SavePath = savePath;
         DeclarationColours = declarationColours;
