@@ -8,24 +8,51 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
-    <AvaloniaResource Include="Assets\**"/>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaXaml Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="HTML Doc Templates\docsHelpers.js" />
+    <None Remove="HTML Doc Templates\docStyles.css" />
+    <None Remove="HTML Doc Templates\helper.js" />
+    <None Remove="HTML Doc Templates\homePageStyles.css" />
+    <None Remove="HTML Doc Templates\sidebar.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="HTML Doc Templates\docsHelpers.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\docStyles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\helper.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\homePageStyles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HTML Doc Templates\sidebar.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <AvaloniaXaml Remove="Models\**"/>
-    <EmbeddedResource Remove="Models\**"/>
-    <None Remove="Models\**"/>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.6"/>
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.6"/>
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.6"/>
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.6"/>
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.6"/>
+    <PackageReference Include="Avalonia" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.6" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.6" />
     <PackageReference Include="Avalonia.Diagnostics" Version="11.3.6">
       <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0"/>
-    <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.1"/>
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.14.0" />
+    <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.1" />
   </ItemGroup>
 </Project>
