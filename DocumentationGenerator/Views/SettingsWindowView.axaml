@@ -12,6 +12,7 @@
         d:DesignHeight="500"
         d:DesignWidth="600"
         x:DataType="vm:SettingsViewModel"
+        Background="#1a1a1a"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
         WindowStartupLocation="CenterOwner"
@@ -22,21 +23,21 @@
     <Window.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
     </Window.Resources>
-    <Grid RowDefinitions="50,*,50">
-        <Border>
-            <StackPanel Orientation="Horizontal">
-                <RadioButton Classes="TabRadioButton" Content="General" 
-                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.General}}" />
-                <RadioButton Classes="TabRadioButton" Content="Colours" 
-                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Colours}}"/>
-                <RadioButton Classes="TabRadioButton" Content="Other" 
-                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Fonts}}"/>
-            </StackPanel>
-        </Border>
+    <Border BorderBrush="#333333" BorderThickness="1">
+        <Grid RowDefinitions="50,*,50">
+            <Border>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Classes="TabRadioButton" Content="General" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.General}}" />
+                    <RadioButton Classes="TabRadioButton" Content="Colours" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Colours}}" />
+                    <RadioButton Classes="TabRadioButton" Content="Other" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Fonts}}" />
+                </StackPanel>
+            </Border>
 
-        <UserControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding CurrentUserControl}"/>
+            <UserControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding CurrentUserControl}" />
 
-        <Button Grid.Row="2" HorizontalAlignment="Right" Click="OnCloseButtonClicked" Content="Close" />
-    </Grid>
+            <Button Grid.Row="2" Margin="5" HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom" Click="OnCloseButtonClicked" Content="Close" />
+        </Grid>
+    </Border>
 
 </Window>
