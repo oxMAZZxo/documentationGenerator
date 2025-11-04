@@ -1,31 +1,26 @@
-﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using Avalonia;
+﻿using System.Windows.Input;
+using Avalonia.Controls;
 using DocumentationGenerator.Helpers;
+using DocumentationGenerator.Views;
 
 namespace DocumentationGenerator.ViewModels;
 
-public class MainWindowViewModel : INotifyPropertyChanged
+public class MainWindowViewModel : BaseViewModel
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
-    public ICommand CloseButtonCommand { get; set; }
+    private Window owner;
+    public ICommand SettingsButtonCommand { get; set; }
+    private SettingsWindowView settingsView;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public void OnPropertyChanged([CallerMemberName]string? name = null)
+    public MainWindowViewModel(Window owner)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        this.owner = owner;
+        settingsView = new SettingsWindowView();
+        SettingsButtonCommand = new RelayCommand(OnSettingsButtonClicked);
     }
 
-    public MainWindowViewModel()
+    private void OnSettingsButtonClicked()
     {
-        CloseButtonCommand = new RelayCommand(OnCloseButtonClicked);
+        settingsView.ShowDialog(owner);
     }
 
-    private void OnCloseButtonClicked()
-    {
-        Environment.Exit(0);
-    }
 }

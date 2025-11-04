@@ -1,0 +1,42 @@
+<Window x:Class="DocumentationGenerator.Views.SettingsWindowView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:helpers="using:DocumentationGenerator.Helpers"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DocumentationGenerator.ViewModels"
+        Width="700"
+        Height="600"
+        MinWidth="500"
+        MinHeight="500"
+        d:DesignHeight="500"
+        d:DesignWidth="600"
+        x:DataType="vm:SettingsViewModel"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:SettingsViewModel />
+    </Design.DataContext>
+    <Window.Resources>
+        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </Window.Resources>
+    <Grid RowDefinitions="50,*,50">
+        <Border>
+            <StackPanel Orientation="Horizontal">
+                <RadioButton Classes="TabRadioButton" Content="General" 
+                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.General}}" />
+                <RadioButton Classes="TabRadioButton" Content="Colours" 
+                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Colours}}"/>
+                <RadioButton Classes="TabRadioButton" Content="Other" 
+                IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Fonts}}"/>
+            </StackPanel>
+        </Border>
+
+        <UserControl Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Content="{Binding CurrentUserControl}"/>
+
+        <Button Grid.Row="2" HorizontalAlignment="Right" Click="OnCloseButtonClicked" Content="Close" />
+    </Grid>
+
+</Window>

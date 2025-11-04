@@ -1,0 +1,115 @@
+<Window x:Class="DocumentationGenerator.Views.MainWindowView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:DocumentationGenerator.ViewModels"
+        Title="Documentation Generator"
+        MinWidth="500"
+        MinHeight="500"
+        d:DesignHeight="400"
+        d:DesignWidth="500"
+        x:DataType="vm:MainWindowViewModel"
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/Doc Gen Icon.png"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button.ChromeButton">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
+
+        <Style Selector="Button.CloseButton">
+            <Setter Property="CornerRadius" Value="5,0,5,5" />
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="Red" />
+            </Style>
+        </Style>
+
+        <Style Selector="Button.MenuButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
+    </Window.Styles>
+    <Grid ColumnDefinitions="250,*" RowDefinitions="50,*">
+        <Border Grid.Row="0" Grid.ColumnSpan="2" BorderBrush="WhiteSmoke">
+            <Grid>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Image Margin="3" VerticalAlignment="Top" Source="avares://DocumentationGenerator/Assets/Doc Gen Icon Rounded Corners.png" />
+                    <Button x:Name="FileButton" Classes="ChromeButton" Click="OnFileButtonClicked" Content="File" />
+                    <Button Classes="ChromeButton" Content="Settings" Command="{Binding SettingsButtonCommand}"/>
+                    <Button Classes="ChromeButton" Content="Help" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Popup x:Name="FilePopup" Grid.ColumnSpan="2" Focusable="True"
+               Placement="BottomEdgeAlignedLeft"
+               PlacementTarget="{Binding ElementName=FileButton}">
+            <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
+                <StackPanel>
+                    <Button Classes="MenuButton" Content="Load File/s" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a file(s) from a directory." />
+                    <Button Classes="MenuButton" Content="Load Directory" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a whole directory (inlcudes sub-directories)." />
+                    <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
+                            Content="Export..." PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
+                    <Button Classes="MenuButton" Content="Clear Docs" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Delete all the loaded data and start over." />
+                    <Button Classes="MenuButton" Content="Exit" PointerEntered="OnMenuButtonPointerOver" />
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Popup x:Name="ExportPopup" Grid.ColumnSpan="2" Placement="RightEdgeAlignedTop" PlacementTarget="{Binding ElementName=ExportButton}">
+            <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
+                <StackPanel>
+                    <Button Classes="MenuButton" Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
+                    <Button Classes="MenuButton" Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
+                </StackPanel>
+            </Border>
+        </Popup>
+
+
+        <Label Grid.Row="1" Grid.ColumnSpan="2" Margin="10"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Content="Loaded File/Directory name will be displayed here."
+               FontSize="20" />
+
+        <Label Grid.Row="1" Margin="10,50" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Content="Project Name:" FontSize="20" />
+
+        <Label Grid.Row="1" Margin="10,95" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Content="Project Description:" FontSize="20" />
+
+        <TextBox Grid.Row="1" Grid.Column="2" Height="30"
+                 Margin="10,50" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Watermark="Enter this projects name." />
+
+        <TextBox Grid.Row="1" Grid.Column="2" Height="30"
+                 Margin="10,95" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                 Watermark="Describe this projects in a few short words." />
+
+        <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="10,150,10,10">
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" AcceptsReturn="True"
+                     TextWrapping="Wrap" Watermark="Ttype some text." />
+        </ScrollViewer>
+    </Grid>
+</Window>
