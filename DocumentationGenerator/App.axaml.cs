@@ -4,6 +4,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using DocumentationGenerator.Views;
+using Avalonia.Controls;
 
 namespace DocumentationGenerator;
 
@@ -22,7 +23,7 @@ public partial class App : Application
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindowView();
-            desktop.ShutdownMode = Avalonia.Controls.ShutdownMode.OnMainWindowClose;
+            desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
         }
 
         base.OnFrameworkInitializationCompleted();

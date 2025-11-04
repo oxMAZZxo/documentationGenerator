@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Avalonia.Controls;
+using DocumentationGenerator.Models;
 using DocumentationGenerator.Views.SettingsViews;
 
 namespace DocumentationGenerator.ViewModels;
@@ -12,7 +13,6 @@ public class SettingsViewModel : BaseViewModel
     private UCGeneralSettings UC_GeneralSettings;
     private UCColourSettings UC_ColourSettings;
     private UCFontSettings UC_FontSettings;
-
 
     public UserControl CurrentUserControl
     {
@@ -45,7 +45,7 @@ public class SettingsViewModel : BaseViewModel
         UC_ColourSettings = new UCColourSettings();
         UC_FontSettings = new UCFontSettings();
         SelectedTab = SettingsTab.Colours;
-        
+        new SettingsModel();
     }
 
     private void ChangeUC()
