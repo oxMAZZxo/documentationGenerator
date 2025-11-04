@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models;
 using DocumentationGenerator.Views;
-using PdfSharp.Snippets.Font;
 
 namespace DocumentationGenerator.ViewModels;
 
@@ -63,6 +56,7 @@ public class MainWindowViewModel : BaseViewModel
     public MainWindowViewModel(Window owner)
     {
         this.owner = owner;
+        owner.Closing += OnAppShuttingDown;
         settingsView = new SettingsWindowView();
         LoadFileCommand = new RelayCommand(LoadFile);
         LoadDirectoryCommand = new RelayCommand(LoadDirectory);
@@ -78,6 +72,11 @@ public class MainWindowViewModel : BaseViewModel
 
         FileName = "Loaded File(s) / Directory name will be displayed here.";
         Output = "Preview will be displayed here.";
+    }
+
+    private void OnAppShuttingDown(object? sender, WindowClosingEventArgs e)
+    {
+        SettingsModel.Instance.SaveSettings();
     }
 
     private void InitDialogs()
@@ -106,7 +105,7 @@ public class MainWindowViewModel : BaseViewModel
 
     private void ExportToHTML()
     {
-        throw new NotImplementedException();
+
     }
 
     private void ExportToPDF()

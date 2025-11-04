@@ -113,17 +113,20 @@ public class SettingsModel
 
         try
         {
+            string[] argb = lines[1].Split(",");
+            ClassDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
 
-            ClassDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[1].Substring(0, 2)), Utilities.HexToByte(lines[1].Substring(2, 2)),
-                Utilities.HexToByte(lines[1].Substring(4, 2)), Utilities.HexToByte(lines[1].Substring(6, 2)));
-            InterfaceDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[2].Substring(0, 2)), Utilities.HexToByte(lines[2].Substring(2, 2)),
-                Utilities.HexToByte(lines[2].Substring(4, 2)), Utilities.HexToByte(lines[2].Substring(6, 2)));
-            StructDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[3].Substring(0, 2)), Utilities.HexToByte(lines[3].Substring(2, 2)),
-                Utilities.HexToByte(lines[3].Substring(4, 2)), Utilities.HexToByte(lines[3].Substring(6, 2)));
-            EnumDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[4].Substring(0, 2)), Utilities.HexToByte(lines[4].Substring(2, 2)),
-                Utilities.HexToByte(lines[4].Substring(4, 2)), Utilities.HexToByte(lines[4].Substring(6, 2)));
-            PrimitiveDeclarationColour = Color.FromArgb(Utilities.HexToByte(lines[5].Substring(0, 2)), Utilities.HexToByte(lines[5].Substring(2, 2)),
-                Utilities.HexToByte(lines[5].Substring(4, 2)), Utilities.HexToByte(lines[5].Substring(6, 2)));
+            argb = lines[2].Split(",");
+            InterfaceDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]),Convert.ToByte(argb[1]),Convert.ToByte(argb[2]),Convert.ToByte(argb[3]));
+
+            argb = lines[3].Split(",");
+            StructDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
+            
+            argb = lines[4].Split(",");
+            EnumDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
+            
+            argb = lines[5].Split(",");
+            PrimitiveDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]),Convert.ToByte(argb[1]),Convert.ToByte(argb[2]),Convert.ToByte(argb[3]));
 
             string[] values = lines[7].Split(",");
             ObjectDeclarationStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
@@ -169,11 +172,11 @@ public class SettingsModel
         StreamWriter writer = new StreamWriter(Path.Combine(AppContext.BaseDirectory, "settings.txt"), false);
 
         writer.WriteLine("Colours (C,I,S,E,P):");
-        writer.WriteLine(ClassDeclarationColour.ToString().Replace("#", ""));
-        writer.WriteLine(InterfaceDeclarationColour.ToString().Replace("#", ""));
-        writer.WriteLine(StructDeclarationColour.ToString().Replace("#", ""));
-        writer.WriteLine(EnumDeclarationColour.ToString().Replace("#", ""));
-        writer.WriteLine(PrimitiveDeclarationColour.ToString().Replace("#", ""));
+        writer.WriteLine($"{ClassDeclarationColour.A},{ClassDeclarationColour.R},{ClassDeclarationColour.G},{ClassDeclarationColour.B}");
+        writer.WriteLine($"{InterfaceDeclarationColour.A},{InterfaceDeclarationColour.R},{InterfaceDeclarationColour.G},{InterfaceDeclarationColour.B}");
+        writer.WriteLine($"{StructDeclarationColour.A},{StructDeclarationColour.R},{StructDeclarationColour.G},{StructDeclarationColour.B}");
+        writer.WriteLine($"{EnumDeclarationColour.A},{EnumDeclarationColour.R},{EnumDeclarationColour.G},{EnumDeclarationColour.B}");
+        writer.WriteLine($"{PrimitiveDeclarationColour.A},{PrimitiveDeclarationColour.R},{PrimitiveDeclarationColour.G},{PrimitiveDeclarationColour.B}");
 
         writer.WriteLine("FontDeclarationStyle (ObjDec,ObjDef,MemberHead,MemberType,MemberStyle,MemberDef):");
         writer.WriteLine(ObjectDeclarationStyle.GetValuesInStrings());
@@ -195,26 +198,26 @@ public class SettingsModel
 
     public void SetMigraDocClassDeclarationColour(byte r, byte g, byte b)
     {
-        // MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
+        MigraDocClassDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
     }
 
     public void SetMigraDocPrimitiveDeclarationColour(byte r, byte g, byte b)
     {
-        // MigraDocPrimitiveDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
+        MigraDocPrimitiveDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
     }
 
     public void SetMigraDocInterfaceDeclarationColour(byte r, byte g, byte b)
     {
-        // MigraDocInterfaceDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
+        MigraDocInterfaceDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
     }
 
     public void SetMigraDocEnumDeclarationColour(byte r, byte g, byte b)
     {
-        // MigraDocEnumDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
+        MigraDocEnumDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
     }
 
     public void SetMigraDocStructDeclarationColour(byte r, byte g, byte b)
     {
-        // MigraDocStructDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
+        MigraDocStructDeclarationColour = new MigraDoc.DocumentObjectModel.Color(255, r, g, b);
     }
 }

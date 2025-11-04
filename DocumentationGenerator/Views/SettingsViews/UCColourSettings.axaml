@@ -6,11 +6,12 @@
              xmlns:vm="using:DocumentationGenerator.ViewModels"
              d:DesignHeight="500"
              d:DesignWidth="600"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+              x:DataType="vm:SettingsViewModel">
         <UserControl.Styles>
                 <Style Selector="StackPanel">
                         <Setter Property="HorizontalAlignment" Value="Left" />
-                        <Setter Property="Height" Value="50"/>
+                        <Setter Property="Height" Value="50" />
                 </Style>
                 <Style Selector="ColorPicker">
                         <Setter Property="Width" Value="100" />
@@ -23,27 +24,26 @@
                         <Setter Property="HorizontalAlignment" Value="Center" />
                 </Style>
         </UserControl.Styles>
-
         <Grid Margin="25" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker />
+                        <ColorPicker Color="{Binding ClassDeclarationColour}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <Label Content="Class Declaration Colour:" />
-                        <ColorPicker />
+                        <Label Content="Interface Declaration Colour:" />
+                        <ColorPicker Color="{Binding InterfaceDeclarationColour}" />
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
-                        <Label Content="Class Declaration Colour:" />
-                        <ColorPicker />
+                        <Label Content="Struct Declaration Colour:" />
+                        <ColorPicker Color="{Binding StructDeclarationColour}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Orientation="Horizontal">
-                        <Label Content="Class Declaration Colour:" />
-                        <ColorPicker />
+                        <Label Content="Enum Declaration Colour:" />
+                        <ColorPicker Color="{Binding EnumDeclarationColour}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal">
-                        <Label Content="Class Declaration Colour:" />
-                        <ColorPicker />
+                        <Label Content="Primitive Declaration Colour:" />
+                        <ColorPicker Color="{Binding PrimitiveDeclarationColour}"/>
                 </StackPanel>
         </Grid>
 

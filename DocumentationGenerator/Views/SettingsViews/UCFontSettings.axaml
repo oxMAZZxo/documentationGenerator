@@ -6,6 +6,7 @@
              xmlns:vm="using:DocumentationGenerator.ViewModels"
              d:DesignHeight="500"
              d:DesignWidth="600"
+             x:DataType="vm:SettingsViewModel"
              mc:Ignorable="d">
         <UserControl.Styles>
                 <Style Selector="StackPanel.FieldStackPanel">
@@ -49,11 +50,10 @@
                        FontWeight="SemiBold" />
                 <ComboBox Height="35" MinWidth="50" Margin="140,10"
                           HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center"
-                          FontSize="18" FontWeight="SemiBold" />
-                <!--
-                        ItemsSource="{Binding Fonts}"
-                        SelectedItem="{Binding SelectedFont}"
-                -->
+                          FontSize="18" FontWeight="SemiBold"
+                          ItemsSource="{Binding Fonts}"
+                          SelectedItem="{Binding SelectedFont}" />
+
                 <ScrollViewer Margin="0,50,0,0">
                         <StackPanel Orientation="Vertical">
                                 <Grid Classes="SectionGrid">
@@ -61,17 +61,17 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDeclarationStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding ObjectDeclarationStyle.IsBold}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding ObjectDeclarationStyle.IsItalic}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Paragraph Space After:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDeclarationStyle.SpaceAfterString}" />
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -82,17 +82,17 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDefinitionStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding ObjectDefinitionStyle.IsBold}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding ObjectDefinitionStyle.IsItalic}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Paragraph Space After:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDefinitionStyle.SpaceAfterString}" />
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -103,17 +103,17 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberHeadingStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding MemberHeadingStyle.IsBold}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding MemberHeadingStyle.IsItalic}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Paragraph Space After:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberHeadingStyle.SpaceAfterString}" />
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -124,17 +124,17 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding MemberStyle.IsBold}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding MemberStyle.IsItalic}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Paragraph Space After:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberStyle.SpaceAfterString}" />
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -145,13 +145,13 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberTypeStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding MemberTypeStyle.IsBold}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding MemberTypeStyle.IsItalic}"/>
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
@@ -162,13 +162,13 @@
                                         <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
                                                         <Label Classes="FontSizeLabel" Content="Font Size:" />
-                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="" />
+                                                        <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberDefinitionStyle.FontSizeString}" />
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Bold" IsChecked="{Binding MemberDefinitionStyle.IsBold}"/>
                                                 </StackPanel>
                                                 <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" />
+                                                        <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsCancel="{Binding MemberDefinitionStyle.IsItalic}"/>
                                                 </StackPanel>
                                         </StackPanel>
                                         <Separator HorizontalAlignment="Stretch" VerticalAlignment="Bottom" />
