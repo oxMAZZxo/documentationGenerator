@@ -15,6 +15,7 @@
         Background="#1a1a1a"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="BorderOnly"
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d">
         
