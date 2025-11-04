@@ -15,7 +15,6 @@
                 <Style Selector="ColorPicker">
                         <Setter Property="Width" Value="100" />
                         <Setter Property="HorizontalAlignment" Value="Center" />
-                        <Setter Property="Margin" Value="15,0,0,0" />
                 </Style>
                 <Style Selector="Label">
                         <Setter Property="FontSize" Value="18" />
@@ -28,23 +27,23 @@
         <Grid Margin="25" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ColorPicker />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ColorPicker />
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ColorPicker />
                 </StackPanel>
                 <StackPanel Grid.Row="3" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ColorPicker />
                 </StackPanel>
                 <StackPanel Grid.Row="4" Orientation="Horizontal">
                         <Label Content="Class Declaration Colour:" />
-                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ColorPicker />
                 </StackPanel>
         </Grid>
 

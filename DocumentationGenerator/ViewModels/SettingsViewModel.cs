@@ -37,6 +37,7 @@ public class SettingsViewModel : BaseViewModel
     public bool GenerateTableOfContents { get; set; }
     public bool AddDocumentRelationshipGraph { get; set; }
     public bool PrintBaseTypesToDocument { get; set; }
+    
 
     public SettingsViewModel()
     {
