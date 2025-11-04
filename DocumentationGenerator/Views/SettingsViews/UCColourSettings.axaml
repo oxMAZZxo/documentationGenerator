@@ -7,8 +7,45 @@
              d:DesignHeight="500"
              d:DesignWidth="600"
              mc:Ignorable="d">
-        <Grid>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Text="Hello from Colour Settings" />
+        <UserControl.Styles>
+                <Style Selector="StackPanel">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="Height" Value="50"/>
+                </Style>
+                <Style Selector="ColorPicker">
+                        <Setter Property="Width" Value="100" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="15,0,0,0" />
+                </Style>
+                <Style Selector="Label">
+                        <Setter Property="FontSize" Value="18" />
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+        </UserControl.Styles>
+
+        <Grid Margin="25" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                        <Label Content="Class Declaration Colour:" />
+                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <Label Content="Class Declaration Colour:" />
+                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <Label Content="Class Declaration Colour:" />
+                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <Label Content="Class Declaration Colour:" />
+                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                        <Label Content="Class Declaration Colour:" />
+                        <ColorPicker Width="100" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </StackPanel>
         </Grid>
 
 </UserControl>

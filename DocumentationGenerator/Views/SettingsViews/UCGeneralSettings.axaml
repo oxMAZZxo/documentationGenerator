@@ -7,8 +7,18 @@
              d:DesignHeight="500"
              d:DesignWidth="600"
              mc:Ignorable="d">
-        <Grid>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14" Text="Hello from General Settings" />
+        <UserControl.Styles>
+                <Style Selector="CheckBox">
+                        <Setter Property="FontSize" Value="18" />
+                </Style>
+        </UserControl.Styles>
+        <Grid Margin="25">
+                <StackPanel Orientation="Vertical">
+                        <CheckBox Content="Generate Page Numbers." />
+                        <CheckBox Content="Generate Table Of Contents." />
+                        <CheckBox Content="Add Object Relationship graph to Document." />
+                        <CheckBox Content="Print Base Types to Document." />
+                </StackPanel>
         </Grid>
 
 </UserControl>

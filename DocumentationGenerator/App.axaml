@@ -8,14 +8,15 @@
     <Application.DataTemplates>
         <local:ViewLocator />
     </Application.DataTemplates>
-
     <Application.Styles>
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml"/>
         <FluentTheme />
-        
+
         <Style Selector="RadioButton.TabRadioButton">
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="40" />
             <Setter Property="Margin" Value="1,5" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -50,5 +51,34 @@
                 <Setter Property="BorderThickness" Value="1" />
             </Style>
         </Style>
+
+        <Style Selector="Button.ChromeButton">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
+
+        <Style Selector="Button.CloseButton">
+            <Setter Property="CornerRadius" Value="5,0,5,5" />
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="Red" />
+            </Style>
+        </Style>
+
+        <Style Selector="Button.MenuButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="5" />
+        </Style>
     </Application.Styles>
+
 </Application>

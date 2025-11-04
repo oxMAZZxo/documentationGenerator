@@ -18,8 +18,20 @@ public partial class SettingsWindowView : Window
         this.Hide();
     }
 
-    private void OnTopGridPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void OnChromeBarPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         this.BeginMoveDrag(e);
+    }
+
+    private void OnChromeBarDoubleTap(object? sender, TappedEventArgs e)
+    {
+        if (WindowState == WindowState.Normal)
+        {
+            WindowState = WindowState.Maximized;
+            
+        }else if(WindowState == WindowState.Maximized)
+        {
+            WindowState = WindowState.Normal;
+        }
     }
 }
