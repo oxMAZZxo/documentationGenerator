@@ -112,7 +112,7 @@ public class MainWindowViewModel : BaseViewModel
         if (topLevel == null) { return; }
         IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
         if (folders.Count < 1) { return; }
-        
+
         DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                    SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                    SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -164,7 +164,7 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void LoadFile()
     {
-        
+
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFile>? files = await App.Instance.TopLevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
 

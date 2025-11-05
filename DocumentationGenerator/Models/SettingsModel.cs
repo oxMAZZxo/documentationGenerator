@@ -50,32 +50,36 @@ public class SettingsModel
             Instance = this;
         }
 
+
+
         if (TryLoadSettings() == false)
         {
-            AssignDefaultValues();
+            ClassDeclarationColour = Color.FromRgb(0, 200, 100);
+            PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255);
+            EnumDeclarationColour = Color.FromRgb(107, 142, 35);
+            InterfaceDeclarationColour = Color.FromRgb(0, 128, 128);
+            StructDeclarationColour = Color.FromRgb(184, 134, 11);
+
+            SelectedFont = Fonts[0];
+            GeneratePageNumbers = true;
+            GenerateTableOfContents = true;
+            AddDocumentRelationshipGraph = true;
+            PrintBaseTypesToDocument = true;
+
+            ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
+            ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
+            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
+            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
+            MemberStyle = new FontDeclarationStyle("14", false, false, "1");
+            MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
         }
-    }
 
-    private void AssignDefaultValues()
-    {
-        ClassDeclarationColour = Color.FromRgb(0, 200, 100);
-        PrimitiveDeclarationColour = Color.FromRgb(0, 0, 255);
-        EnumDeclarationColour = Color.FromRgb(107, 142, 35);
-        InterfaceDeclarationColour = Color.FromRgb(0, 128, 128);
-        StructDeclarationColour = Color.FromRgb(184, 134, 11);
+        SetMigraDocClassDeclarationColour(ClassDeclarationColour.R, ClassDeclarationColour.G, ClassDeclarationColour.B);
+        SetMigraDocInterfaceDeclarationColour(InterfaceDeclarationColour.R, InterfaceDeclarationColour.G, InterfaceDeclarationColour.B);
+        SetMigraDocStructDeclarationColour(StructDeclarationColour.R, StructDeclarationColour.G, StructDeclarationColour.B);
+        SetMigraDocEnumDeclarationColour(EnumDeclarationColour.R, EnumDeclarationColour.G,EnumDeclarationColour.B);
+        SetMigraDocPrimitiveDeclarationColour(PrimitiveDeclarationColour.R, PrimitiveDeclarationColour.G, PrimitiveDeclarationColour.B);
 
-        SelectedFont = Fonts[0];
-        GeneratePageNumbers = true;
-        GenerateTableOfContents = true;
-        AddDocumentRelationshipGraph = true;
-        PrintBaseTypesToDocument = true;
-
-        ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
-        ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
-        MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
-        MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
-        MemberStyle = new FontDeclarationStyle("14", false, false, "1");
-        MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
     }
 
     private bool TryLoadSettings()
@@ -117,16 +121,16 @@ public class SettingsModel
             ClassDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
 
             argb = lines[2].Split(",");
-            InterfaceDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]),Convert.ToByte(argb[1]),Convert.ToByte(argb[2]),Convert.ToByte(argb[3]));
+            InterfaceDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
 
             argb = lines[3].Split(",");
             StructDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
-            
+
             argb = lines[4].Split(",");
             EnumDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
-            
+
             argb = lines[5].Split(",");
-            PrimitiveDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]),Convert.ToByte(argb[1]),Convert.ToByte(argb[2]),Convert.ToByte(argb[3]));
+            PrimitiveDeclarationColour = Color.FromArgb(Convert.ToByte(argb[0]), Convert.ToByte(argb[1]), Convert.ToByte(argb[2]), Convert.ToByte(argb[3]));
 
             string[] values = lines[7].Split(",");
             ObjectDeclarationStyle = new FontDeclarationStyle(values[0], Convert.ToBoolean(values[1]), Convert.ToBoolean(values[2]), values[3]);
