@@ -34,6 +34,11 @@ public class DocumentationWriter
             valid = await htmlWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
         }
 
+        if(App.Instance != null && App.Instance.TopLevel != null)
+        {
+            await App.Instance.TopLevel.Launcher.LaunchUriAsync(docInfo.SavePath.Path);
+        }
+
 
         return valid;
     }
