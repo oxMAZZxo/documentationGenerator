@@ -4,11 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
-using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DocumentationGenerator.Models.DocumentWriters;
 
@@ -18,20 +16,32 @@ public class HtmlWriter
     {
         if (string.IsNullOrEmpty(docInfo.SavePath.Path.ToString()) || string.IsNullOrWhiteSpace(docInfo.SavePath.Path.ToString())) { return false; }
         IStorageFolder parentFolder = (IStorageFolder)docInfo.SavePath;
-        
+
         IStorageFolder? outputFolder = await parentFolder.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
         if (outputFolder == null) { return false; }
-        bool valid;
-        valid = await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder);
-        valid = await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docsHelpers.js"), outputFolder);
-        valid = await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/homePageStyles.css"), outputFolder);
-        valid = await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/sidebar.css"), outputFolder);
-        valid = await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docStyles.css"), outputFolder);
         
-        if(!valid)
+        if (await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder) == false)
         {
             return false;
         }
+        if (await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docsHelpers.js"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/homePageStyles.css"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/sidebar.css"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docStyles.css"), outputFolder) == false)
+        {
+            return false;
+        }
+
+
 
         if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
         {
@@ -48,30 +58,12 @@ public class HtmlWriter
 
     private async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
     {
-        if(App.Instance == null || App.Instance.TopLevel == null ) { return false; }
-        Stream sourceStream;
-        try
-        {
-            IStorageFile? file = await App.Instance.TopLevel.StorageProvider.TryGetFileFromPathAsync(sourceFilePath);
-            if (file == null) { throw new FileNotFoundException(); }
-            
-            sourceStream = await file.OpenReadAsync();
-        }
-        catch (FileNotFoundException)
-        {
-            Debug.WriteLine($"File: {sourceFilePath}, could not be found");
-            return false;
-        }catch (DirectoryNotFoundException)
-        {
-            Debug.WriteLine($"Directory of file {sourceFilePath}, could not be found");
-            return false;
-        }catch(Exception ex)
-        {
-            Debug.WriteLine($"Could not complete resource copying operation because of the following reason.\n Message: {ex.Message}");
-            return false;
-        }
-        IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
+        Stream? sourceStream = await TryOpenReadStream(sourceFilePath);
+
+        if(sourceStream == null) { return false; }
         
+        IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
+
         if (copyFile == null) { return false; }
 
         Stream destinationStream = await copyFile.OpenWriteAsync();
@@ -83,10 +75,38 @@ public class HtmlWriter
 
         sourceStream.Close();
         await sourceStream.DisposeAsync();
-        
+
         copyFile.Dispose();
-        
+
         return true;
+    }
+
+    private async Task<Stream?> TryOpenReadStream(string sourceFilePath)
+    {
+        try
+        {
+            if (App.Instance == null || App.Instance.TopLevel == null) { return null; }
+
+            IStorageFile? file = await App.Instance.TopLevel.StorageProvider.TryGetFileFromPathAsync(sourceFilePath);
+            if (file == null) { throw new FileNotFoundException(); }
+
+            return await file.OpenReadAsync();
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.WriteLine($"File: {sourceFilePath}, could not be found");
+            return null;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Debug.WriteLine($"Directory of file {sourceFilePath}, could not be found");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Could not complete resource copying operation because of the following reason.\n Message: {ex.Message}");
+            return null;
+        }
     }
 
     private void SaveBitmaps(Bitmap globalInheritanceGraph, Dictionary<string, Bitmap> individualGraphs, DirectoryInfo outputPath)
@@ -127,7 +147,7 @@ public class HtmlWriter
         {
             foreach (InterfaceDeclaration current in interfaces)
             {
-                
+
                 IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
                 if (storageFile == null) { continue; }
                 Stream stream = await storageFile.OpenWriteAsync();
@@ -144,7 +164,7 @@ public class HtmlWriter
         {
             foreach (StructDeclaration current in structs)
             {
-                
+
                 IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
                 if (storageFile == null) { continue; }
                 Stream stream = await storageFile.OpenWriteAsync();
@@ -161,7 +181,7 @@ public class HtmlWriter
         {
             foreach (EnumDeclaration current in enums)
             {
-                
+
                 IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
                 if (storageFile == null) { continue; }
                 Stream stream = await storageFile.OpenWriteAsync();
