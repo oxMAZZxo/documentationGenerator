@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
 
@@ -19,29 +20,10 @@ public class HtmlWriter
 
         IStorageFolder? outputFolder = await parentFolder.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
         if (outputFolder == null) { return false; }
-        
-        if (await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder) == false)
-        {
-            return false;
-        }
-        if (await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docsHelpers.js"), outputFolder) == false)
-        {
-            return false;
-        }
-        if (await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/homePageStyles.css"), outputFolder) == false)
-        {
-            return false;
-        }
-        if (await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/sidebar.css"), outputFolder) == false)
-        {
-            return false;
-        }
-        if (await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docStyles.css"), outputFolder) == false)
-        {
-            return false;
-        }
 
+        bool valid = await TryCopyHtmlResources(outputFolder);
 
+        if(!valid) { return false; }
 
         if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
         {
@@ -56,58 +38,32 @@ public class HtmlWriter
         return true;
     }
 
-    private async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
+    private async Task<bool> TryCopyHtmlResources(IStorageFolder outputFolder)
     {
-        Stream? sourceStream = await TryOpenReadStream(sourceFilePath);
-
-        if(sourceStream == null) { return false; }
-        
-        IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
-
-        if (copyFile == null) { return false; }
-
-        Stream destinationStream = await copyFile.OpenWriteAsync();
-
-        await sourceStream.CopyToAsync(destinationStream);
-
-        destinationStream.Close();
-        await destinationStream.DisposeAsync();
-
-        sourceStream.Close();
-        await sourceStream.DisposeAsync();
-
-        copyFile.Dispose();
-
+        if (await Utilities.CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await Utilities.CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docsHelpers.js"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await Utilities.CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/homePageStyles.css"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await Utilities.CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/sidebar.css"), outputFolder) == false)
+        {
+            return false;
+        }
+        if (await Utilities.CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docStyles.css"), outputFolder) == false)
+        {
+            return false;
+        }
         return true;
     }
 
-    private async Task<Stream?> TryOpenReadStream(string sourceFilePath)
-    {
-        try
-        {
-            if (App.Instance == null || App.Instance.TopLevel == null) { return null; }
-
-            IStorageFile? file = await App.Instance.TopLevel.StorageProvider.TryGetFileFromPathAsync(sourceFilePath);
-            if (file == null) { throw new FileNotFoundException(); }
-
-            return await file.OpenReadAsync();
-        }
-        catch (FileNotFoundException)
-        {
-            Debug.WriteLine($"File: {sourceFilePath}, could not be found");
-            return null;
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Debug.WriteLine($"Directory of file {sourceFilePath}, could not be found");
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Could not complete resource copying operation because of the following reason.\n Message: {ex.Message}");
-            return null;
-        }
-    }
+    
 
     private void SaveBitmaps(Bitmap globalInheritanceGraph, Dictionary<string, Bitmap> individualGraphs, DirectoryInfo outputPath)
     {

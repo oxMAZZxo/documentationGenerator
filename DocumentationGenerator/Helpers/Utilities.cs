@@ -1,10 +1,13 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 
 namespace DocumentationGenerator.Helpers;
 
 public static class Utilities
 {
-
     public static byte HexToByte(string hex)
     {
         if (hex.Length != 2)
@@ -28,16 +31,58 @@ public static class Utilities
         throw new ArgumentException("Invalid hex character: " + c);
     }
 
-    // public static Microsoft.Msagl.Drawing.Color UIntColourToMSAGLColour(uint r, uint g, uint b)
-    // {
-    //     return new Microsoft.Msagl.Drawing.Color(Convert.ToByte(r), Convert.ToByte(g), Convert.ToByte(b));
-    // }
+    public static async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
+    {
+        Stream? sourceStream = await TryOpenReadStream(sourceFilePath);
 
-    // public static Microsoft.Msagl.Drawing.Color MigraDocColourToMSAGLColour(MigraDoc.DocumentObjectModel.Color color)
-    // {
-    //     return new Microsoft.Msagl.Drawing.Color(Convert.ToByte(color.R), Convert.ToByte(color.G), Convert.ToByte(color.B));
-    // }
+        if(sourceStream == null) { return false; }
+        
+        IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
 
+        if (copyFile == null) { return false; }
+
+        Stream destinationStream = await copyFile.OpenWriteAsync();
+
+        await sourceStream.CopyToAsync(destinationStream);
+
+        destinationStream.Close();
+        await destinationStream.DisposeAsync();
+
+        sourceStream.Close();
+        await sourceStream.DisposeAsync();
+
+        copyFile.Dispose();
+
+        return true;
+    }
+
+    public static async Task<Stream?> TryOpenReadStream(string sourceFilePath)
+    {
+        try
+        {
+            if (App.Instance == null || App.Instance.TopLevel == null) { return null; }
+
+            IStorageFile? file = await App.Instance.TopLevel.StorageProvider.TryGetFileFromPathAsync(sourceFilePath);
+            if (file == null) { throw new FileNotFoundException(); }
+
+            return await file.OpenReadAsync();
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.WriteLine($"File: {sourceFilePath}, could not be found");
+            return null;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Debug.WriteLine($"Directory of file {sourceFilePath}, could not be found");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Could not complete resource copying operation because of the following reason.\n Message: {ex.Message}");
+            return null;
+        }
+    }
 }
 
 public enum XmlTag
