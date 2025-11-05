@@ -58,7 +58,7 @@
                    PlacementTarget="{Binding ElementName=ExportButton}">
                 <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
                     <StackPanel>
-                        <Button Classes="MenuButton" Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
+                        <Button Classes="MenuButton" Content="Export to PDF." Command="{Binding ExportPDFDocumentationCommand}" ToolTip.Tip="All data will be compiled into one PDF Document." />
                         <Button Classes="MenuButton" Content="Export to HTML." Command="{Binding ExportHTMLDocumentationCommand}" ToolTip.Tip="All data will be compiled into a HTML website." />
                     </StackPanel>
                 </Border>

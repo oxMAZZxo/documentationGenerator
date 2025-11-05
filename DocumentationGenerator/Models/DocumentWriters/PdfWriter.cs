@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform.Storage;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
 using MigraDoc.DocumentObjectModel;
@@ -27,7 +29,7 @@ public class PdfWriter
     /// <param name="classes">The Declaration of classes read from the SourceFileReader.</param>
     /// <param name="enums">The Declaration of enums read from the SourceFileReader.</param>
     /// <returns></returns>
-    public bool Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+    public async Task<bool> WriteAsync(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
     {
         if (string.IsNullOrEmpty(docInfo.SavePath.Path.ToString()) || string.IsNullOrWhiteSpace(docInfo.SavePath.Path.ToString())) { return false; }
         Document document = new Document();
@@ -95,9 +97,21 @@ public class PdfWriter
         pdfRenderer.RenderDocument();
 
         // Add sample-specific heading with sample project helper function.
+        // if (App.Instance == null || App.Instance.TopLevel == null) { return false; }
+        // // Save the document.
+        // IStorageFolder? storageFolder = await App.Instance.TopLevel.StorageProvider.TryGetFolderFromPathAsync(docInfo.SavePath.Path);
+        // if (storageFolder == null) { return false; }
 
-        // Save the document.
-        pdfRenderer.Save(docInfo.SavePath.Path.ToString());
+        // IStorageFile? storageFile = await storageFolder.CreateFileAsync(docInfo.SavePath.Name);
+        // if (storageFile == null) { return false; }
+
+        // Stream stream = await storageFile.OpenWriteAsync();
+
+        IStorageFile storageFile = (IStorageFile)docInfo.SavePath;
+
+        Stream stream = await storageFile.OpenWriteAsync();
+        pdfRenderer.Save(stream,true);
+
 
         return alterations;
     }

@@ -14,11 +14,12 @@ namespace DocumentationGenerator.Models.DocumentWriters;
 
 public class HtmlWriter
 {
-    public async Task<bool> Write(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
+    public async Task<bool> WriteAsync(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
     {
         if (string.IsNullOrEmpty(docInfo.SavePath.Path.ToString()) || string.IsNullOrWhiteSpace(docInfo.SavePath.Path.ToString())) { return false; }
-
-        IStorageFolder? outputFolder = await docInfo.SavePath.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
+        IStorageFolder parentFolder = (IStorageFolder)docInfo.SavePath;
+        
+        IStorageFolder? outputFolder = await parentFolder.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
         if (outputFolder == null) { return false; }
         bool valid;
         valid = await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder);

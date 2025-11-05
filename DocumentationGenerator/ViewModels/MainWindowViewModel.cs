@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Avalonia.Controls;
@@ -124,13 +125,31 @@ public class MainWindowViewModel : BaseViewModel
             SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
             SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
 
-        await documentationWriter.WriteDocumentation(DocumentationType.HTML, sourceFileReader.Classes.ToArray(),
+        await documentationWriter.WriteDocumentationAsync(DocumentationType.HTML, sourceFileReader.Classes.ToArray(),
                 sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
     }
 
-    private void ExportToPDF()
+    private async void ExportToPDF()
     {
-        throw new NotImplementedException();
+        TopLevel? topLevel = TopLevel.GetTopLevel(owner);
+        if (topLevel == null) { return; }
+        IStorageFile? file = await topLevel.StorageProvider.SaveFilePickerAsync(filePickerSaveOptions);
+        if (file == null) { return; }
+
+        DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
+                   SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
+                   SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
+
+        DeclarationFontStyles declarationFontStyles = new DeclarationFontStyles(SettingsModel.Instance.SelectedFont, SettingsModel.Instance.ObjectDeclarationStyle,
+            SettingsModel.Instance.ObjectDefinitionStyle, SettingsModel.Instance.MemberHeadingStyle, SettingsModel.Instance.MemberTypeStyle,
+            SettingsModel.Instance.MemberStyle, SettingsModel.Instance.MemberDefinitionStyle);
+
+        DocumentInformation docInfo = new DocumentInformation(file, declarationColours, declarationFontStyles,
+            SettingsModel.Instance.GenerateTableOfContents, SettingsModel.Instance.GeneratePageNumbers,
+            SettingsModel.Instance.AddDocumentRelationshipGraph, SettingsModel.Instance.PrintBaseTypesToDocument, ProjectName, ProjectDescription);
+
+        await documentationWriter.WriteDocumentationAsync(DocumentationType.PDF, sourceFileReader.Classes.ToArray(),
+                sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
     }
 
     private async void LoadDirectory()

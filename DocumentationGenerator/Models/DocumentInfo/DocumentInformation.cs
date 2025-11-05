@@ -19,9 +19,10 @@ public class DocumentInformation : IDisposable
     public string ProjectDescription { get; set; }
     public Bitmap? GlobalInheritanceGraph { get; set; }
     public Dictionary<string, Bitmap>? IndividualObjsGraphs { get; set; }
-    public IStorageFolder SavePath { get; }
+    public IStorageItem SavePath { get; }
 
-    public DocumentInformation(IStorageFolder savePath, DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
+    public
+    DocumentInformation(IStorageItem savePath, DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)
     {
         SavePath = savePath;
         DeclarationColours = declarationColours;
