@@ -5,6 +5,8 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using DocumentationGenerator.Views;
 using Avalonia.Controls;
+using PdfSharp.Fonts;
+using DocumentationGenerator.Helpers;
 
 namespace DocumentationGenerator;
 
@@ -16,7 +18,8 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
-        Instance = this;   
+        Instance = this;
+        GlobalFontSettings.FontResolver = new SimpleFontResolver();
     }
 
     public override void OnFrameworkInitializationCompleted()

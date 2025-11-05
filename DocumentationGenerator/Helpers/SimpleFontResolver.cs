@@ -4,7 +4,7 @@ using PdfSharp.Fonts;
 
 namespace DocumentationGenerator.Helpers;
 
-public class SimpleFontResolver
+public class SimpleFontResolver : IFontResolver
 {
     public byte[] GetFont(string faceName)
     {
