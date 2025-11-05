@@ -10,9 +10,13 @@ namespace DocumentationGenerator;
 
 public partial class App : Application
 {
+    public static App? Instance { get; private set; }
+    public TopLevel? TopLevel { get; private set; }
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        Instance = this;   
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -24,6 +28,7 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindowView();
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            TopLevel = TopLevel.GetTopLevel(desktop.MainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();

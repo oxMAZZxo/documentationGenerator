@@ -47,10 +47,14 @@ public class HtmlWriter
 
     private async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
     {
-        FileStream sourceStream;
+        if(App.Instance == null || App.Instance.TopLevel == null ) { return false; }
+        Stream sourceStream;
         try
         {
-            sourceStream = File.OpenRead(sourceFilePath);
+            IStorageFile? file = await App.Instance.TopLevel.StorageProvider.TryGetFileFromPathAsync(sourceFilePath);
+            if (file == null) { throw new FileNotFoundException(); }
+            
+            sourceStream = await file.OpenReadAsync();
         }
         catch (FileNotFoundException)
         {
@@ -66,18 +70,21 @@ public class HtmlWriter
             return false;
         }
         IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
-
+        
         if (copyFile == null) { return false; }
 
         Stream destinationStream = await copyFile.OpenWriteAsync();
 
         await sourceStream.CopyToAsync(destinationStream);
+
         destinationStream.Close();
-        destinationStream.Dispose();
+        await destinationStream.DisposeAsync();
+
         sourceStream.Close();
         await sourceStream.DisposeAsync();
+        
         copyFile.Dispose();
-
+        
         return true;
     }
 

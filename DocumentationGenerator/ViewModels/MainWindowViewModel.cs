@@ -135,9 +135,8 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void LoadDirectory()
     {
-        TopLevel? topLevel = TopLevel.GetTopLevel(owner);
-        if (topLevel == null) { return; }
-        IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
+        if (App.Instance == null || App.Instance.TopLevel == null) { return; }
+        IReadOnlyList<IStorageFolder> folders = await App.Instance.TopLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
 
         await sourceFileReader.ReadSourceDirectory(folders[0], ProgLanguage.CSharp);
         FileName = folders[0].Name;
@@ -146,9 +145,9 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void LoadFile()
     {
-        TopLevel? toplevel = TopLevel.GetTopLevel(owner);
-        if (toplevel == null) { return; }
-        IReadOnlyList<IStorageFile>? files = await toplevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
+        
+        if (App.Instance == null || App.Instance.TopLevel == null) { return; }
+        IReadOnlyList<IStorageFile>? files = await App.Instance.TopLevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
 
         await sourceFileReader.ReadSourceFilesAsync(files.ToList(), ProgLanguage.CSharp);
 
