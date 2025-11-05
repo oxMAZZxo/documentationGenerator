@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Platform.Storage;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
@@ -18,17 +20,17 @@ public class HtmlWriter
 
         IStorageFolder? outputFolder = await docInfo.SavePath.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
         if (outputFolder == null) { return false; }
-
-        await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), outputFolder);
-        await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), outputFolder);
-        await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), outputFolder);
-        await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), outputFolder);
-        await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), outputFolder);
-        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), Path.Combine(outputFolder.Path.ToString(), "helper.js"), true);
-        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), Path.Combine(outputFolder.Path.ToString(), "docsHelpers.js"), true);
-        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), Path.Combine(outputFolder.Path.ToString(), "homePageStyles.css"), true);
-        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), Path.Combine(outputFolder.Path.ToString(), "sidebar.css"), true);
-        // File.Copy(Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), Path.Combine(outputFolder.Path.ToString(), "docStyles.css"), true);
+        bool valid;
+        valid = await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), outputFolder);
+        valid = await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), outputFolder);
+        valid = await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), outputFolder);
+        valid = await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), outputFolder);
+        valid = await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), outputFolder);
+        
+        if(!valid)
+        {
+            return false;
+        }
 
         if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
         {
@@ -45,13 +47,28 @@ public class HtmlWriter
 
     private async Task<bool> CopyFileAsync(string sourceFileName, string sourceFilePath, IStorageFolder outputFolder)
     {
-        if (!File.Exists(sourceFilePath)) { return false; }
-
+        FileStream sourceStream;
+        try
+        {
+            sourceStream = File.OpenRead(sourceFilePath);
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.WriteLine($"File: {sourceFilePath}, could not be found");
+            return false;
+        }catch (DirectoryNotFoundException)
+        {
+            Debug.WriteLine($"Directory of file {sourceFilePath}, could not be found");
+            return false;
+        }catch(Exception ex)
+        {
+            Debug.WriteLine($"Could not complete resource copying operation because of the following reason.\n Message: {ex.Message}");
+            return false;
+        }
         IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
 
         if (copyFile == null) { return false; }
 
-        FileStream sourceStream = File.OpenRead(sourceFilePath);
         Stream destinationStream = await copyFile.OpenWriteAsync();
 
         await sourceStream.CopyToAsync(destinationStream);
