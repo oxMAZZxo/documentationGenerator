@@ -1,0 +1,152 @@
+:root {
+    --sidebar-width: 260px;
+    --sidebar-bg: #0f1724;
+    --accent: #10b981;
+    --muted: #94a3b8;
+    --content-bg: #f7fafc;
+    --radius: 10px;
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, sans-serif;
+    background: linear-gradient(180deg, #fbfdff, #f0f6f9);
+    color: #071028
+}
+
+.page {
+    display: flex;
+    min-height: 100vh
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 28px;
+    min-height: 100vh;
+    background: transparent;
+}
+
+.doc-header h1 {
+    margin: 0;
+    font-size: 26px;
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.label {
+    font-size: 12px;
+    color: white;
+    background: rgba(16, 185, 129, 0.18);
+    padding: 2px 8px;
+    border-radius: 8px
+}
+
+.lead {
+    color: #334155;
+    margin-top: 6px
+}
+
+/* diagrams */
+.diagrams {
+    display: flex;
+    gap: 12px;
+    margin: 16px 0
+}
+
+.diagram-placeholder {
+    flex: 1;
+    border-radius: 8px;
+    padding: 18px;
+    background: linear-gradient(180deg, #eef6fb, #f6fbff);
+    color: #0b1220;
+    border: 1px solid rgba(2, 6, 23, 0.06);
+    text-align: center;
+    font-size: 14px
+}
+
+.diagrams img {
+    width: 30%;
+}
+
+/* members list */
+.members h2 {
+    margin-top: 8px
+}
+
+.member {
+    border-radius: 8px;
+    border: 1px solid rgba(2, 6, 23, 0.05);
+    margin: 10px 0;
+    overflow: hidden;
+    background: white
+}
+
+.member-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border: 0;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.member-body {
+    display: none;
+    padding: 12px 14px;
+    color: #1f2937;
+    background: linear-gradient(180deg, #fbfdff, #f7fbff)
+}
+
+    .member-body p {
+        margin: 8px 0
+    }
+
+.member-footer {
+    font-size: 13px;
+    color: var(--muted)
+}
+
+/* when open */
+.member.open .member-body {
+    display: block
+}
+
+.member.open .member-toggle {
+    background: linear-gradient(180deg, #f0f6ff, #e9f3ff);
+}
+
+/* details/footer */
+.details {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid rgba(2, 6, 23, 0.05)
+}
+
+.doc-footer {
+    margin-top: 18px;
+    color: var(--muted)
+}
+
+/* small screens */
+@media (max-width:900px) {
+    .page {
+        flex-direction: column
+    }
+
+    .content {
+        padding: 16px
+    }
+}
