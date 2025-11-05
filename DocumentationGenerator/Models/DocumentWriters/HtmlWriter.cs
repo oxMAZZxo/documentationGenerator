@@ -21,11 +21,11 @@ public class HtmlWriter
         IStorageFolder? outputFolder = await docInfo.SavePath.CreateFolderAsync($"{docInfo.ProjectName} Documentation");
         if (outputFolder == null) { return false; }
         bool valid;
-        valid = await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/helper.js"), outputFolder);
-        valid = await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docsHelpers.js"), outputFolder);
-        valid = await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/homePageStyles.css"), outputFolder);
-        valid = await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/sidebar.css"), outputFolder);
-        valid = await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML DOC Templates/docStyles.css"), outputFolder);
+        valid = await CopyFileAsync("helper.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/helper.js"), outputFolder);
+        valid = await CopyFileAsync("docsHelpers.js", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docsHelpers.js"), outputFolder);
+        valid = await CopyFileAsync("homePageStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/homePageStyles.css"), outputFolder);
+        valid = await CopyFileAsync("sidebar.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/sidebar.css"), outputFolder);
+        valid = await CopyFileAsync("docStyles.css", Path.Combine(AppContext.BaseDirectory, "HTML Doc Templates/docStyles.css"), outputFolder);
         
         if(!valid)
         {
