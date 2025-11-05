@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -10,6 +12,11 @@ using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models;
 using DocumentationGenerator.Models.DocumentInfo;
 using DocumentationGenerator.Views;
+using MsBox.Avalonia;
+using MsBox.Avalonia.Base;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia.Models;
 
 namespace DocumentationGenerator.ViewModels;
 
@@ -108,6 +115,10 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void ExportToHTML()
     {
+        bool noData = await CheckNoData();
+
+        if (noData) { return; }
+
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
         IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
@@ -131,6 +142,10 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void ExportToPDF()
     {
+        bool noData = await CheckNoData();
+
+        if (noData) { return; }
+
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
         IStorageFile? file = await topLevel.StorageProvider.SaveFilePickerAsync(filePickerSaveOptions);
@@ -152,10 +167,52 @@ public class MainWindowViewModel : BaseViewModel
                 sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
     }
 
+    private async Task<bool> CheckHasData()
+    {
+        if (sourceFileReader.HasData)
+        {
+            IMsBox<ButtonResult> box =
+            MessageBoxManager.GetMessageBoxStandard("Warning!",
+            "You already have loaded some data. By clicking 'OK', you will load data on top of the existing data. Click 'Cancel' to cancel the operation.",
+            ButtonEnum.OkCancel, Icon.Warning, null, WindowStartupLocation.CenterOwner);
+
+            ButtonResult result = await box.ShowWindowDialogAsync(owner);
+            if (result == ButtonResult.Cancel)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    /// <returns>True if there's no data, false if otherwise</returns>
+    private async Task<bool> CheckNoData()
+    {
+        if (!sourceFileReader.HasData)
+        {
+            IMsBox<ButtonResult> result = MessageBoxManager.GetMessageBoxStandard("Error!",
+            "You are trying to Export but you haven't loaded any data! Try loading some data by loading a directory or specific files by clickin one of the options on the 'File' menu.",
+            ButtonEnum.Ok, Icon.Error, null, WindowStartupLocation.CenterOwner);
+
+            await result.ShowWindowDialogAsync(owner);
+            return true;
+        }
+
+        return false;
+    }
+
     private async void LoadDirectory()
     {
+        bool validOp = await CheckHasData();
+
+        if (!validOp) { return; }
+
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFolder> folders = await App.Instance.TopLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
+
+        if(folders.Count < 1 || folders == null) { return; }
 
         await sourceFileReader.ReadSourceDirectory(folders[0], ProgLanguage.CSharp);
         FileName = folders[0].Name;
@@ -164,9 +221,15 @@ public class MainWindowViewModel : BaseViewModel
 
     private async void LoadFile()
     {
+        bool validOp = await CheckHasData();
+
+        if (!validOp) { return; }
+
 
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFile>? files = await App.Instance.TopLevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
+
+        if(files == null || files.Count < 1) { return; }
 
         await sourceFileReader.ReadSourceFilesAsync(files.ToList(), ProgLanguage.CSharp);
 
