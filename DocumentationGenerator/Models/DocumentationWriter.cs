@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
 using DocumentationGenerator.Models.DocumentWriters;
@@ -20,7 +21,8 @@ public class DocumentationWriter
     {
         if (docInfo.GenerateInheritanceGraphs)
         {
-            // docInfo.GlobalInheritanceGraph = InheritanceGraphGenerator.GenerateGlobalGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours);
+            docInfo.GlobalInheritanceGraph = InheritanceGraphGenerator.GenerateGlobalGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours);
+            
             // docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations,docInfo.DeclarationColours);
         }
 

@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using DocumentationGenerator.ViewModels;
 using DocumentationGenerator.Helpers;
+using System.IO;
 
 namespace DocumentationGenerator.Views;
 
@@ -22,7 +23,7 @@ public partial class MainWindowView : Window
         this.LostFocus += OnWindowLostFocus;
         this.PointerEntered += OnWindowPointerEntered;
 
-        SimpleTreeRenderer.Run();
+        DirectedGraphRenderer.TestRun(Path.Combine(AppContext.BaseDirectory, "graph.png"));
     }
 
     private void OnMenuButtonPointerOver(object? sender, RoutedEventArgs e)

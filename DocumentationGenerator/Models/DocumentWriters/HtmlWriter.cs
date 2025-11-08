@@ -25,9 +25,22 @@ public class HtmlWriter
 
         if(!valid) { return false; }
 
-        if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
+        if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null )
         {
+            IStorageFile? file = await outputFolder.CreateFileAsync("globalInheritanceGraph.png");
+            if(file != null)
+            {
+                Stream? stream  = await file.OpenWriteAsync();
+                docInfo.GlobalInheritanceGraph.Save(stream);
+                Debug.WriteLine("The global inheritance graph was created successfully.");
+                stream.Close();
+                await stream.DisposeAsync();
+                file.Dispose();
             // SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputFolder.Path.ToString());
+            } else
+            {
+                Debug.WriteLine("The global inheritance graph was not created.");
+            }
         }
 
         string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs, docInfo);
