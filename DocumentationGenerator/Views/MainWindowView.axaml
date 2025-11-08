@@ -39,18 +39,20 @@
                 </Popup.Styles>
                 <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
                     <StackPanel>
-                        <Button Classes="MenuButton"
+                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
                                 Command="{Binding LoadFileCommand}"
                                 Content="Load File/s" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a file(s) from a directory." />
-                        <Button Classes="MenuButton"
+                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
                                 Command="{Binding LoadDirectoryCommand}"
                                 Content="Load Directory" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a whole directory (inlcudes sub-directories)." />
                         <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
                                 Content="Export..." PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
                         <Button Classes="MenuButton" Content="Clear Docs" PointerEntered="OnMenuButtonPointerOver"
                                 ToolTip.Tip="Delete all the loaded data and start over." />
-                        <Separator HorizontalAlignment="Stretch"/>
-                        <Button Classes="MenuButton" Content="Exit" Command="{Binding ExitAppCommand}" PointerEntered="OnMenuButtonPointerOver" />
+                        <Separator HorizontalAlignment="Stretch" />
+                        <Button Classes="MenuButton"
+                                Command="{Binding ExitAppCommand}"
+                                Content="Exit" PointerEntered="OnMenuButtonPointerOver" />
                     </StackPanel>
                 </Border>
             </Popup>
@@ -59,8 +61,12 @@
                    PlacementTarget="{Binding ElementName=ExportButton}">
                 <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
                     <StackPanel>
-                        <Button Classes="MenuButton" Content="Export to PDF." Command="{Binding ExportPDFDocumentationCommand}" ToolTip.Tip="All data will be compiled into one PDF Document." />
-                        <Button Classes="MenuButton" Content="Export to HTML." Command="{Binding ExportHTMLDocumentationCommand}" ToolTip.Tip="All data will be compiled into a HTML website." />
+                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
+                                Command="{Binding ExportPDFDocumentationCommand}"
+                                Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
+                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
+                                Command="{Binding ExportHTMLDocumentationCommand}"
+                                Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
                     </StackPanel>
                 </Border>
             </Popup>
@@ -79,11 +85,13 @@
 
             <TextBox Grid.Row="1" Grid.Column="2" Height="30"
                      Margin="10,50" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                     Watermark="Enter this projects name." Text="{Binding ProjectName}" />
+                     Text="{Binding ProjectName}"
+                     Watermark="Enter this projects name." />
 
             <TextBox Grid.Row="1" Grid.Column="2" Height="30"
                      Margin="10,95" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                     Watermark="Describe this projects in a few short words." Text="{Binding ProjectDescription}" />
+                     Text="{Binding ProjectDescription}"
+                     Watermark="Describe this projects in a few short words." />
 
             <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="10,150,10,10">
                 <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Top" AcceptsReturn="True"

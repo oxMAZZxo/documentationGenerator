@@ -73,4 +73,11 @@ public partial class MainWindowView : Window
         ExportPopup.Open();
     }
 
+    private void OnPopupButtonClick(object? sender, RoutedEventArgs e)
+    {
+        ExportPopup.Close();
+        FilePopup.Close();
+    }
+
+
 }

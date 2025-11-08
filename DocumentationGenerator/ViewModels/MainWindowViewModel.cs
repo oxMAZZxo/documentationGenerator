@@ -78,10 +78,17 @@ public class MainWindowViewModel : BaseViewModel
 
         sourceFileReader = new SourceFileReader();
         documentationWriter = new DocumentationWriter();
+
+        filePickerOpenOptions = new FilePickerOpenOptions();
+        directoryPickerOpenOptions = new FolderPickerOpenOptions();
+        filePickerSaveOptions = new FilePickerSaveOptions();
+
         InitDialogs();
 
         FileName = "Loaded File(s) / Directory name will be displayed here.";
         Output = "Preview will be displayed here.";
+        ProjectName = "";
+        ProjectDescription = "";
     }
 
     private void OnAppShuttingDown(object? sender, WindowClosingEventArgs e)
@@ -91,15 +98,12 @@ public class MainWindowViewModel : BaseViewModel
 
     private void InitDialogs()
     {
-        filePickerOpenOptions = new FilePickerOpenOptions();
         filePickerOpenOptions.AllowMultiple = true;
         filePickerOpenOptions.Title = "Select a file(s) to load.";
 
-        directoryPickerOpenOptions = new FolderPickerOpenOptions();
         directoryPickerOpenOptions.Title = "Select a folder which contains source files to load."; ;
         directoryPickerOpenOptions.AllowMultiple = false;
 
-        filePickerSaveOptions = new FilePickerSaveOptions();
         filePickerSaveOptions.Title = "Save the Documentation as a PDF at the desired Location";
     }
 
