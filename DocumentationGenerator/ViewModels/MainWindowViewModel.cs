@@ -14,9 +14,7 @@ using DocumentationGenerator.Models.DocumentInfo;
 using DocumentationGenerator.Views;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
-using MsBox.Avalonia.Dto;
 using MsBox.Avalonia.Enums;
-using MsBox.Avalonia.Models;
 
 namespace DocumentationGenerator.ViewModels;
 

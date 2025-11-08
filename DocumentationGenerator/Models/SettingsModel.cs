@@ -50,8 +50,6 @@ public class SettingsModel
             Instance = this;
         }
 
-
-
         if (TryLoadSettings() == false)
         {
             ClassDeclarationColour = Color.FromRgb(0, 200, 100);

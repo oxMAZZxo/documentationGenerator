@@ -8,6 +8,14 @@ namespace DocumentationGenerator.Helpers;
 
 public static class Utilities
 {
+    // public static Microsoft.Msagl.Drawing.Color MigraDocColourToMsaglColor(MigraDoc.DocumentObjectModel.Color color)
+    // {
+    //     byte r = Convert.ToByte(color.R);
+    //     byte g = Convert.ToByte(color.G);
+    //     byte b = Convert.ToByte(color.B);
+    //     return new Microsoft.Msagl.Drawing.Color(255, r, g, b);
+    // }
+
     public static byte HexToByte(string hex)
     {
         if (hex.Length != 2)
