@@ -23,24 +23,11 @@ public class HtmlWriter
 
         bool valid = await TryCopyHtmlResources(outputFolder);
 
-        if(!valid) { return false; }
+        if (!valid) { return false; }
 
-        if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null )
+        if (docInfo.GenerateInheritanceGraphs && docInfo.GlobalInheritanceGraph != null && docInfo.IndividualObjsGraphs != null)
         {
-            IStorageFile? file = await outputFolder.CreateFileAsync("globalInheritanceGraph.png");
-            if(file != null)
-            {
-                Stream? stream  = await file.OpenWriteAsync();
-                docInfo.GlobalInheritanceGraph.Save(stream);
-                Debug.WriteLine("The global inheritance graph was created successfully.");
-                stream.Close();
-                await stream.DisposeAsync();
-                file.Dispose();
-            // SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputFolder.Path.ToString());
-            } else
-            {
-                Debug.WriteLine("The global inheritance graph was not created.");
-            }
+            await SaveBitmaps(docInfo.GlobalInheritanceGraph, docInfo.IndividualObjsGraphs, outputFolder);
         }
 
         string homepageSideBar = GenerateSideBar(classes, enums, interfaces, structs, docInfo);
@@ -76,18 +63,34 @@ public class HtmlWriter
         return true;
     }
 
-    
 
-    private void SaveBitmaps(Bitmap globalInheritanceGraph, Dictionary<string, Bitmap> individualGraphs, DirectoryInfo outputPath)
+
+    private async Task SaveBitmaps(Bitmap globalInheritanceGraph, Dictionary<string, Bitmap> individualGraphs, IStorageFolder outputFolder)
     {
-        globalInheritanceGraph.Save(Path.Combine(outputPath.FullName, "globalInheritanceGraph.png"));
+        IStorageFile? file = await outputFolder.CreateFileAsync("globalInheritanceGraph.png");
+        if (file != null)
+        {
+            Stream? stream = await file.OpenWriteAsync();
+            globalInheritanceGraph.Save(stream);
+            stream.Close();
+            await stream.DisposeAsync();
+            file.Dispose();
+        }
 
-        DirectoryInfo objsDirectory = Directory.CreateDirectory(Path.Combine(outputPath.FullName, "objGraphs"));
-
+        IStorageFolder? folder = await outputFolder.CreateFolderAsync("objGraphs");
+        if (folder == null) { return; }
+        
         foreach (string o in individualGraphs.Keys)
         {
             Bitmap bitmap = individualGraphs[o];
-            bitmap.Save(Path.Combine(objsDirectory.FullName, $"{o}_Graph.png"));
+            IStorageFile? subFile = await folder.CreateFileAsync($"{o}_Graph.png");
+            if(subFile == null) { continue; }
+
+            Stream? stream = await subFile.OpenWriteAsync();
+            bitmap.Save(stream);
+            stream.Close();
+            await stream.DisposeAsync();
+            subFile.Dispose();
         }
     }
 

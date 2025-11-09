@@ -19,7 +19,7 @@ public static class DirectedGraphRenderer
     /// </summary>
     public static void TestRun(string outputPath)
     {
-        DirectedGraph g = new DirectedGraph("Example");
+        Graph g = new Graph("Example");
         g.AddEdge("A", "B");
         g.AddEdge("A", "C");
         g.AddEdge("C", "E");
@@ -52,7 +52,7 @@ public static class DirectedGraphRenderer
     /// <summary>
     /// Draws the given root node and its hierarchy into a bitmap.
     /// </summary>
-    public static Bitmap RenderGraph(DirectedGraph graph, bool inverted = false)
+    public static Bitmap RenderGraph(Graph graph, bool inverted = false)
     {
         List<Node> nodes = graph.Nodes.Values.ToList();
         // Used to measure text and determine node sizes
@@ -354,13 +354,13 @@ public class Node
     }
 }
 
-public class DirectedGraph
+public class Graph
 {
     public string Name { get; }
     public Dictionary<string, Node> Nodes { get; }
     public List<Edge> Edges { get; }
 
-    public DirectedGraph(string name)
+    public Graph(string name)
     {
         Name = name;
         Nodes = new Dictionary<string, Node>();

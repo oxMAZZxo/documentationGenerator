@@ -3,13 +3,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
+using SkiaSharp;
 
 namespace DocumentationGenerator.Helpers;
 
 public static class Utilities
 {
-
-
+    public static SKColor MigraDocColorToSKColor(MigraDoc.DocumentObjectModel.Color color)
+    {
+        return new SKColor(color.Argb);
+    }
     public static byte HexToByte(string hex)
     {
         if (hex.Length != 2)

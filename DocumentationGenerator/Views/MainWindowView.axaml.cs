@@ -22,8 +22,6 @@ public partial class MainWindowView : Window
         windowLostFocus = false;
         this.LostFocus += OnWindowLostFocus;
         this.PointerEntered += OnWindowPointerEntered;
-
-        DirectedGraphRenderer.TestRun(Path.Combine(AppContext.BaseDirectory, "graph.png"));
     }
 
     private void OnMenuButtonPointerOver(object? sender, RoutedEventArgs e)

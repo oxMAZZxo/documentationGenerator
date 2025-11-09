@@ -22,8 +22,7 @@ public class DocumentationWriter
         if (docInfo.GenerateInheritanceGraphs)
         {
             docInfo.GlobalInheritanceGraph = InheritanceGraphGenerator.GenerateGlobalGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours);
-            
-            // docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations,docInfo.DeclarationColours);
+            docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations,docInfo.DeclarationColours);
         }
 
         bool valid = false;
