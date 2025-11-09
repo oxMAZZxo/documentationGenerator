@@ -8,15 +8,15 @@
     gap: 14px;
 }
 
-    .sidebar a {
-        color: inherit;
-        text-decoration: none
-    }
+.sidebar a {
+    color: inherit;
+    text-decoration: none
+}
 
-    .sidebar h2 {
-        margin: 0;
-        font-size: 18px
-    }
+.sidebar h2 {
+    margin: 0;
+    font-size: 18px
+}
 
 /* navigation */
 .nav-section {
@@ -47,23 +47,23 @@
     gap: 6px
 }
 
-    .nav-links a {
-        color: #dbeaf5;
-        text-decoration: none;
-        padding: 4px;
-        border-radius: 6px;
-        font-size: 14px
-    }
+.nav-links a {
+    color: #dbeaf5;
+    text-decoration: none;
+    padding: 4px;
+    border-radius: 6px;
+    font-size: 14px
+}
 
-        .nav-links a.active {
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.03);
-        }
+.nav-links a.active {
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.03);
+}
 
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.03);
-            color: #ffffff;
-        }
+.nav-links a:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: #ffffff;
+}
 
 /* small screens */
 @media (max-width:900px) {
@@ -92,4 +92,52 @@
     .nav-section {
         display: flex;
     }
+}
+
+.search-container {
+    position: relative;
+    /* important: anchors the absolute dropdown */
+    padding: 8px;
+}
+
+#search {
+    width: 100%;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #1e1e1e;
+    color: white;
+}
+
+/* the dropdown menu now floats */
+.search-results {
+    position: absolute;
+    top: 100%;
+    /* directly under the input */
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    /* ensures it's above sidebar content */
+
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-top: none;
+    /* optional, looks cleaner */
+    display: none;
+
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    /* optional visual polish */
+}
+
+.search-results a {
+    display: block;
+    padding: 6px;
+    text-decoration: none;
+    color: white;
+}
+
+.search-results a:hover {
+    background: #333;
 }
