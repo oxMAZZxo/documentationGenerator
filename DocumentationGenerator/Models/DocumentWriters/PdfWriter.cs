@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,13 +52,18 @@ public class PdfWriter
             AddTableOfContentsToPDF(document, tocEntries);
         }
 
-        AddIntroPage(document, docInfo);
+        IStorageFolder? storageFolder = await docInfo.SavePath.GetParentAsync();
+        if (storageFolder == null) { return false; }
+        IStorageFolder? graphFolder = await storageFolder.CreateFolderAsync("Object_Graphs");
 
-        bool alterations = false;
-        if (classes != null && classes.Length > 0)
+        await Task.WhenAll(AddIntroPage(document, docInfo, graphFolder),        
+        
+            WriteClassesToPdfAsync(classes, docInfo.DeclarationColours, document, docInfo, graphFolder)
+        );
+
+        if (interfaces != null && interfaces.Length > 0)
         {
-            alterations = true;
-            WriteClassesToPDF(classes, docInfo.DeclarationColours, document, docInfo);
+            WriteInterfacesToPDF(interfaces, docInfo.DeclarationColours, document);
         }
 
         if (structs != null && structs.Length > 0)
@@ -65,14 +71,8 @@ public class PdfWriter
             WriteStructsToPDF(structs, docInfo.DeclarationColours, document);
         }
 
-        if (interfaces != null && interfaces.Length > 0)
-        {
-            WriteInterfacesToPDF(interfaces, docInfo.DeclarationColours, document);
-        }
-
         if (enums != null && enums.Length > 0)
         {
-            alterations = true;
             WriteEnumsToPDF(enums, docInfo.DeclarationColours.EnumDeclarationColour, document);
         }
 
@@ -96,27 +96,16 @@ public class PdfWriter
         // Layout and render document to PDF.
         pdfRenderer.RenderDocument();
 
-        // Add sample-specific heading with sample project helper function.
-        // if (App.Instance == null || App.Instance.TopLevel == null) { return false; }
-        // // Save the document.
-        // IStorageFolder? storageFolder = await App.Instance.TopLevel.StorageProvider.TryGetFolderFromPathAsync(docInfo.SavePath.Path);
-        // if (storageFolder == null) { return false; }
-
-        // IStorageFile? storageFile = await storageFolder.CreateFileAsync(docInfo.SavePath.Name);
-        // if (storageFile == null) { return false; }
-
-        // Stream stream = await storageFile.OpenWriteAsync();
-
         IStorageFile storageFile = (IStorageFile)docInfo.SavePath;
 
         Stream stream = await storageFile.OpenWriteAsync();
-        pdfRenderer.Save(stream,true);
-
-
-        return alterations;
+        pdfRenderer.Save(stream, true);
+        stream.Close(); await stream.DisposeAsync();
+        
+        return true;
     }
 
-    private void AddIntroPage(Document document, DocumentInformation docInfo)
+    private async Task AddIntroPage(Document document, DocumentInformation docInfo, IStorageFolder? graphFolder)
     {
         Section section = document.AddSection();
         Paragraph paragraph = section.AddParagraph($"{docInfo.ProjectName}");
@@ -131,12 +120,14 @@ public class PdfWriter
         paragraph = section.AddParagraph("Global Inheritance Graph");
         paragraph.Style = ObjectStyle;
 
-        string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath.Path.ToString());
-        if (docInfo.GlobalInheritanceGraph != null && parentDirectory != null)
+        if (docInfo.GlobalInheritanceGraph != null && graphFolder != null)
         {
-            string imgPath = Path.Combine(parentDirectory, "globalInheritanceGraph.png");
-            docInfo.GlobalInheritanceGraph.Save(imgPath);
-            Image image = section.AddImage(imgPath);
+            IStorageFile? file = await graphFolder.CreateFileAsync("globalInheritanceGraph.png");
+            if (file == null) { return; }
+            Stream stream = await file.OpenWriteAsync();
+
+            docInfo.GlobalInheritanceGraph.Save(stream);
+            Image image = section.AddImage(file.Path.AbsolutePath);
             image.Width = 500;
         }
     }
@@ -365,8 +356,9 @@ public class PdfWriter
         }
     }
 
-    private void WriteClassesToPDF(ClassDeclaration[] classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo)
+    private async Task WriteClassesToPdfAsync(ClassDeclaration[]? classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo, IStorageFolder? graphFolder)
     {
+        if(classDeclarations == null || classDeclarations.Length < 1) { return; }
         string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath.Path.ToString());
         Section section;
         foreach (ClassDeclaration current in classDeclarations)
@@ -384,12 +376,16 @@ public class PdfWriter
                 WriteClassInheritancesAndInterfacesToPDF(current, paragraph, declarationColours);
             }
 
-            if (parentDirectory != null && docInfo.GenerateInheritanceGraphs && docInfo.IndividualObjsGraphs != null && docInfo.IndividualObjsGraphs.ContainsKey(current.Name))
+            if (parentDirectory != null && docInfo.GenerateInheritanceGraphs && docInfo.IndividualObjsGraphs != null && docInfo.IndividualObjsGraphs.ContainsKey(current.Name) && graphFolder != null)
             {
+                IStorageFile? storageFile = await graphFolder.CreateFileAsync($"{current.Name}_Graph.png");
+                if (storageFile == null) { continue; }
                 Bitmap currentGraph = docInfo.IndividualObjsGraphs[current.Name];
-                string savePath = Path.Combine(parentDirectory, $"{current.Name}Graph.png");
-                currentGraph.Save(savePath);
-                section.AddImage(savePath);
+                Stream stream = await storageFile.OpenWriteAsync();
+                currentGraph.Save(stream);
+                stream.Close(); await stream.DisposeAsync();
+                section.AddImage(storageFile.Path.AbsolutePath);
+                
             }
 
             paragraph = section.AddParagraph($"Definition: {current.Definition}");
