@@ -12,8 +12,15 @@ using SkiaSharp;
 /// Nodes are arranged top-down, centered among their children, and drawn with
 /// rounded rectangles and connecting lines.
 /// </summary>
-public static class DirectedGraphRenderer
+public class GraphRenderer
 {
+    /// <summary>
+    /// Tracks current X position for placing leaf nodes.
+    /// </summary>
+    private float currentLeafX = 50;
+    public int LayerSpacing { get; set; }
+    public int NodeSpacing { get; set; }
+
     /// <summary>
     /// Small example runner to build a sample tree and save it in the provided output path.
     /// </summary>
@@ -27,18 +34,25 @@ public static class DirectedGraphRenderer
         g.AddEdge("C", "D");
         g.AddEdge("D", "G");
 
-        var bitmap = RenderGraph(g);
+        GraphRenderer render = new GraphRenderer();
+        var bitmap = render.RenderSugiyamaStyleGraph(g);
         using FileStream fs = File.OpenWrite(outputPath);
         bitmap.Save(fs);
     }
+    
+    public GraphRenderer()
+    {
+        NodeSpacing = 150;
+        LayerSpacing = 150;
+    }
 
-    public static List<Node> FindRootNodes(List<Node> nodes)
+    public List<Node> FindRootNodes(List<Node> nodes)
     {
         var indegree = ComputeInDegree(nodes);
         return indegree.Where(x => x.Value == 0).Select(x => x.Key).ToList();
     }
 
-    private static Dictionary<Node, int> ComputeIncomingCounts(List<Node> nodes)
+    private Dictionary<Node, int> ComputeIncomingCounts(List<Node> nodes)
     {
         var incoming = nodes.ToDictionary(n => n, n => 0);
 
@@ -52,7 +66,7 @@ public static class DirectedGraphRenderer
     /// <summary>
     /// Draws the given root node and its hierarchy into a bitmap.
     /// </summary>
-    public static Bitmap RenderGraph(Graph graph, bool inverted = false)
+    public Bitmap RenderSugiyamaStyleGraph(Graph graph)
     {
         List<Node> nodes = graph.Nodes.Values.ToList();
         // Used to measure text and determine node sizes
@@ -99,7 +113,7 @@ public static class DirectedGraphRenderer
     /// <summary>
     /// Finds the rightmost and bottom-most node to compute image bounds.
     /// </summary>
-    private static Vector2 FindBoundingBox(Dictionary<Node, Vector2> positions)
+    private Vector2 FindBoundingBox(Dictionary<Node, Vector2> positions)
     {
         float maxX = 0;
         float maxY = 0;
@@ -117,7 +131,7 @@ public static class DirectedGraphRenderer
     /// Measures node width & height from text so rectangles can be drawn fitting the label.
     /// This must be called before layout so we can center nodes properly.
     /// </summary>
-    private static void MeasureNode(Node node, SKFont font)
+    private void MeasureNode(Node node, SKFont font)
     {
         font.MeasureText(node.Name, out SKRect bounds);
 
@@ -133,12 +147,12 @@ public static class DirectedGraphRenderer
     /// Leaf nodes are spaced horizontally.
     /// Internal nodes are positioned centered between their children.
     /// </summary>
-    private static float LayoutNodes(Node node, int depth, Dictionary<Node, Vector2> pos, float spacing, int maxDepth, bool inverted)
+    private float LayoutNodes(Node node, int depth, Dictionary<Node, Vector2> pos, float spacing, int maxDepth, bool inverted)
     {
         if (node.Children.Count == 0)
         {
-            pos[node] = new Vector2(CurrentLeafX, depth * 100 + 50);
-            CurrentLeafX += spacing;
+            pos[node] = new Vector2(currentLeafX, depth * 100 + 50);
+            currentLeafX += spacing;
             return pos[node].X;
         }
 
@@ -171,7 +185,7 @@ public static class DirectedGraphRenderer
     /// <summary>
     /// Draws node rectangles and centered text.
     /// </summary>
-    private static void DrawNodes(Dictionary<Node, Vector2> positions, SKCanvas canvas, SKFont font)
+    private void DrawNodes(Dictionary<Node, Vector2> positions, SKCanvas canvas, SKFont font)
     {
         foreach (KeyValuePair<Node, Vector2> kvp in positions)
         {
@@ -198,7 +212,7 @@ public static class DirectedGraphRenderer
     /// <summary>
     /// Draws connecting lines between parent and child nodes.
     /// </summary>
-    private static void DrawEdges(Dictionary<Node, Vector2> positions, SKCanvas canvas, SKPaint linePaint)
+    private void DrawEdges(Dictionary<Node, Vector2> positions, SKCanvas canvas, SKPaint linePaint)
     {
         foreach (var kvp in positions)
         {
@@ -213,7 +227,7 @@ public static class DirectedGraphRenderer
         }
     }
 
-    private static int GetMaxDepth(Node node)
+    private int GetMaxDepth(Node node)
     {
         if (node.Children.Count == 0)
             return 0;
@@ -227,7 +241,7 @@ public static class DirectedGraphRenderer
         return max + 1;
     }
 
-    private static List<Node> CollectNodes(Node root)
+    private List<Node> CollectNodes(Node root)
     {
         var result = new HashSet<Node>();
         var stack = new Stack<Node>();
@@ -287,33 +301,24 @@ public static class DirectedGraphRenderer
         return layers;
     }
 
-    private static Dictionary<Node, Vector2> ComputeNodePositions(List<List<Node>> layers)
+    private  Dictionary<Node, Vector2> ComputeNodePositions(List<List<Node>> layers)
     {
         var positions = new Dictionary<Node, Vector2>();
-
-        float layerSpacing = 150;
-        float nodeSpacing = 200;
 
         for (int depth = 0; depth < layers.Count; depth++)
         {
             var layer = layers[depth];
-            float y = depth * layerSpacing + 50;
+            float y = depth * LayerSpacing + 50;
 
             for (int i = 0; i < layer.Count; i++)
             {
-                float x = i * nodeSpacing + 100;
+                float x = i * NodeSpacing + 100;
                 positions[layer[i]] = new Vector2(x, y);
             }
         }
 
         return positions;
     }
-
-
-    /// <summary>
-    /// Tracks current X position for placing leaf nodes.
-    /// </summary>
-    private static float CurrentLeafX = 50;
 }
 
 /// <summary>

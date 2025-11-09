@@ -51,8 +51,11 @@ public static class InheritanceGraphGenerator
             }
         }
 
+        GraphRenderer renderer = new GraphRenderer();
+        renderer.LayerSpacing = 100;
+        renderer.NodeSpacing = 200;
 
-        return DirectedGraphRenderer.RenderGraph(graph);
+        return renderer.RenderSugiyamaStyleGraph(graph);
     }
 
     /// <summary>
@@ -116,12 +119,14 @@ public static class InheritanceGraphGenerator
     private static Dictionary<string, Bitmap> RenderGraphs(Dictionary<string, Graph> graphs)
     {
         Dictionary<string, Bitmap> bitmaps = new Dictionary<string, Bitmap>();
+        GraphRenderer renderer = new GraphRenderer();
+        renderer.LayerSpacing = 100;
+        renderer.NodeSpacing = 200;
 
         foreach (string graphName in graphs.Keys)
         {
-            Graph graph = graphs[graphName];
-            Bitmap bitmap = DirectedGraphRenderer.RenderGraph(graph);
-            bitmaps.Add(graph.Name, bitmap);
+            Bitmap bitmap = renderer.RenderSugiyamaStyleGraph(graphs[graphName]);
+            bitmaps.Add(graphs[graphName].Name, bitmap);
         }
 
         return bitmaps;

@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Utilities;
 using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
@@ -79,12 +80,12 @@ public class HtmlWriter
 
         IStorageFolder? folder = await outputFolder.CreateFolderAsync("objGraphs");
         if (folder == null) { return; }
-        
+
         foreach (string o in individualGraphs.Keys)
         {
             Bitmap bitmap = individualGraphs[o];
             IStorageFile? subFile = await folder.CreateFileAsync($"{o}_Graph.png");
-            if(subFile == null) { continue; }
+            if (subFile == null) { continue; }
 
             Stream? stream = await subFile.OpenWriteAsync();
             bitmap.Save(stream);
@@ -98,73 +99,71 @@ public class HtmlWriter
     {
         IStorageFolder? folder = await parentFolder.CreateFolderAsync("objs");
         if (folder == null) { return; }
-
+        string searchDataString = "";
         if (classes != null && classes.Length > 0)
         {
-            foreach (ClassDeclaration current in classes)
+            for (int i = 0; i < classes.Length; i++)
             {
-                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
-                if (storageFile == null) { continue; }
-                Stream stream = await storageFile.OpenWriteAsync();
-                StreamWriter writer = new StreamWriter(stream);
-                string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                await writer.WriteAsync(classOutput);
-                writer.Close(); writer.Dispose();
-                stream.Close(); await stream.DisposeAsync();
-                storageFile.Dispose();
+                searchDataString += @"""" + classes[i].Name + @"""" + ",";
+                await TryCreateObjFile(folder, classes[i].Name, classes[i].Definition, sideBar, docInfo, classes[i].Properties, classes[i].Methods);
             }
+
         }
 
         if (interfaces != null && interfaces.Length > 0)
         {
-            foreach (InterfaceDeclaration current in interfaces)
+            for (int i = 0; i < interfaces.Length; i++)
             {
-
-                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
-                if (storageFile == null) { continue; }
-                Stream stream = await storageFile.OpenWriteAsync();
-                StreamWriter writer = new StreamWriter(stream);
-                string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                await writer.WriteAsync(classOutput);
-                writer.Close(); writer.Dispose();
-                stream.Close(); await stream.DisposeAsync();
-                storageFile.Dispose();
+                searchDataString += @"""" + interfaces[i].Name + @"""" + ",";
+                await TryCreateObjFile(folder, interfaces[i].Name, interfaces[i].Definition, sideBar, docInfo, interfaces[i].Properties, interfaces[i].Methods);
             }
         }
 
         if (structs != null && structs.Length > 0)
         {
-            foreach (StructDeclaration current in structs)
+            for (int i = 0; i < structs.Length; i++)
             {
-
-                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
-                if (storageFile == null) { continue; }
-                Stream stream = await storageFile.OpenWriteAsync();
-                StreamWriter writer = new StreamWriter(stream);
-                string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, current.Properties, current.Methods);
-                await writer.WriteAsync(classOutput);
-                writer.Close(); writer.Dispose();
-                stream.Close(); await stream.DisposeAsync();
-                storageFile.Dispose();
+                searchDataString += @"""" + structs[i].Name + @"""" + ",";
+                await TryCreateObjFile(folder, structs[i].Name, structs[i].Definition, sideBar, docInfo, structs[i].Properties, structs[i].Methods);
             }
         }
 
         if (enums != null && enums.Length > 0)
         {
-            foreach (EnumDeclaration current in enums)
+            for (int i = 0; i < enums.Length; i++)
             {
-
-                IStorageFile? storageFile = await folder.CreateFileAsync($"{current.Name}.html");
-                if (storageFile == null) { continue; }
-                Stream stream = await storageFile.OpenWriteAsync();
-                StreamWriter writer = new StreamWriter(stream);
-                string classOutput = GeneratePage(current.Name, current.Definition, sideBar, docInfo, null, null, current.EnumMembers);
-                await writer.WriteAsync(classOutput);
-                writer.Close(); writer.Dispose();
-                stream.Close(); await stream.DisposeAsync();
-                storageFile.Dispose();
+                searchDataString += @"""" + enums[i].Name + @"""" + ",";
+                await TryCreateObjFile(folder, enums[i].Name, enums[i].Definition, sideBar, docInfo, null, null, enums[i].EnumMembers);
             }
         }
+
+        if (!string.IsNullOrEmpty(searchDataString) && !string.IsNullOrWhiteSpace(searchDataString))
+        {
+            IStorageFile? searchDataFile = await parentFolder.CreateFileAsync("search-data.js");
+            if (searchDataFile == null) { return; }
+
+            Stream stream = await searchDataFile.OpenWriteAsync();
+            StreamWriter writer = new StreamWriter(stream);
+
+            await writer.WriteAsync($"window.searchablePages = [{searchDataString}]");
+            writer.Close(); await writer.DisposeAsync();
+            stream.Close(); await stream.DisposeAsync();
+            searchDataFile.Dispose();
+        }
+    }
+
+    private async Task<bool> TryCreateObjFile(IStorageFolder folder, string name, string? definition, string sideBar, DocumentInformation docInfo, Declaration[]? properties = null, Declaration[]? methods = null, Declaration[]? enumMembers = null)
+    {
+        IStorageFile? storageFile = await folder.CreateFileAsync($"{name}.html");
+        if (storageFile == null) { return false; }
+        Stream stream = await storageFile.OpenWriteAsync();
+        StreamWriter writer = new StreamWriter(stream);
+        string classOutput = GeneratePage(name, definition, sideBar, docInfo, properties, methods, enumMembers);
+        await writer.WriteAsync(classOutput);
+        writer.Close(); writer.Dispose();
+        stream.Close(); await stream.DisposeAsync();
+        storageFile.Dispose();
+        return true;
     }
 
     private async Task<bool> GenerateHomePage(IStorageFolder outputPath, string sidebar, DocumentInformation docInfo)
@@ -184,6 +183,7 @@ public class HtmlWriter
                     <title>{docInfo.ProjectName} Documentation</title>
                     <link rel=""stylesheet"" href=""./homePageStyles.css"">
                     <link rel=""stylesheet"" href=""./sidebar.css"">
+                    <script src=""./search-data.js"" defer></script>
                     <script src=""./helper.js"" defer></script>
                 </head>
 
@@ -194,6 +194,11 @@ public class HtmlWriter
                     <a href=""./"">
                         <h2>{docInfo.ProjectName}</h2>
                     </a>
+
+                    <div class=""search-container"">
+                <input type=""text"" id=""search"" placeholder=""Search..."" autocomplete=""off"">
+                <div id=""search-results"" class=""search-results""></div>
+            </div>
 
                     {sidebar}
                     </aside> 
@@ -236,6 +241,7 @@ public class HtmlWriter
 
     <link rel=""stylesheet"" href=""../docStyles.css"">
     <link rel=""stylesheet"" href=""../sidebar.css"">
+    <script src=""../search-data.js"" defer></script>
     <script src=""../docsHelpers.js"" defer></script>
 </head>
 
@@ -245,6 +251,11 @@ public class HtmlWriter
             <a href=""../"" class=""brand"">
                 <h2>{docInfo.ProjectName}</h2>
             </a>
+            
+            <div class=""search-container"">
+                <input type=""text"" id=""search"" placeholder=""Search..."" autocomplete=""off"">
+                <div id=""search-results"" class=""search-results""></div>
+            </div>
 
             {sidebar}
         </aside>
