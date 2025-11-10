@@ -28,13 +28,13 @@ public class DocumentationWriter
             docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations, docInfo.DeclarationColours);
         }
 
-        bool success = false;
+        bool success;
         if (type == DocumentationType.PDF)
         {
             success = await pdfWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
             if (success && SettingsModel.Instance.KeepGraphFilesPostPDFGeneration == false && docInfo.GraphFolder != null)
             {
-                await DeleteGraphFolder(docInfo.GraphFolder);
+                await Utilities.DeleteFolder(docInfo.GraphFolder);
             }
         }
         else
@@ -48,21 +48,6 @@ public class DocumentationWriter
         }
         return success;
     }
-
-    private async Task DeleteGraphFolder(IStorageFolder folder)
-    {
-        List<IStorageFile> files = await Utilities.EnumerateAllFilesAsync(folder);
-        for (int i = 0; i < files.Count; i++)
-        {
-            await files[i].DeleteAsync();
-        }
-
-        files.Clear();
-        await folder.DeleteAsync();
-    }
-
-
-
 }
 
 public enum DocumentationType

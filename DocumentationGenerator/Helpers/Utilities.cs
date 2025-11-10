@@ -10,6 +10,18 @@ namespace DocumentationGenerator.Helpers;
 
 public static class Utilities
 {
+    public static async Task DeleteFolder(IStorageFolder folder)
+    {
+        List<IStorageFile> files = await EnumerateAllFilesAsync(folder);
+        for (int i = 0; i < files.Count; i++)
+        {
+            await files[i].DeleteAsync();
+        }
+
+        files.Clear();
+        await folder.DeleteAsync();
+    }
+    
     public static async Task<List<IStorageFile>> EnumerateAllFilesAsync(IStorageFolder folder, string searchPattern = "*")
     {
         var files = new List<IStorageFile>();
