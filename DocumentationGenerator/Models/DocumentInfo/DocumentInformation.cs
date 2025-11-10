@@ -20,6 +20,7 @@ public class DocumentInformation : IDisposable
     public Bitmap? GlobalInheritanceGraph { get; set; }
     public Dictionary<string, Bitmap>? IndividualObjsGraphs { get; set; }
     public IStorageItem SavePath { get; }
+    public IStorageFolder? GraphFolder { get; set; }
 
     public
     DocumentInformation(IStorageItem savePath, DeclarationColours declarationColours, DeclarationFontStyles declarationFonts, bool generateTableOfContents, bool generatePageNumbers, bool generateRelationshipGraph, bool printBaseTypes, string projectName, string projectDescription)

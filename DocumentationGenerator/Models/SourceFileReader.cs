@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
+using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.LanguageParsers;
 using Microsoft.CodeAnalysis.CSharp;
@@ -49,49 +50,10 @@ public class SourceFileReader : IDisposable
                 break;
         }
 
-        List<IStorageFile> files = await EnumerateAllFilesAsync(directory,searchPattern);
+        List<IStorageFile> files = await Utilities.EnumerateAllFilesAsync(directory,searchPattern);
         await ReadSourceFilesAsync(files, progLanguage);
     }
 
-    public async Task<List<IStorageFile>> EnumerateAllFilesAsync(IStorageFolder folder, string searchPattern = "*") 
-    {
-        var files = new List<IStorageFile>();
-
-        await foreach (var item in folder.GetItemsAsync())
-        {
-            switch (item)
-            {
-                case IStorageFile file:
-                    // Optionally filter by extension manually since there's no pattern support
-                    if (MatchesPattern(file.Name, searchPattern))
-                        files.Add(file);
-                    break;
-
-                case IStorageFolder subfolder:
-                    var subFiles = await EnumerateAllFilesAsync(subfolder,searchPattern);
-                    files.AddRange(subFiles);
-                    break;
-            }
-        }
-
-        return files;
-    }
-
-    private bool MatchesPattern(string fileName, string pattern)
-    {
-        if (pattern == "*") return true;
-
-        // Simple pattern matching for "*.ext"
-        if (pattern.StartsWith("*."))
-        {
-            var ext = pattern.Substring(1); //".cs"
-            return fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase);
-        }
-
-        return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
-    }
-
-    /// <summary>
     /// Attempts to read multiple source files asyncronously and awaits for all source files to be read until it Parses all the Results into the object.
     /// </summary>
     /// <param name="fileNames">The source files to read.</param>

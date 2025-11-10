@@ -56,8 +56,11 @@ public class PdfWriter
         if (storageFolder == null) { return false; }
         IStorageFolder? graphFolder = await storageFolder.CreateFolderAsync("Object_Graphs");
 
-        await Task.WhenAll(AddIntroPage(document, docInfo, graphFolder),        
-        
+        docInfo.GraphFolder = graphFolder;
+
+        await Task.WhenAll(
+            AddIntroPage(document, docInfo, graphFolder),
+
             WriteClassesToPdfAsync(classes, docInfo.DeclarationColours, document, docInfo, graphFolder)
         );
 
@@ -101,7 +104,7 @@ public class PdfWriter
         Stream stream = await storageFile.OpenWriteAsync();
         pdfRenderer.Save(stream, true);
         stream.Close(); await stream.DisposeAsync();
-        
+
         return true;
     }
 
@@ -358,7 +361,7 @@ public class PdfWriter
 
     private async Task WriteClassesToPdfAsync(ClassDeclaration[]? classDeclarations, DeclarationColours declarationColours, Document document, DocumentInformation docInfo, IStorageFolder? graphFolder)
     {
-        if(classDeclarations == null || classDeclarations.Length < 1) { return; }
+        if (classDeclarations == null || classDeclarations.Length < 1) { return; }
         string? parentDirectory = Path.GetDirectoryName(docInfo.SavePath.Path.ToString());
         Section section;
         foreach (ClassDeclaration current in classDeclarations)
@@ -385,7 +388,7 @@ public class PdfWriter
                 currentGraph.Save(stream);
                 stream.Close(); await stream.DisposeAsync();
                 section.AddImage(storageFile.Path.AbsolutePath);
-                
+
             }
 
             paragraph = section.AddParagraph($"Definition: {current.Definition}");

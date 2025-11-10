@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
@@ -22,27 +25,43 @@ public class DocumentationWriter
         if (docInfo.GenerateInheritanceGraphs)
         {
             docInfo.GlobalInheritanceGraph = InheritanceGraphGenerator.GenerateGlobalGraph(classDeclarations, interfaceDeclarations, docInfo.DeclarationColours);
-            docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations,docInfo.DeclarationColours);
+            docInfo.IndividualObjsGraphs = InheritanceGraphGenerator.GenerateIndividualGraphs(classDeclarations, docInfo.DeclarationColours);
         }
 
-        bool valid = false;
+        bool success = false;
         if (type == DocumentationType.PDF)
         {
-            valid = await pdfWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
+            success = await pdfWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
+            if (success && SettingsModel.Instance.KeepGraphFilesPostPDFGeneration == false && docInfo.GraphFolder != null)
+            {
+                await DeleteGraphFolder(docInfo.GraphFolder);
+            }
         }
         else
         {
-            valid = await htmlWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
+            success = await htmlWriter.WriteAsync(classDeclarations, enumDeclarations, interfaceDeclarations, structDeclarations, docInfo);
         }
 
-        if(App.Instance != null && App.Instance.TopLevel != null)
+        if (success && App.Instance != null && App.Instance.TopLevel != null)
         {
             await App.Instance.TopLevel.Launcher.LaunchUriAsync(docInfo.SavePath.Path);
         }
-
-
-        return valid;
+        return success;
     }
+
+    private async Task DeleteGraphFolder(IStorageFolder folder)
+    {
+        List<IStorageFile> files = await Utilities.EnumerateAllFilesAsync(folder);
+        for (int i = 0; i < files.Count; i++)
+        {
+            await files[i].DeleteAsync();
+        }
+
+        files.Clear();
+        await folder.DeleteAsync();
+    }
+
+
 
 }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -9,6 +10,47 @@ namespace DocumentationGenerator.Helpers;
 
 public static class Utilities
 {
+    public static async Task<List<IStorageFile>> EnumerateAllFilesAsync(IStorageFolder folder, string searchPattern = "*")
+    {
+        var files = new List<IStorageFile>();
+
+        await foreach (var item in folder.GetItemsAsync())
+        {
+            switch (item)
+            {
+                case IStorageFile file:
+                    // Optionally filter by extension manually since there's no pattern support
+                    if (MatchesPattern(file.Name, searchPattern))
+                        files.Add(file);
+                    break;
+
+                case IStorageFolder subfolder:
+                    var subFiles = await EnumerateAllFilesAsync(subfolder, searchPattern);
+                    files.AddRange(subFiles);
+                    break;
+            }
+        }
+
+        return files;
+    }
+
+    private static bool MatchesPattern(string fileName, string pattern)
+    {
+        if (pattern == "*") return true;
+
+        // Simple pattern matching for "*.ext"
+        if (pattern.StartsWith("*."))
+        {
+            var ext = pattern.Substring(1); //".cs"
+            return fileName.EndsWith(ext, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return string.Equals(fileName, pattern, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+
+
     public static SKColor MigraDocColorToSKColor(MigraDoc.DocumentObjectModel.Color color)
     {
         return new SKColor(color.Argb);
@@ -40,8 +82,8 @@ public static class Utilities
     {
         Stream? sourceStream = await TryOpenReadStream(sourceFilePath);
 
-        if(sourceStream == null) { return false; }
-        
+        if (sourceStream == null) { return false; }
+
         IStorageFile? copyFile = await outputFolder.CreateFileAsync(sourceFileName);
 
         if (copyFile == null) { return false; }

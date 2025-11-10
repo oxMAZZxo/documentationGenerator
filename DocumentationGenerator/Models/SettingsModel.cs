@@ -36,6 +36,7 @@ public class SettingsModel
     public bool GeneratePageNumbers { get; set; }
     public bool AddDocumentRelationshipGraph { get; set; }
     public bool PrintBaseTypesToDocument { get; set; }
+    public bool KeepGraphFilesPostPDFGeneration { get; set; }
     public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
 
     public SettingsModel()
@@ -63,6 +64,7 @@ public class SettingsModel
             GenerateTableOfContents = true;
             AddDocumentRelationshipGraph = true;
             PrintBaseTypesToDocument = true;
+            KeepGraphFilesPostPDFGeneration = false;
 
             ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
             ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
@@ -158,6 +160,8 @@ public class SettingsModel
 
             PrintBaseTypesToDocument = Convert.ToBoolean(lines[17]);
 
+            KeepGraphFilesPostPDFGeneration = Convert.ToBoolean(lines[18]);
+
         }
         catch (Exception ex)
         {
@@ -193,6 +197,7 @@ public class SettingsModel
         writer.WriteLine(GenerateTableOfContents.ToString());
         writer.WriteLine(AddDocumentRelationshipGraph.ToString());
         writer.WriteLine(PrintBaseTypesToDocument.ToString());
+        writer.WriteLine(KeepGraphFilesPostPDFGeneration.ToString());
 
         writer.Close();
         writer.Dispose();
