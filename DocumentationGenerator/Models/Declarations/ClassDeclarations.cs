@@ -46,6 +46,27 @@ public struct Declaration
         IsTypePrimitive = isTypePrimitive;
         WhatIsType = objDeclaration;
     }
+
+    /// <returns>If this Declaration contains parameters, all the parameters will be returned seperated by commas.</returns>
+    public string GetMethodParameters()
+    {
+        if (Parameters == null || Parameters.Length == 0) { return ""; }
+        string output = "";
+
+        for (int i = 0; i < Parameters.Length; i++)
+        {
+            if (i == Parameters.Length - 1)
+            {
+                output += Parameters[i];
+            }
+            else
+            {
+                output += Parameters[i] + ", ";
+            }
+        }
+
+        return output;
+    }
 }
 
 public enum ObjectType

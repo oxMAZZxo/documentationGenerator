@@ -500,7 +500,7 @@ public class PdfWriter
                 }
             }
 
-            FormattedText formatted = paragraph.AddFormattedText($"{method.Name} - ");
+            FormattedText formatted = paragraph.AddFormattedText($"{method.Name}({method.GetMethodParameters()}) - ");
             formatted.Style = MemberStyle;
 
             formatted = paragraph.AddFormattedText($"{method.Definition} - {method.ReturnDefinition}");

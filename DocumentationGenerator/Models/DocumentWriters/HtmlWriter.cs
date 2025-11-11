@@ -351,7 +351,7 @@ public class HtmlWriter
             output += $@"<article class=""member"">
                         <button class=""member-toggle"" onclick=""toggleMember(this)"">◈ {method.Name}</button>
                         <div class=""member-body"">
-                            <p><strong>Signature:</strong> <code>{method.Type} {method.Name}({GetMethodParameters(method.Parameters)})</code></p>
+                            <p><strong>Signature:</strong> <code>{method.Type} {method.Name}({method.GetMethodParameters()})</code></p>
                             <p>{method.Definition}</p>
                         </div>
                     </article>
@@ -361,25 +361,7 @@ public class HtmlWriter
         return output;
     }
 
-    private string GetMethodParameters(string[]? parameters)
-    {
-        if (parameters == null || parameters.Length == 0) { return ""; }
-        string output = "";
-
-        for (int i = 0; i < parameters.Length; i++)
-        {
-            if (i == parameters.Length - 1)
-            {
-                output += parameters[i];
-            }
-            else
-            {
-                output += parameters[i] + ", ";
-            }
-        }
-
-        return output;
-    }
+    
 
     private string GenerateProperties(Declaration[]? properties)
     {
