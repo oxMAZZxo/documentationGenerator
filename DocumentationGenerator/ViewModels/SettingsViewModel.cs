@@ -209,6 +209,16 @@ public class SettingsViewModel : BaseViewModel
         }
     }
 
+    public bool KeepGraphFilesPostPDFGeneration
+    {
+        get => SettingsModel.Instance.KeepGraphFilesPostPDFGeneration;
+        set
+        {
+            SettingsModel.Instance.KeepGraphFilesPostPDFGeneration = value;
+            OnPropertyChanged(nameof(KeepGraphFilesPostPDFGeneration));
+        }
+    }
+
 
     public SettingsViewModel()
     {

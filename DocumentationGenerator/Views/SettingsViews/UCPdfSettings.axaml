@@ -52,10 +52,6 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="FontSize" Value="16" />
-            <!-- <Style Selector="Border">
-                                <Setter Property="Height" Value="15" />
-                                <Setter Property="Width" Value="15" />
-                        </Style>-->
         </Style>
         <Style Selector="Label.FontSizeLabel">
             <Setter Property="FontSize" Value="16" />
@@ -67,7 +63,8 @@
             <StackPanel Orientation="Vertical">
                 <CheckBox Content="Generate Page Numbers." IsChecked="{Binding GeneratePageNumbers}" />
                 <CheckBox Content="Generate Table Of Contents." IsChecked="{Binding GenerateTableOfContents}" />
-                <CheckBox Content="Print Base Types to Document." IsChecked="{Binding PrintBaseTypesToDocument}" />
+                <CheckBox Content="Print Base Types to Document." ToolTip.Tip="If checked, each class which inherits/implements are other objects, will have those objects printed beneath it." IsChecked="{Binding PrintBaseTypesToDocument}" />
+                <CheckBox Content="Keep Graphs Post PDF Generation." ToolTip.Tip="If unchecked, all the graph PNGs will be deleted." IsChecked="{Binding KeepGraphFilesPostPDFGeneration}" />
                 <StackPanel Classes="InnerPanel" Orientation="Horizontal">
                     <Label Content="Class Declaration Colour:" />
                     <ColorPicker Color="{Binding ClassDeclarationColour}" />

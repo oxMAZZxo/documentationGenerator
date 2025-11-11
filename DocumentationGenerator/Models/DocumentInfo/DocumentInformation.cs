@@ -142,11 +142,21 @@ public class FontDeclarationStyle : INotifyPropertyChanged
     }
     private void SetSpaceAfter()
     {
+        if(string.IsNullOrEmpty(SpaceAfterString) || string.IsNullOrWhiteSpace(SpaceAfterString))
+        {
+            SpaceAfter = 1;
+            return;
+        }
         SpaceAfter = Convert.ToInt32(SpaceAfterString);
     }
 
     private void SetFontSize()
     {
+        if(string.IsNullOrEmpty(FontSizeString) || string.IsNullOrWhiteSpace(FontSizeString))
+        {
+            FontSize = 1;
+            return;
+        }
         FontSize = Convert.ToInt32(FontSizeString);
     }
 
