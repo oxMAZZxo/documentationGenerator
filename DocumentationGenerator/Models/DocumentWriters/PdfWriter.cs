@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -125,14 +124,24 @@ public class PdfWriter
 
         if (docInfo.GlobalInheritanceGraph != null && graphFolder != null)
         {
-            IStorageFile? file = await graphFolder.CreateFileAsync("globalInheritanceGraph.png");
-            if (file == null) { return; }
-            Stream stream = await file.OpenWriteAsync();
-
-            docInfo.GlobalInheritanceGraph.Save(stream);
-            Image image = section.AddImage(file.Path.AbsolutePath);
-            image.Width = 500;
+            await AddGlobalInheritanceGraph(graphFolder, section, docInfo.GlobalInheritanceGraph);
         }
+    }
+
+    private async Task AddGlobalInheritanceGraph(IStorageFolder graphFolder, Section section, Bitmap globalInheritanceGraph)
+    {
+        IStorageFile? file = await graphFolder.CreateFileAsync("globalInheritanceGraph.png");
+        if (file == null) { return; }
+        Stream stream = await file.OpenWriteAsync();
+
+        globalInheritanceGraph.Save(stream);
+        Image image = section.AddImage(file.Path.AbsolutePath);
+        image.Width = 500;
+        image.LockAspectRatio = true;
+        image.Left = 0;
+        stream.Close();
+        stream.Dispose();
+        file.Dispose();
     }
 
     private void AddFirstPage(Document document, string projectName)
