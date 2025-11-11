@@ -142,7 +142,7 @@ public class FontDeclarationStyle : INotifyPropertyChanged
     }
     private void SetSpaceAfter()
     {
-        if(string.IsNullOrEmpty(SpaceAfterString) || string.IsNullOrWhiteSpace(SpaceAfterString))
+        if (string.IsNullOrEmpty(SpaceAfterString) || string.IsNullOrWhiteSpace(SpaceAfterString))
         {
             SpaceAfter = 1;
             return;
@@ -152,7 +152,7 @@ public class FontDeclarationStyle : INotifyPropertyChanged
 
     private void SetFontSize()
     {
-        if(string.IsNullOrEmpty(FontSizeString) || string.IsNullOrWhiteSpace(FontSizeString))
+        if (string.IsNullOrEmpty(FontSizeString) || string.IsNullOrWhiteSpace(FontSizeString))
         {
             FontSize = 1;
             return;
