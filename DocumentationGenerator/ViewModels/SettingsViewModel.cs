@@ -15,8 +15,7 @@ public class SettingsViewModel : BaseViewModel
     private UserControl currentUserControl;
     private SettingsTab selectedTab;
     private UCGeneralSettings UC_GeneralSettings;
-    private UCColourSettings UC_ColourSettings;
-    private UCFontSettings UC_FontSettings;
+    private UCPdfSettings UC_PdfSettings;
 
     public Color ClassDeclarationColour
     {
@@ -213,11 +212,12 @@ public class SettingsViewModel : BaseViewModel
 
     public SettingsViewModel()
     {
-        UC_GeneralSettings = new UCGeneralSettings();
-        UC_ColourSettings = new UCColourSettings();
-        UC_FontSettings = new UCFontSettings();
-        SelectedTab = SettingsTab.General;
         new SettingsModel();
+
+        UC_GeneralSettings = new UCGeneralSettings();
+        UC_PdfSettings = new UCPdfSettings();
+
+        SelectedTab = SettingsTab.General;
 
         ObjectDeclarationStyle.PropertyChanged += DeclarationStylePropertyChanged;
         ObjectDefinitionStyle.PropertyChanged += DeclarationStylePropertyChanged;
@@ -239,13 +239,10 @@ public class SettingsViewModel : BaseViewModel
             case SettingsTab.General:
                 CurrentUserControl = UC_GeneralSettings;
                 break;
-            case SettingsTab.Colours:
-                CurrentUserControl = UC_ColourSettings;
+            case SettingsTab.PDF:
+                CurrentUserControl = UC_PdfSettings;
                 break;
 
-            case SettingsTab.Fonts:
-                CurrentUserControl = UC_FontSettings;
-                break;
         }
     }
 }
@@ -253,6 +250,5 @@ public class SettingsViewModel : BaseViewModel
 public enum SettingsTab
 {
     General,
-    Colours,
-    Fonts
+    PDF,
 }

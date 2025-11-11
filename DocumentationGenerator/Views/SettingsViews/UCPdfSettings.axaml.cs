@@ -1,17 +1,17 @@
-using System.Diagnostics;
 using Avalonia.Controls;
 using Avalonia.Input;
 
 namespace DocumentationGenerator.Views.SettingsViews;
 
-public partial class UCFontSettings : UserControl
+public partial class UCPdfSettings : UserControl
 {
     private const string numbers = "0123456789";
-    public UCFontSettings()
+
+    public UCPdfSettings()
     {
         InitializeComponent();
     }
-
+    
     private void TextBoxKeyDown(object? sender, KeyEventArgs e)
     {
         if (sender == null || e.KeySymbol == null) { return; }

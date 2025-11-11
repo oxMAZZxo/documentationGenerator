@@ -38,8 +38,7 @@
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
                 <RadioButton Classes="TabRadioButton" Content="General" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.General}}" />
-                <RadioButton Classes="TabRadioButton" Content="Colours" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Colours}}" />
-                <RadioButton Classes="TabRadioButton" Content="Other" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.Fonts}}" />
+                <RadioButton Classes="TabRadioButton" Content="PDF" IsChecked="{Binding SelectedTab, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static vm:SettingsTab.PDF}}" />
             </StackPanel>
             <Separator Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
 
