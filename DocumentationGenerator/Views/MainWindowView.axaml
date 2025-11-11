@@ -35,15 +35,15 @@
                 <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding LoadFileCommand}"
+                                Command="{Binding LoadFileCommand}" HotKey="Ctrl+F"
                                 Content="Load File/s" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a file(s) from a directory." />
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding LoadDirectoryCommand}"
+                                Command="{Binding LoadDirectoryCommand}" HotKey="Ctrl+O"
                                 Content="Load Directory" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a whole directory (inlcudes sub-directories)." />
                         <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
                                 Content="Export..." PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
                         <Button Classes="MenuButton" Content="Clear Docs" PointerEntered="OnMenuButtonPointerOver"
-                                ToolTip.Tip="Delete all the loaded data and start over." />
+                                ToolTip.Tip="Delete all the loaded data and start over." HotKey="Ctrl+D" />
                         <Separator HorizontalAlignment="Stretch" />
                         <Button Classes="MenuButton"
                                 Command="{Binding ExitAppCommand}"
@@ -57,10 +57,10 @@
                 <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportPDFDocumentationCommand}"
+                                Command="{Binding ExportPDFDocumentationCommand}" HotKey="Ctrl+P"
                                 Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportHTMLDocumentationCommand}"
+                                Command="{Binding ExportHTMLDocumentationCommand}" HotKey="Ctrl+H"
                                 Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
                     </StackPanel>
                 </Border>
