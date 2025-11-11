@@ -57,10 +57,10 @@
                 <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportPDFDocumentationCommand}" HotKey="Ctrl+P"
+                                Command="{Binding ExportPDFDocumentationCommand}" HotKey="Ctrl+E+P"
                                 Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportHTMLDocumentationCommand}" HotKey="Ctrl+H"
+                                Command="{Binding ExportHTMLDocumentationCommand}" HotKey="Ctrl+E+H"
                                 Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
                     </StackPanel>
                 </Border>
