@@ -2,9 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using Avalonia.Controls;
 using Avalonia.Media;
-using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.DocumentInfo;
 
 namespace DocumentationGenerator.Models;

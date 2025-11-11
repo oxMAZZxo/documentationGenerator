@@ -126,6 +126,9 @@ public class MainWindowViewModel : BaseViewModel
         IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
         if (folders.Count < 1) { return; }
 
+        FileName = "Please wait while the documentation is being generated....";
+
+
         DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                    SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
                    SettingsModel.Instance.MigraDocInterfaceDeclarationColour, SettingsModel.Instance.MigraDocStructDeclarationColour);
@@ -140,6 +143,9 @@ public class MainWindowViewModel : BaseViewModel
 
         await documentationWriter.WriteDocumentationAsync(DocumentationType.HTML, sourceFileReader.Classes.ToArray(),
                 sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
+
+        FileName = "The documentation was generated successfully.";
+
     }
 
     private async void ExportToPDF()
@@ -152,6 +158,7 @@ public class MainWindowViewModel : BaseViewModel
         if (topLevel == null) { return; }
         IStorageFile? file = await topLevel.StorageProvider.SaveFilePickerAsync(filePickerSaveOptions);
         if (file == null) { return; }
+        FileName = "Please wait while the documentation is being generated.....";
 
         DeclarationColours declarationColours = new DeclarationColours(SettingsModel.Instance.MigraDocClassDeclarationColour,
                    SettingsModel.Instance.MigraDocEnumDeclarationColour, SettingsModel.Instance.MigraDocPrimitiveDeclarationColour,
@@ -167,6 +174,7 @@ public class MainWindowViewModel : BaseViewModel
 
         await documentationWriter.WriteDocumentationAsync(DocumentationType.PDF, sourceFileReader.Classes.ToArray(),
                 sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
+        FileName = "The documentation was generated successfully.";
     }
 
     private async Task<bool> CheckHasData()
@@ -178,7 +186,7 @@ public class MainWindowViewModel : BaseViewModel
             "You already have loaded some data. By clicking 'OK', you will load data on top of the existing data. Click 'Cancel' to cancel the operation.",
             ButtonEnum.OkCancel, Icon.Warning, null, WindowStartupLocation.CenterOwner);
 
-            ButtonResult result = await box.ShowWindowDialogAsync(owner);
+            ButtonResult result = await box.ShowAsPopupAsync(owner);
             if (result == ButtonResult.Cancel)
             {
                 return false;
@@ -198,7 +206,7 @@ public class MainWindowViewModel : BaseViewModel
             "You are trying to Export but you haven't loaded any data! Try loading some data by loading a directory or specific files by clickin one of the options on the 'File' menu.",
             ButtonEnum.Ok, Icon.Error, null, WindowStartupLocation.CenterOwner);
 
-            await result.ShowWindowDialogAsync(owner);
+            await result.ShowAsPopupAsync(owner);
             return true;
         }
 
@@ -214,7 +222,7 @@ public class MainWindowViewModel : BaseViewModel
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFolder> folders = await App.Instance.TopLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
 
-        if(folders.Count < 1 || folders == null) { return; }
+        if (folders.Count < 1 || folders == null) { return; }
 
         await sourceFileReader.ReadSourceDirectory(folders[0], ProgLanguage.CSharp);
         FileName = folders[0].Name;
@@ -231,7 +239,7 @@ public class MainWindowViewModel : BaseViewModel
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFile>? files = await App.Instance.TopLevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
 
-        if(files == null || files.Count < 1) { return; }
+        if (files == null || files.Count < 1) { return; }
 
         await sourceFileReader.ReadSourceFilesAsync(files.ToList(), ProgLanguage.CSharp);
 

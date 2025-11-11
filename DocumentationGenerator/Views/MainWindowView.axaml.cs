@@ -5,6 +5,7 @@ using Avalonia.Interactivity;
 using DocumentationGenerator.ViewModels;
 using DocumentationGenerator.Helpers;
 using System.IO;
+using Avalonia.VisualTree;
 
 namespace DocumentationGenerator.Views;
 
@@ -18,7 +19,6 @@ public partial class MainWindowView : Window
         DataContext = new MainWindowViewModel(this);
         FilePopup.Opened += OnFilePopupOpened;
         ExportPopup.Opened += OnExportPopupOpened;
-
         windowLostFocus = false;
         this.LostFocus += OnWindowLostFocus;
         this.PointerEntered += OnWindowPointerEntered;

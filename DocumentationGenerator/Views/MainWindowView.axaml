@@ -32,12 +32,7 @@
             <Popup x:Name="FilePopup" Grid.ColumnSpan="2" Focusable="True"
                    Placement="BottomEdgeAlignedLeft"
                    PlacementTarget="{Binding ElementName=FileButton}">
-                <Popup.Styles>
-                    <Style Selector="Border">
-                        <Setter Property="CornerRadius" Value="10" />
-                    </Style>
-                </Popup.Styles>
-                <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
+                <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
                                 Command="{Binding LoadFileCommand}"
@@ -59,7 +54,7 @@
 
             <Popup x:Name="ExportPopup" Grid.ColumnSpan="2" Placement="RightEdgeAlignedTop"
                    PlacementTarget="{Binding ElementName=ExportButton}">
-                <Border Background="#1c1c1c" BorderBrush="#1c1c1c" BorderThickness="1">
+                <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
                                 Command="{Binding ExportPDFDocumentationCommand}"
