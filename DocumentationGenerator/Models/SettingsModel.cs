@@ -68,8 +68,8 @@ public class SettingsModel
 
             ObjectDeclarationStyle = new FontDeclarationStyle("20", false, true, "5");
             ObjectDefinitionStyle = new FontDeclarationStyle("18", true, false, "20");
-            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "2");
-            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "1");
+            MemberHeadingStyle = new FontDeclarationStyle("16", false, true, "8");
+            MemberTypeStyle = new FontDeclarationStyle("14", false, true, "5");
             MemberStyle = new FontDeclarationStyle("14", false, false, "1");
             MemberDefinitionStyle = new FontDeclarationStyle("14", true, false, "1");
         }

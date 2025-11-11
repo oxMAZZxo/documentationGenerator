@@ -162,6 +162,6 @@ public class FontDeclarationStyle : INotifyPropertyChanged
 
     public string GetValuesInStrings()
     {
-        return $"{FontSize},{isBold},{IsItalic},{SpaceAfter}";
+        return $"{FontSize},{IsItalic},{IsBold},{SpaceAfter}";
     }
 }
