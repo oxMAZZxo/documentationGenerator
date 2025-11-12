@@ -83,10 +83,7 @@ public class MainWindowViewModel : BaseViewModel
 
         InitDialogs();
 
-        FileName = "Loaded File(s) / Directory name will be displayed here.";
-        Output = "Preview will be displayed here.";
-        ProjectName = "";
-        ProjectDescription = "";
+        ShowDefaultUI();
     }
 
     private void OnAppShuttingDown(object? sender, WindowClosingEventArgs e)
@@ -110,9 +107,26 @@ public class MainWindowViewModel : BaseViewModel
         Environment.Exit(0);
     }
 
-    private void ClearDocs()
+    private async void ClearDocs()
     {
-        sourceFileReader.Clear();
+        if (!sourceFileReader.HasData) { return; }
+
+        IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard("Warning!", "Are you sure you want to clear all the source data that has been loaded.", ButtonEnum.YesNo, Icon.Warning, null, WindowStartupLocation.CenterOwner);
+
+        ButtonResult result = await box.ShowWindowDialogAsync(owner);
+        if (result == ButtonResult.Yes)
+        {
+            sourceFileReader.Clear();
+            ShowDefaultUI();
+        }
+    }
+    
+    private void ShowDefaultUI()
+    {
+        FileName = "Loaded File(s) / Directory name will be displayed here.";
+        Output = "Preview will be displayed here.";
+        ProjectName = "";
+        ProjectDescription = "";
     }
 
     private async void ExportToHTML()

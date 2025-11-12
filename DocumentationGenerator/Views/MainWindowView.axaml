@@ -45,8 +45,8 @@
                                     Content="Load Directory" HotKey="Ctrl+O" PointerEntered="OnMenuButtonPointerOver"
                                     ToolTip.Tip="Load a whole directory (inlcudes sub-directories). HOTKEY: CTRL+O" />
                             <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
-                                    Content="Export         &gt;" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
-                            <Button Classes="MenuButton" Content="Clear Docs" HotKey="Ctrl+D"
+                                    Content="Export      >" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
+                            <Button Classes="MenuButton" Content="Clear Docs" HotKey="Ctrl+D" Command="{Binding ClearDocsCommand}"
                                     PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Delete all the loaded data and start over." />
                             <Separator HorizontalAlignment="Stretch" />
                             <Button Classes="MenuButton"
