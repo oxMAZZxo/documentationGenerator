@@ -100,6 +100,10 @@ public class MainWindowViewModel : BaseViewModel
         directoryPickerOpenOptions.AllowMultiple = false;
 
         filePickerSaveOptions.Title = "Save the Documentation as a PDF at the desired Location";
+        filePickerSaveOptions.SuggestedFileName = "Documentation";
+        filePickerSaveOptions.DefaultExtension = "pdf";
+        filePickerSaveOptions.ShowOverwritePrompt = true;
+        filePickerSaveOptions.FileTypeChoices = new[] { new FilePickerFileType(""){ Patterns = new[] { "*.pdf" } } };
     }
 
     private void Exit()
