@@ -7,6 +7,7 @@ using DocumentationGenerator.Views;
 using Avalonia.Controls;
 using PdfSharp.Fonts;
 using DocumentationGenerator.Helpers;
+using System;
 
 namespace DocumentationGenerator;
 
@@ -14,6 +15,7 @@ public partial class App : Application
 {
     public static App? Instance { get; private set; }
     public TopLevel? TopLevel { get; private set; }
+    public bool IsShuttingDown { get; private set; }
 
     public override void Initialize()
     {
@@ -31,10 +33,20 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindowView();
             desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            desktop.MainWindow.Closing += OnMainWindowClosing;
             TopLevel = TopLevel.GetTopLevel(desktop.MainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void OnMainWindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        IsShuttingDown = true;
+        if(sender == null) { return; }
+
+        Window window = (Window)sender;
+        window.Closing -= OnMainWindowClosing;
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

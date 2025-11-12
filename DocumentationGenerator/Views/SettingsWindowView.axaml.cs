@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -11,6 +12,22 @@ public partial class SettingsWindowView : Window
     {
         InitializeComponent();
         DataContext = new SettingsViewModel();
+        Closing += OnWindowClosing;
+    }
+
+    private void OnWindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        e.Cancel = false;
+        if (App.Instance == null)
+        {
+            return;
+        }
+
+        if(!App.Instance.IsShuttingDown)
+        {
+            e.Cancel = true;
+            this.Hide();              
+        }
     }
 
     private void OnCloseButtonClicked(object? sender, RoutedEventArgs e)

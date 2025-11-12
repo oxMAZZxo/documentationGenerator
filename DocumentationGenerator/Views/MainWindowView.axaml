@@ -25,7 +25,7 @@
                 <Image Margin="3" VerticalAlignment="Top" Source="avares://DocumentationGenerator/Assets/Doc Gen Icon Rounded Corners.png" />
                 <Button x:Name="FileButton" Classes="ChromeButton" Click="OnFileButtonClicked"
                         Content="File" />
-                <Button Classes="ChromeButton" Command="{Binding SettingsButtonCommand}" Content="Settings" />
+                <Button Classes="ChromeButton" Command="{Binding SettingsButtonCommand}" Content="Settings" HotKey="Ctrl+S" />
                 <Button Classes="ChromeButton" Content="Help" />
             </StackPanel>
 
