@@ -33,22 +33,26 @@
                    Placement="BottomEdgeAlignedLeft"
                    PlacementTarget="{Binding ElementName=FileButton}">
                 <Border Classes="PopupBorder">
-                    <StackPanel>
-                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding LoadFileCommand}" HotKey="Ctrl+F"
-                                Content="Load File/s" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a file(s) from a directory." />
-                        <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding LoadDirectoryCommand}" HotKey="Ctrl+O"
-                                Content="Load Directory" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Load a whole directory (inlcudes sub-directories)." />
-                        <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
-                                Content="Export..." PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
-                        <Button Classes="MenuButton" Content="Clear Docs" PointerEntered="OnMenuButtonPointerOver"
-                                ToolTip.Tip="Delete all the loaded data and start over." HotKey="Ctrl+D" />
-                        <Separator HorizontalAlignment="Stretch" />
-                        <Button Classes="MenuButton"
-                                Command="{Binding ExitAppCommand}"
-                                Content="Exit" PointerEntered="OnMenuButtonPointerOver" />
-                    </StackPanel>
+
+                        <StackPanel>
+                            <Button Classes="MenuButton" Click="OnPopupButtonClick"
+                                    Command="{Binding LoadFileCommand}"
+                                    Content="Load File/s" HotKey="Ctrl+F" PointerEntered="OnMenuButtonPointerOver"
+                                    ToolTip.Tip="Load a file(s) from a directory. HOTKEY: CTRL+F">
+                            </Button>
+                            <Button Classes="MenuButton" Click="OnPopupButtonClick"
+                                    Command="{Binding LoadDirectoryCommand}"
+                                    Content="Load Directory" HotKey="Ctrl+O" PointerEntered="OnMenuButtonPointerOver"
+                                    ToolTip.Tip="Load a whole directory (inlcudes sub-directories). HOTKEY: CTRL+O" />
+                            <Button x:Name="ExportButton" Classes="MenuButton" Click="OnExportButtonClicked"
+                                    Content="Export         &gt;" PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Export data to a chosen format." />
+                            <Button Classes="MenuButton" Content="Clear Docs" HotKey="Ctrl+D"
+                                    PointerEntered="OnMenuButtonPointerOver" ToolTip.Tip="Delete all the loaded data and start over." />
+                            <Separator HorizontalAlignment="Stretch" />
+                            <Button Classes="MenuButton"
+                                    Command="{Binding ExitAppCommand}"
+                                    Content="Exit" PointerEntered="OnMenuButtonPointerOver" />
+                        </StackPanel>
                 </Border>
             </Popup>
 
@@ -57,11 +61,11 @@
                 <Border Classes="PopupBorder">
                     <StackPanel>
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportPDFDocumentationCommand}" HotKey="Ctrl+E+P"
-                                Content="Export to PDF." ToolTip.Tip="All data will be compiled into one PDF Document." />
+                                Command="{Binding ExportPDFDocumentationCommand}"
+                                Content="Export to PDF." HotKey="Ctrl+E+P" ToolTip.Tip="All data will be compiled into one PDF Document. HOTKEY: CTRL+E+P" />
                         <Button Classes="MenuButton" Click="OnPopupButtonClick"
-                                Command="{Binding ExportHTMLDocumentationCommand}" HotKey="Ctrl+E+H"
-                                Content="Export to HTML." ToolTip.Tip="All data will be compiled into a HTML website." />
+                                Command="{Binding ExportHTMLDocumentationCommand}"
+                                Content="Export to HTML." HotKey="Ctrl+E+H" ToolTip.Tip="All data will be compiled into a HTML website. HOTKEY: CTRL+E+H" />
                     </StackPanel>
                 </Border>
             </Popup>
