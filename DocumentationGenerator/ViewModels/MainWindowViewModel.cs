@@ -136,8 +136,8 @@ public class MainWindowViewModel : BaseViewModel
     private async void ExportToHTML()
     {
         bool noData = await CheckNoData();
-
-        if (noData) { return; }
+        bool hasProjectName = await CheckProjectNameAsync();
+        if (noData || !hasProjectName) { return; }
 
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
@@ -169,8 +169,9 @@ public class MainWindowViewModel : BaseViewModel
     private async void ExportToPDF()
     {
         bool noData = await CheckNoData();
-
-        if (noData) { return; }
+        bool hasProjectName = await CheckProjectNameAsync();
+        if (noData || !hasProjectName) { return; }
+        
 
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
@@ -193,6 +194,17 @@ public class MainWindowViewModel : BaseViewModel
         await documentationWriter.WriteDocumentationAsync(DocumentationType.PDF, sourceFileReader.Classes.ToArray(),
                 sourceFileReader.Enums.ToArray(), sourceFileReader.Interfaces.ToArray(), sourceFileReader.Structs.ToArray(), docInfo);
         FileName = "The documentation was generated successfully.";
+    }
+
+    private async Task<bool> CheckProjectNameAsync()
+    {
+        if (string.IsNullOrEmpty(ProjectName) || string.IsNullOrWhiteSpace(ProjectName))
+        {
+            IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard("Error!", "Enter a project name in the 'Project Name' input field.", ButtonEnum.Ok, Icon.Error, WindowStartupLocation.CenterOwner);
+            await box.ShowAsPopupAsync(owner);
+            return false;
+        }
+        return true;
     }
 
     private async Task<bool> CheckHasData()
