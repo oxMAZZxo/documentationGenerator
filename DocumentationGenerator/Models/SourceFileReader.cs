@@ -85,10 +85,6 @@ public class SourceFileReader : IDisposable
     /// <returns>Returns the Parsed Source Results which may contain Class, Enum, etc. Declarations.</returns>
     private async Task<ParsedSourceResults> ReadSourceFileAsync(IStorageFile sourceFile, ProgLanguage progLanguage)
     {
-        if(sourceFile.Name == "NPC.cs")
-        {
-            Debug.WriteLine($"Reading NPC.cs file");
-        }
         Stream? stream = await sourceFile.OpenReadAsync();
         StreamReader streamReader = new StreamReader(stream);
         string rawCode = await streamReader.ReadToEndAsync();
@@ -267,25 +263,25 @@ public class ParsedSourceResults
         Structs = new List<StructDeclaration>();
     }
 
-    public void Add(ParsedSourceResults results)
+    public void Add(ParsedSourceResults incoming)
     {
-        if (results == null) { return; }
+        if (incoming == null) { return; }
         
-        if (results.Classes != null && results.Classes.Count > 0)
+        if (incoming.Classes != null && incoming.Classes.Count > 0)
         {
-            Classes.AddRange(results.Classes);
+            Classes.AddRange(incoming.Classes);
         }
-        if (results.Interfaces != null && results.Interfaces.Count > 0)
+        if (incoming.Interfaces != null && incoming.Interfaces.Count > 0)
         {
-            Interfaces.AddRange(results.Interfaces);
+            Interfaces.AddRange(incoming.Interfaces);
         }
-        if (results.Structs != null && results.Structs.Count > 0)
+        if (incoming.Structs != null && incoming.Structs.Count > 0)
         {
-            Structs.AddRange(results.Structs);
+            Structs.AddRange(incoming.Structs);
         }
-        if(results.Enums != null && results.Enums.Count > 0)
+        if(incoming.Enums != null && incoming.Enums.Count > 0)
         {
-            Enums.AddRange(results.Enums);
+            Enums.AddRange(incoming.Enums);
         }
     }
 

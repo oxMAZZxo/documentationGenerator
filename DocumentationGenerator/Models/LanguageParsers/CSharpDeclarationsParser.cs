@@ -240,7 +240,6 @@ public static class CSharpDeclarationsParser
     private static ClassDeclaration HandleClassDeclaration(ClassDeclarationSyntax classDec)
     {
         string className = classDec.Identifier.Text;
-        Debug.WriteLine(className);
         string classDefinition = GetXML(classDec, XmlTag.summary);
 
         IEnumerable<PropertyDeclarationSyntax> properties = classDec.Members.OfType<PropertyDeclarationSyntax>();
