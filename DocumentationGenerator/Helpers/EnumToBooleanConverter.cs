@@ -1,11 +1,14 @@
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using Avalonia.Data;
 using Avalonia.Data.Converters;
 
 namespace DocumentationGenerator.Helpers
 {
+    /// <summary>
+    /// The Enum To Boolean Converter allows enum types to be converted to boolean types through the explicit parameters.
+    /// For an example have a look in SettingsWindowView.axaml at the radio buttons, and how whether they are checked is converted to a Settings Tab Enum.
+    /// </summary>
     public class EnumToBooleanConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)

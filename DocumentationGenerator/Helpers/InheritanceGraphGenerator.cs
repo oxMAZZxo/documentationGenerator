@@ -1,20 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Numerics;
 using Avalonia.Media.Imaging;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.DocumentInfo;
+using DocumentationGenerator.Models.Graph;
 using SkiaSharp;
 
 namespace DocumentationGenerator.Helpers;
 
-
+/// <summary>
+/// The Inheritance Graph Generator is a static wrapper class for creating and rendering graph from declarations.
+/// </summary>
 public static class InheritanceGraphGenerator
 {
+    /// <summary>
+    /// Generated a global inheritance graph, from given declarations.
+    /// </summary>
+    /// <param name="classes">The source classes.</param>
+    /// <param name="interfaces">The source interfaces.</param>
+    /// <param name="declarationColours">The declaration colours which will be assigned on the nodes.</param>
+    /// <returns>Returns a bitmap which represents the global inheritance hierarchy of the source codebase.</returns>
     public static Bitmap GenerateGlobalGraph(ClassDeclaration[]? classes, InterfaceDeclaration[]? interfaces, DeclarationColours declarationColours)
     {
         Graph graph = new Graph("Global Inheritance Graph");
@@ -74,7 +81,7 @@ public static class InheritanceGraphGenerator
             Dictionary<string, ClassDeclaration> classDictionary = classes.ToDictionary(x => x.Name, x => x);
             for (int i = 0; i < classes.Length; i++)
             {
-                if(classes[i].Name == "NPC")
+                if (classes[i].Name == "NPC")
                 {
                     Debug.WriteLine("NPC");
                 }
@@ -92,6 +99,13 @@ public static class InheritanceGraphGenerator
         return bitmaps;
     }
 
+    /// <summary>
+    /// Gets the base types of a declaration and generates nodes and edges, where the parent and child are assigned accordingly.
+    /// </summary>
+    /// <param name="graph">The current graph that is being generated.</param>
+    /// <param name="current">The current class declaration.</param>
+    /// <param name="sourceClasses">A dictionary of the source classes, where the key to a value is a classes name.</param>
+    /// <param name="declarationColours">The declaration colours.</param>
     private static void HandleBaseTypes(Graph graph, ClassDeclaration current, Dictionary<string, ClassDeclaration> sourceClasses, DeclarationColours declarationColours)
     {
         foreach (string b in current.BaseTypes)
