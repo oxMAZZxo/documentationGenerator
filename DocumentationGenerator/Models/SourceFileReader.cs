@@ -11,20 +11,46 @@ using DocumentationGenerator.Models.LanguageParsers;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace DocumentationGenerator.Models;
-
+/// <summary>
+/// Represents the different programming languages that are available read from source.
+/// </summary>
 public enum ProgLanguage
 {
+    /// <summary>
+    /// C#
+    /// </summary>
     CSharp,
+    /// <summary>
+    /// Visual Basic or vb.Net
+    /// </summary>
     VisualBasic,
+    /// <summary>
+    /// C++
+    /// </summary>
     CPP
 }
 
 public class SourceFileReader : IDisposable
 {
+    /// <summary>
+    /// A list of all the class declarations that have been parsed from source.
+    /// </summary>
     public List<ClassDeclaration> Classes { get; private set; }
+    /// <summary>
+    /// A list of all the enum declarations that have been parsed from source.
+    /// </summary>
     public List<EnumDeclaration> Enums { get; private set; }
+    /// <summary>
+    /// A list of all the interface declarations that have been parsed from source.
+    /// </summary>
     public List<InterfaceDeclaration> Interfaces { get; private set; }
+    /// <summary>
+    /// A list of all the struct declarations that have been parsed from source.
+    /// </summary>
     public List<StructDeclaration> Structs { get; private set; }
+    /// <summary>
+    /// Indicates whether this source file reader contains any data.
+    /// </summary>
     public bool HasData { get; private set; }
 
     public SourceFileReader()
@@ -40,6 +66,12 @@ public class SourceFileReader : IDisposable
         Dispose();
     }
 
+    /// <summary>
+    /// Attempts to asyncronously read a source directory and parse all data from the chosen programming language into each respective declaration.
+    /// </summary>
+    /// <param name="directory">The base directory to start reading from.</param>
+    /// <param name="progLanguage">The programming language to read.</param>
+    /// <returns>Returns a Task which can be awaited</returns>
     public async Task ReadSourceDirectory(IStorageFolder directory, ProgLanguage progLanguage)
     {
         string searchPattern = "*";
@@ -50,7 +82,7 @@ public class SourceFileReader : IDisposable
                 break;
         }
 
-        List<IStorageFile> files = await Utilities.EnumerateAllFilesAsync(directory,searchPattern);
+        List<IStorageFile> files = await Utilities.EnumerateAllFilesAsync(directory, searchPattern);
         await ReadSourceFilesAsync(files, progLanguage);
     }
 
@@ -100,6 +132,12 @@ public class SourceFileReader : IDisposable
         return results;
     }
 
+    /// <summary>
+    /// Attempts to parse source code into its respective declarations (Classes, Interfaces, Structs, Enums)
+    /// </summary>
+    /// <param name="rawCode">The code to attempt to parse.</param>
+    /// <param name="progLanguage">The programming language that is being passed.</param>
+    /// <returns>Returns ParsedSourceResults.</returns>
     private ParsedSourceResults ParseSourceResults(string rawCode, ProgLanguage progLanguage)
     {
         ParsedSourceResults results;
@@ -125,8 +163,9 @@ public class SourceFileReader : IDisposable
 
     /// <summary>
     /// Gets all the declaration read from the source files combining them into a string. The only formatting it applies is tab spacing and new lines.
+    /// NOTE! Structs have need been implemented yet inside this function.
     /// </summary>
-    /// <returns>Returns a string with all declarations.</returns>
+    /// <returns>Returns a string with all declarations (besides enums).</returns>
     public string GetAllDeclarations()
     {
         string output = "";
@@ -184,6 +223,10 @@ public class SourceFileReader : IDisposable
         return output;
     }
 
+    /// <summary>
+    /// Assembles all interface declarations into one string.
+    /// </summary>
+    /// <returns>Returns a string comprised of all the interface declarations.</returns>
     public string GetInterfaceDeclarations()
     {
         string output = "";
@@ -245,9 +288,14 @@ public class SourceFileReader : IDisposable
     }
 }
 
-
+/// <summary>
+/// The parsed source results holds collections of different declarations which have either been parsed from a language parser.
+/// </summary>
 public class ParsedSourceResults
 {
+    /// <summary>
+    /// The file path from where these source results have been parsed from.
+    /// </summary>
     public string FilePath { get; set; }
     public List<ClassDeclaration> Classes { get; set; }
     public List<EnumDeclaration> Enums { get; set; }
@@ -263,10 +311,14 @@ public class ParsedSourceResults
         Structs = new List<StructDeclaration>();
     }
 
+    /// <summary>
+    /// Combines incoming source results with the current source results.
+    /// </summary>
+    /// <param name="incoming">The source results to combine with.</param>
     public void Add(ParsedSourceResults incoming)
     {
         if (incoming == null) { return; }
-        
+
         if (incoming.Classes != null && incoming.Classes.Count > 0)
         {
             Classes.AddRange(incoming.Classes);
@@ -279,12 +331,16 @@ public class ParsedSourceResults
         {
             Structs.AddRange(incoming.Structs);
         }
-        if(incoming.Enums != null && incoming.Enums.Count > 0)
+        if (incoming.Enums != null && incoming.Enums.Count > 0)
         {
             Enums.AddRange(incoming.Enums);
         }
     }
 
+    /// <summary>
+    /// Attempts to find custom types which have been declared/defined within the loaded source code and find references.
+    /// Used for figuring out what colours can be assigned to have declaration (for fields or method return types).
+    /// </summary>
     public void HandleCustomTypes()
     {
         var enumNames = new HashSet<string>(Enums.Select(e => e.Name));

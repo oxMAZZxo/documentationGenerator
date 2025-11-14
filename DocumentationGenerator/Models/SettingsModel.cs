@@ -5,38 +5,126 @@ using System.IO;
 using Avalonia.Media;
 using DocumentationGenerator.Models.DocumentInfo;
 
+
 namespace DocumentationGenerator.Models;
 
-
+/// <summary>
+/// The Settings Model is a Singleton that stores the user's settings data regarding to how Documentation should be generated. The data is attempted to be loaded at the start of the applications lifetime; 
+/// if unsuccessful, default values are assigned to all the settings. The Settings Model provides functionality for saving the settings data, and can be called from anywhere in the application.
+/// </summary>
 public class SettingsModel
 {
+    /// <summary>
+    /// The Settings Model Instance
+    /// </summary>
     public static SettingsModel Instance { get; private set; }
+    /// <summary>
+    /// The Class Declaration Colour which will be used for rendering PDFs with MigraDoc
+    /// </summary>
     public MigraDoc.DocumentObjectModel.Color MigraDocClassDeclarationColour { get; private set; }
+    /// <summary>
+    /// The Primitive Declaration Colour which will be used for rendering PDFs with MigraDoc
+    /// </summary>
     public MigraDoc.DocumentObjectModel.Color MigraDocPrimitiveDeclarationColour { get; private set; }
+    /// <summary>
+    /// The Enum Declaration Colour which will be used for rendering PDFs with MigraDoc
+    /// 
+    /// </summary>
     public MigraDoc.DocumentObjectModel.Color MigraDocEnumDeclarationColour { get; private set; }
+    /// <summary>
+    /// The Interface Declaration Colour which will be used for rendering PDFs with MigraDoc
+    /// 
+    /// </summary>
     public MigraDoc.DocumentObjectModel.Color MigraDocInterfaceDeclarationColour { get; private set; }
+    /// <summary>
+    /// The Struct Declaration Colour which will be used for rendering PDFs with MigraDoc
+    /// 
+    /// </summary>
     public MigraDoc.DocumentObjectModel.Color MigraDocStructDeclarationColour { get; private set; }
 
+    /// <summary>
+    /// The class declaration colour used saved in the settings.
+    /// </summary>
     public Color ClassDeclarationColour { get; set; }
+    /// <summary>
+    /// The primitive declaration colour used saved in the settings.
+    /// 
+    /// </summary>
     public Color PrimitiveDeclarationColour { get; set; }
+    /// <summary>
+    /// The enum declaration colour used saved in the settings.
+    /// 
+    /// </summary>
     public Color EnumDeclarationColour { get; set; }
+    /// <summary>
+    /// The interface declaration colour used saved in the settings.
+    /// 
+    /// </summary>
     public Color InterfaceDeclarationColour { get; set; }
+    /// <summary>
+    /// The struct declaration colour used saved in the settings.
+    /// 
+    /// </summary>
     public Color StructDeclarationColour { get; set; }
 
+    /// <summary>
+    /// The font style for an objects declaration.
+    /// </summary>
     public FontDeclarationStyle ObjectDeclarationStyle { get; set; }
+    /// <summary>
+    /// the font style for an objects definition.
+    /// </summary>
     public FontDeclarationStyle ObjectDefinitionStyle { get; set; }
+    /// <summary>
+    /// The font style for member headings
+    /// </summary>
     public FontDeclarationStyle MemberHeadingStyle { get; set; }
+    /// <summary>
+    /// THe font style for a members name.
+    /// </summary>
     public FontDeclarationStyle MemberStyle { get; set; }
+    /// <summary>
+    /// The font style for a memebers type
+    /// </summary>
     public FontDeclarationStyle MemberTypeStyle { get; set; }
+    /// <summary>
+    /// The font style for a members definition.
+    /// </summary>
     public FontDeclarationStyle MemberDefinitionStyle { get; set; }
+    /// <summary>
+    /// The currently selected Font. Used for rendering PDFs
+    /// </summary>
     public string SelectedFont { get; set; }
+    /// <summary>
+    /// If true, the PDF Renderer will add a table of contents to the document.
+    /// </summary>
     public bool GenerateTableOfContents { get; set; }
+    /// <summary>
+    /// If true, the PDF Renderer will add page numbers to the document.
+    /// 
+    /// </summary>
     public bool GeneratePageNumbers { get; set; }
+    /// <summary>
+    /// If true, the documentation will contain inherititance hierarchy per Class Declaration, as well as a project wide Inheritance Hierarchy.
+    /// </summary>
     public bool AddDocumentRelationshipGraph { get; set; }
+    /// <summary>
+    /// If true, the PDF renderer will print the base types of a class in text. (Doesn't override the functionality of the AddDocumentRelationshipGraph property.)
+    /// </summary>
     public bool PrintBaseTypesToDocument { get; set; }
+    /// <summary>
+    /// If true, after the PDF has been renderer and saved, all the graph images will be deleted.
+    /// </summary>
     public bool KeepGraphFilesPostPDFGeneration { get; set; }
+    /// <summary>
+    /// The available fonts for the PDF generation.
+    /// </summary>
     public ObservableCollection<string> Fonts { get; } = new ObservableCollection<string> { "Arial", "Arial Black", "Courier New" };
 
+    /// <summary>
+    /// Instantiates a Settings Model Singleton. NOTE! If a singleton has already been instantiated, this constructor will stop the process early. 
+    /// For best practice, check whether the Instance is null before performing an operation.
+    /// </summary>
     public SettingsModel()
     {
         if (Instance != null)
@@ -80,6 +168,10 @@ public class SettingsModel
 
     }
 
+    /// <summary>
+    /// Attempts to load settings data stored in a file in the application base directory.
+    /// </summary>
+    /// <returns>Returns true if successful, otherwise returns false.</returns>
     private bool TryLoadSettings()
     {
         string[] lines;
@@ -170,7 +262,9 @@ public class SettingsModel
         return true;
     }
 
-
+    /// <summary>
+    /// Saves the settings data to a file in the applications base directory.
+    /// </summary>
     public void SaveSettings()
     {
         StreamWriter writer = new StreamWriter(Path.Combine(AppContext.BaseDirectory, "settings.txt"), false);
