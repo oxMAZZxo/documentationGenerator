@@ -1,5 +1,8 @@
 namespace DocumentationGenerator.Models.Declarations;
 
+/// <summary>
+/// A Struct Declaration reprensets a struct that is declared within a script file (.cs for example), and can store the structs' name and definition (if has one), along with its fields, properties and methods (and functions).
+/// </summary>
 public struct StructDeclaration
 {
     public string Name { get; }

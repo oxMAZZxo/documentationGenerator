@@ -9,8 +9,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DocumentationGenerator.Models.LanguageParsers;
 
+/// <summary>
+/// The CSharp Declaration Parser, is a wrapper class for parsing raw C# code into the different declarations.
+/// </summary>
 public static class CSharpDeclarationsParser
 {
+    /// <summary>
+    /// Reads all the declarations from a syntax tree.
+    /// </summary>
+    /// <param name="syntaxTree">The syntax tree to read</param>
+    /// <returns>Returns ParsedSourceResults which may contain parsed data</returns>
     public static ParsedSourceResults ReadAllDeclarations(SyntaxTree syntaxTree)
     {
         ParsedSourceResults results = new ParsedSourceResults();
@@ -50,6 +58,11 @@ public static class CSharpDeclarationsParser
         return results;
     }
 
+    /// <summary>
+    /// Handles namespace declarations in raw code. A source file may contatin multiple namespace declarations, this function handles all the declarations within a namespace.
+    /// </summary>
+    /// <param name="nameSpaceDeclaration">The namespace declaration to read.</param>
+    /// <returns>Returns ParsedSourceResults which may contain parsed data from within the provided namespace declaration.</returns>
     private static ParsedSourceResults HandleNamespaceDeclaration(NamespaceDeclarationSyntax nameSpaceDeclaration)
     {
         ParsedSourceResults results = new ParsedSourceResults();
@@ -83,6 +96,11 @@ public static class CSharpDeclarationsParser
         return results;
     }
 
+    /// <summary>
+    /// Handles a struct declaration syntax, turning it into a StructDeclaration.
+    /// </summary>
+    /// <param name="structDec">The Struct Declaration Syntax to parse.</param>
+    /// <returns>Returns a StructDeclaration containing all the important information about the struct delcaration syntax.</returns>
     private static StructDeclaration HandleStructDeclaration(StructDeclarationSyntax structDec)
     {
         string structName = structDec.Identifier.Text;
@@ -153,6 +171,11 @@ public static class CSharpDeclarationsParser
         return new StructDeclaration(structName, structDefinition, newProperties, newFields, newMethods);
     }
 
+    /// <summary>
+    /// Handles a interface declaration syntax, turning it into a InterfaceDeclaration.
+    /// </summary>
+    /// <param name="structDec">The Interface Declaration Syntax to parse.</param>
+    /// <returns>Returns a InterfaceDeclaration containing all the important information about the interface delcaration syntax.</returns>
     private static InterfaceDeclaration HandleInterfaceDeclaration(InterfaceDeclarationSyntax interfaceDec)
     {
         string interfaceName = interfaceDec.Identifier.Text;
@@ -329,7 +352,7 @@ public static class CSharpDeclarationsParser
     /// </summary>
     /// <param name="node">The node that may contain a XML comment trivia.</param>
     /// <param name="tag">The type of XML comment to look for.</param>
-    /// <returns></returns>
+    /// <returns>Returns a string which may contain the XML Comment, or an indication that theres no valid comment.</returns>
     private static string GetXML(SyntaxNode node, XmlTag tag)
     {
         SyntaxToken token = node.GetFirstToken();

@@ -1,7 +1,7 @@
 namespace DocumentationGenerator.Models.Declarations;
 
 /// <summary>
-/// A Class Declaration is a class that is declared within a script file (.cs for example), and can store the classes name, and definition (if has one), along with its fields, properties and methods (and functions).
+/// A Class Declaration reprensets a class that is declared within a script file (.cs for example), and can store the classes name, and definition (if has one), along with its fields, properties and methods (and functions).
 /// </summary>
 public struct ClassDeclaration
 {
@@ -69,11 +69,29 @@ public struct Declaration
     }
 }
 
+/// <summary>
+/// Indicates what type of object a declaration is. This allows for changing certain logic at runtime without checking for specific types.
+/// </summary>
 public enum ObjectType
 {
+    /// <summary>
+    /// A class object.
+    /// </summary>
     Class,
+    /// <summary>
+    /// An enum object.
+    /// </summary>
     Enum,
+    /// <summary>
+    /// An interface object.
+    /// </summary>
     Interface,
+    /// <summary>
+    /// A struct object.
+    /// </summary>
     Struct,
+    /// <summary>
+    /// A primitive.
+    /// </summary>
     Primitive
 }

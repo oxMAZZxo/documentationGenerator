@@ -6,9 +6,18 @@ using DocumentationGenerator.Models.DocumentWriters;
 
 namespace DocumentationGenerator.Models;
 
+/// <summary>
+/// The Documentation Writer provides functionality for creating different types of documentation from Declarations (Classes, Interfaces etc.).
+/// </summary>
 public class DocumentationWriter
 {
+    /// <summary>
+    /// An instance of a PDF Writer
+    /// </summary>
     private PdfWriter pdfWriter;
+    /// <summary>
+    /// An instance of a HTML Writer
+    /// </summary>
     private HtmlWriter htmlWriter;
 
     public DocumentationWriter()
@@ -17,6 +26,16 @@ public class DocumentationWriter
         htmlWriter = new HtmlWriter();
     }
 
+    /// <summary>
+    /// Write a type of documentation to a specified destination, providing all the nessary declarations, styles etc. 
+    /// </summary>
+    /// <param name="type">The type of documentation to be created.</param>
+    /// <param name="classDeclarations">The class declarations to use for the documentation.</param>
+    /// <param name="enumDeclarations">The enum declarations to use for the documentation.</param>
+    /// <param name="interfaceDeclarations">The interface declarations to use for the documentation.</param>
+    /// <param name="structDeclarations">The struct declarations to use for the documentation.</param>
+    /// <param name="docInfo">The documents information (regarding styles, fonts, graphs etc.).</param>
+    /// <returns>Returns true if operation was successful, else returns false</returns>
     public async Task<bool> WriteDocumentationAsync(DocumentationType type, ClassDeclaration[]? classDeclarations, EnumDeclaration[]? enumDeclarations, InterfaceDeclaration[]? interfaceDeclarations, StructDeclaration[]? structDeclarations, DocumentInformation docInfo)
     {
         if (docInfo.GenerateInheritanceGraphs)
@@ -47,8 +66,17 @@ public class DocumentationWriter
     }
 }
 
+/// <summary>
+/// Represents the different types of documentation that can be created.
+/// </summary>
 public enum DocumentationType
 {
+    /// <summary>
+    /// PDF Document
+    /// </summary>
     PDF,
+    /// <summary>
+    /// HTML Document(s)
+    /// </summary>
     HTML
 }

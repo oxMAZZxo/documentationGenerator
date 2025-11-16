@@ -1,5 +1,8 @@
 namespace DocumentationGenerator.Models.Declarations;
 
+/// <summary>
+/// An Interface Declaration reprensets an interface that is declared within a script file (.cs for example), and can store the name and definition (if has one), along with its properties and methods (and functions).
+/// </summary>
 public struct InterfaceDeclaration
 {
     public string Name { get; }
