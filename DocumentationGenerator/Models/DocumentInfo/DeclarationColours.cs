@@ -2,6 +2,9 @@ using MigraDoc.DocumentObjectModel;
 
 namespace DocumentationGenerator.Models.DocumentInfo;
 
+/// <summary>
+/// The Declaration Colours class stores the MigraDoc colours for the different declarations which are used in the PDF Rendering process.
+/// </summary>
 public struct DeclarationColours
 {
     public Color ClassDeclarationColour { get; set; }

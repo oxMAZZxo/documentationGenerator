@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 
 namespace DocumentationGenerator.Models.DocumentInfo;
 
+/// <summary>
+/// The Document Information class represents/stores data regarding to how the documentation will be rendered/what will be rendered. 
+/// It is used in both the HTML Docs creation and PDF Docs creation process, however for each process different data would be needed, therefore this class is a way of storing that data in one place and accessing it from one place.
+/// That said, in the future different classes might be created to be used for the different documentation creation processes. 
+/// </summary>
 public class DocumentInformation : IDisposable
 {
     public DeclarationColours DeclarationColours { get; set; }
@@ -50,6 +53,9 @@ public class DocumentInformation : IDisposable
     }
 }
 
+/// <summary>
+/// The Declaration Font Styles is a wrapper class which holds all the different FontDeclarationStyle object which are used in the PDF Rendering Creation.
+/// </summary>
 public class DeclarationFontStyles
 {
     public string FontFamilyName { get; }
@@ -69,99 +75,5 @@ public class DeclarationFontStyles
         MemberStyle = memberStyle;
         MemberTypeStyle = memberTypeStyle;
         MemberDefinitionStyle = memberDefinitionStyle;
-    }
-}
-
-public class FontDeclarationStyle : INotifyPropertyChanged
-{
-    private string fontSizeString = "";
-    private bool isItalic;
-    private bool isBold;
-    private string spaceAfterString = "";
-
-    public string FontSizeString
-    {
-        get => fontSizeString;
-        set
-        {
-            fontSizeString = value;
-            SetFontSize();
-            OnPropertyChanged();
-        }
-    }
-
-    public int FontSize { get; private set; }
-
-    public bool IsItalic
-    {
-        get => isItalic;
-        set
-        {
-            isItalic = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public bool IsBold
-    {
-        get => isBold;
-        set
-        {
-            isBold = value;
-
-            OnPropertyChanged();
-        }
-    }
-
-    public string SpaceAfterString
-    {
-        get => spaceAfterString;
-        set
-        {
-            spaceAfterString = value;
-            SetSpaceAfter();
-            OnPropertyChanged();
-        }
-    }
-
-    public int SpaceAfter { get; private set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public FontDeclarationStyle(string fontSizeString, bool isItalic, bool isBold, string spaceAfterString)
-    {
-        FontSizeString = fontSizeString;
-        SpaceAfterString = spaceAfterString;
-        IsItalic = isItalic;
-        IsBold = isBold;
-    }
-
-    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-    private void SetSpaceAfter()
-    {
-        if (string.IsNullOrEmpty(SpaceAfterString) || string.IsNullOrWhiteSpace(SpaceAfterString))
-        {
-            SpaceAfter = 1;
-            return;
-        }
-        SpaceAfter = Convert.ToInt32(SpaceAfterString);
-    }
-
-    private void SetFontSize()
-    {
-        if (string.IsNullOrEmpty(FontSizeString) || string.IsNullOrWhiteSpace(FontSizeString))
-        {
-            FontSize = 1;
-            return;
-        }
-        FontSize = Convert.ToInt32(FontSizeString);
-    }
-
-    public string GetValuesInStrings()
-    {
-        return $"{FontSize},{IsItalic},{IsBold},{SpaceAfter}";
     }
 }
