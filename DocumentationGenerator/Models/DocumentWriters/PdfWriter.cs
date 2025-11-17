@@ -13,6 +13,10 @@ using PdfSharp.Pdf;
 
 namespace DocumentationGenerator.Models.DocumentWriters;
 
+/// <summary>
+/// The PdfWriter is a wrapper class for generating PDF documentation based on data that has been loaded from source.
+/// It holds functionality for creating a pdf document, adding all the declarations on it, styling it, rendering it, and finally saving it to the target location.
+/// </summary>
 public class PdfWriter
 {
     private const string ObjectStyle = "Object";

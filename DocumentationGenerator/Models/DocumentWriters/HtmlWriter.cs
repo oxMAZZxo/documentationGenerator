@@ -12,6 +12,11 @@ using DocumentationGenerator.Models.DocumentInfo;
 
 namespace DocumentationGenerator.Models.DocumentWriters;
 
+/// <summary>
+/// The HtmlWriter is a wrapper class for generating HTML Documentation based on the loaded source. 
+/// It holds functionality for generating pages for each Object Declaration, generating a navigation bar, and the home page. 
+/// The wrapper also copies resources to the target folder where the documentation is created, such as the CSS files for the styling and JS code which makes the documentation interactive.
+/// </summary>
 public class HtmlWriter
 {
     public async Task<bool> WriteAsync(ClassDeclaration[]? classes, EnumDeclaration[]? enums, InterfaceDeclaration[]? interfaces, StructDeclaration[]? structs, DocumentInformation docInfo)
