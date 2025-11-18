@@ -1,0 +1,20 @@
+<Window x:Class="DocumentationGenerator.Views.LanguageSelectionWindowView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        MinWidth="400"
+        MinHeight="200"
+        d:DesignHeight="400"
+        d:DesignWidth="600"
+        ExtendClientAreaChromeHints="NoChrome"
+        SystemDecorations="BorderOnly"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+
+    <Grid ColumnDefinitions="200,200">
+        <Label Grid.ColumnSpan="2" Content="Please Select the Language Type" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18"/>
+        <Button Grid.Column="0" Click="OnOkayButtonClicked" Content="Okay" />
+        <Button Grid.Column="1" Click="OnCancelButtonClicked" Content="Cancel" />
+    </Grid>
+</Window>

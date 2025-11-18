@@ -29,6 +29,7 @@ public class MainWindowViewModel : BaseViewModel
     private DocumentationWriter documentationWriter;
     private SettingsWindowView settingsView;
     private string output;
+    private LanguageSelectionWindowView languageSelectionWindowView;
 
     public string FileName
     {
@@ -84,6 +85,8 @@ public class MainWindowViewModel : BaseViewModel
         InitDialogs();
 
         ShowDefaultUI();
+
+         languageSelectionWindowView = new LanguageSelectionWindowView();
     }
 
     private void OnAppShuttingDown(object? sender, WindowClosingEventArgs e)
@@ -138,6 +141,8 @@ public class MainWindowViewModel : BaseViewModel
         bool noData = await CheckNoData();
         bool hasProjectName = await CheckProjectNameAsync();
         if (noData || !hasProjectName) { return; }
+
+        await languageSelectionWindowView.ShowDialog(owner);
 
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
