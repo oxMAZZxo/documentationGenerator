@@ -86,7 +86,7 @@ public class MainWindowViewModel : BaseViewModel
 
         ShowDefaultUI();
 
-         languageSelectionWindowView = new LanguageSelectionWindowView();
+        languageSelectionWindowView = new LanguageSelectionWindowView();
     }
 
     private void OnAppShuttingDown(object? sender, WindowClosingEventArgs e)
@@ -106,7 +106,7 @@ public class MainWindowViewModel : BaseViewModel
         filePickerSaveOptions.SuggestedFileName = "Documentation";
         filePickerSaveOptions.DefaultExtension = "pdf";
         filePickerSaveOptions.ShowOverwritePrompt = true;
-        filePickerSaveOptions.FileTypeChoices = new[] { new FilePickerFileType(""){ Patterns = new[] { "*.pdf" } } };
+        filePickerSaveOptions.FileTypeChoices = new[] { new FilePickerFileType("") { Patterns = new[] { "*.pdf" } } };
     }
 
     private void Exit()
@@ -127,7 +127,7 @@ public class MainWindowViewModel : BaseViewModel
             ShowDefaultUI();
         }
     }
-    
+
     private void ShowDefaultUI()
     {
         FileName = "Loaded File(s) / Directory name will be displayed here.";
@@ -141,8 +141,6 @@ public class MainWindowViewModel : BaseViewModel
         bool noData = await CheckNoData();
         bool hasProjectName = await CheckProjectNameAsync();
         if (noData || !hasProjectName) { return; }
-
-        await languageSelectionWindowView.ShowDialog(owner);
 
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
@@ -176,7 +174,6 @@ public class MainWindowViewModel : BaseViewModel
         bool noData = await CheckNoData();
         bool hasProjectName = await CheckProjectNameAsync();
         if (noData || !hasProjectName) { return; }
-        
 
         TopLevel? topLevel = TopLevel.GetTopLevel(owner);
         if (topLevel == null) { return; }
@@ -254,12 +251,18 @@ public class MainWindowViewModel : BaseViewModel
 
         if (!validOp) { return; }
 
+
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
+
+        await languageSelectionWindowView.ShowDialog(owner);
+        
+        if (!languageSelectionWindowView.ValidSelection) { return; }
+
         IReadOnlyList<IStorageFolder> folders = await App.Instance.TopLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
 
         if (folders.Count < 1 || folders == null) { return; }
 
-        await sourceFileReader.ReadSourceDirectory(folders[0], ProgLanguage.CSharp);
+        await sourceFileReader.ReadSourceDirectory(folders[0], languageSelectionWindowView.SelectedProgrammingLanguage);
         FileName = folders[0].Name;
         Output = sourceFileReader.GetAllDeclarations();
     }

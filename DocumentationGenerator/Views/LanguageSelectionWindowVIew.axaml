@@ -3,18 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        MinWidth="400"
-        MinHeight="200"
-        d:DesignHeight="400"
-        d:DesignWidth="600"
+        Width="450"
+        Height="250"
+        d:DesignHeight="200"
+        d:DesignWidth="400"
         ExtendClientAreaChromeHints="NoChrome"
         SystemDecorations="BorderOnly"
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d">
 
-    <Grid ColumnDefinitions="200,200">
-        <Label Grid.ColumnSpan="2" Content="Please Select the Language Type" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18"/>
-        <Button Grid.Column="0" Click="OnOkayButtonClicked" Content="Okay" />
-        <Button Grid.Column="1" Click="OnCancelButtonClicked" Content="Cancel" />
-    </Grid>
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="16"/>    
+        </Style>    
+    </Window.Styles>
+
+    <Border BorderBrush="DarkGray" BorderThickness="1">
+        <Grid ColumnDefinitions="200,200">
+            <Label Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top"
+                   Margin="10" Content="Please Select the Language Type" FontSize="18" />
+
+            <ComboBox x:Name="ProgLangOptions" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            <Button Grid.Column="0" HorizontalAlignment="Left" Click="OnOkayButtonClicked" Content="Okay" />
+            <Button Grid.Column="1" HorizontalAlignment="Right" Click="OnCancelButtonClicked" Content="Cancel" />
+        </Grid>
+    </Border>
 </Window>

@@ -91,12 +91,20 @@
 
                 <Separator />
                 <Label Classes="H1" Content="Fonts" />
-
+                <Grid>
+                    <StackPanel Margin="10" Orientation="Horizontal">
+                            <Label Content="Font Family:" />
+                            <ComboBox Height="35" MinWidth="50" VerticalContentAlignment="Center"
+                                      FontSize="16" FontWeight="SemiBold"
+                                      ItemsSource="{Binding Fonts}"
+                                      SelectedItem="{Binding SelectedFont}" />
+                    </StackPanel>
+                </Grid>
                 <Grid>
                     <Label Classes="H2" Content="Object Declaration Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDeclarationStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
@@ -106,7 +114,7 @@
                             <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding ObjectDeclarationStyle.IsItalic}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Paragraph Space After:" />
+                            <Label Content="Paragraph Space After:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDeclarationStyle.SpaceAfterString}" />
                         </StackPanel>
                     </StackPanel>
@@ -117,7 +125,7 @@
                     <Label Classes="H2" Content="Object Definition Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDefinitionStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
@@ -127,7 +135,7 @@
                             <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding ObjectDefinitionStyle.IsItalic}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Paragraph Space After:" />
+                            <Label Content="Paragraph Space After:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding ObjectDefinitionStyle.SpaceAfterString}" />
                         </StackPanel>
 
@@ -139,7 +147,7 @@
                     <Label Classes="H2" Content="Member Heading Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberHeadingStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
@@ -149,7 +157,7 @@
                             <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding MemberHeadingStyle.IsItalic}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Paragraph Space After:" />
+                            <Label Content="Paragraph Space After:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberHeadingStyle.SpaceAfterString}" />
                         </StackPanel>
                     </StackPanel>
@@ -160,7 +168,7 @@
                     <Label Classes="H2" Content="Member Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
@@ -170,7 +178,7 @@
                             <CheckBox Classes="CheckBoxFontStyle" Content="Is Italic" IsChecked="{Binding MemberStyle.IsItalic}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Paragraph Space After:" />
+                            <Label Content="Paragraph Space After:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberStyle.SpaceAfterString}" />
                         </StackPanel>
                     </StackPanel>
@@ -181,7 +189,7 @@
                     <Label Classes="H2" Content="Member Type Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberTypeStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
@@ -198,7 +206,7 @@
                     <Label Classes="H2" Content="Member Definition Style" />
                     <StackPanel Classes="SectionStackPanel" Orientation="Horizontal">
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">
-                            <Label  Content="Font Size:" />
+                            <Label Content="Font Size:" />
                             <TextBox Classes="SizeSetterTextBox" KeyDown="TextBoxKeyDown" Text="{Binding MemberDefinitionStyle.FontSizeString}" />
                         </StackPanel>
                         <StackPanel Classes="FieldStackPanel" Orientation="Horizontal">

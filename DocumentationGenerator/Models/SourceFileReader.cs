@@ -19,15 +19,15 @@ public enum ProgLanguage
     /// <summary>
     /// C#
     /// </summary>
-    CSharp,
+    CSharp = 0,
     /// <summary>
     /// Visual Basic or vb.Net
     /// </summary>
-    VisualBasic,
+    VisualBasic = 1,
     /// <summary>
     /// C++
     /// </summary>
-    CPP
+    CPP = 2
 }
 
 public class SourceFileReader : IDisposable
