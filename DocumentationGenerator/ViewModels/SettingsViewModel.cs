@@ -220,7 +220,7 @@ public class SettingsViewModel : BaseViewModel
     }
 
 
-    public SettingsViewModel()
+    public SettingsViewModel(Window owner) : base(owner)
     {
         new SettingsModel();
 

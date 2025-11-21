@@ -11,7 +11,7 @@ public partial class SettingsWindowView : Window
     public SettingsWindowView()
     {
         InitializeComponent();
-        DataContext = new SettingsViewModel();
+        DataContext = new SettingsViewModel(this);
         Closing += OnWindowClosing;
     }
 

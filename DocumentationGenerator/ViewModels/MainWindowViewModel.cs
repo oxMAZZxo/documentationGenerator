@@ -20,7 +20,6 @@ namespace DocumentationGenerator.ViewModels;
 
 public class MainWindowViewModel : BaseViewModel
 {
-    private Window owner;
     private string fileName;
     private FilePickerOpenOptions filePickerOpenOptions;
     private FolderPickerOpenOptions directoryPickerOpenOptions;
@@ -62,9 +61,8 @@ public class MainWindowViewModel : BaseViewModel
     public ICommand SettingsButtonCommand { get; set; }
     public ICommand ExitAppCommand { get; set; }
 
-    public MainWindowViewModel(Window owner)
+    public MainWindowViewModel(Window owner) : base(owner)
     {
-        this.owner = owner;
         owner.Closing += OnAppShuttingDown;
         settingsView = new SettingsWindowView();
         LoadFileCommand = new RelayCommand(LoadFile);
@@ -120,7 +118,7 @@ public class MainWindowViewModel : BaseViewModel
 
         IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard("Warning!", "Are you sure you want to clear all the source data that has been loaded.", ButtonEnum.YesNo, Icon.Warning, null, WindowStartupLocation.CenterOwner);
 
-        ButtonResult result = await box.ShowWindowDialogAsync(owner);
+        ButtonResult result = await box.ShowWindowDialogAsync(Owner);
         if (result == ButtonResult.Yes)
         {
             sourceFileReader.Clear();
@@ -142,7 +140,7 @@ public class MainWindowViewModel : BaseViewModel
         bool hasProjectName = await CheckProjectNameAsync();
         if (noData || !hasProjectName) { return; }
 
-        TopLevel? topLevel = TopLevel.GetTopLevel(owner);
+        TopLevel? topLevel = TopLevel.GetTopLevel(Owner);
         if (topLevel == null) { return; }
         IReadOnlyList<IStorageFolder> folders = await topLevel.StorageProvider.OpenFolderPickerAsync(directoryPickerOpenOptions);
         if (folders.Count < 1) { return; }
@@ -175,7 +173,7 @@ public class MainWindowViewModel : BaseViewModel
         bool hasProjectName = await CheckProjectNameAsync();
         if (noData || !hasProjectName) { return; }
 
-        TopLevel? topLevel = TopLevel.GetTopLevel(owner);
+        TopLevel? topLevel = TopLevel.GetTopLevel(Owner);
         if (topLevel == null) { return; }
         IStorageFile? file = await topLevel.StorageProvider.SaveFilePickerAsync(filePickerSaveOptions);
         if (file == null) { return; }
@@ -203,7 +201,7 @@ public class MainWindowViewModel : BaseViewModel
         if (string.IsNullOrEmpty(ProjectName) || string.IsNullOrWhiteSpace(ProjectName))
         {
             IMsBox<ButtonResult> box = MessageBoxManager.GetMessageBoxStandard("Error!", "Enter a project name in the 'Project Name' input field.", ButtonEnum.Ok, Icon.Error, WindowStartupLocation.CenterOwner);
-            await box.ShowAsPopupAsync(owner);
+            await box.ShowAsPopupAsync(Owner);
             return false;
         }
         return true;
@@ -218,7 +216,7 @@ public class MainWindowViewModel : BaseViewModel
             "You already have loaded some data. By clicking 'OK', you will load data on top of the existing data. Click 'Cancel' to cancel the operation.",
             ButtonEnum.OkCancel, Icon.Warning, null, WindowStartupLocation.CenterOwner);
 
-            ButtonResult result = await box.ShowAsPopupAsync(owner);
+            ButtonResult result = await box.ShowAsPopupAsync(Owner);
             if (result == ButtonResult.Cancel)
             {
                 return false;
@@ -238,7 +236,7 @@ public class MainWindowViewModel : BaseViewModel
             "You are trying to Export but you haven't loaded any data! Try loading some data by loading a directory or specific files by clickin one of the options on the 'File' menu.",
             ButtonEnum.Ok, Icon.Error, null, WindowStartupLocation.CenterOwner);
 
-            await result.ShowAsPopupAsync(owner);
+            await result.ShowAsPopupAsync(Owner);
             return true;
         }
 
@@ -254,7 +252,7 @@ public class MainWindowViewModel : BaseViewModel
 
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
 
-        await languageSelectionWindowView.ShowDialog(owner);
+        await languageSelectionWindowView.ShowDialog(Owner);
         
         if (!languageSelectionWindowView.ValidSelection) { return; }
 
@@ -287,7 +285,7 @@ public class MainWindowViewModel : BaseViewModel
 
     private void OnSettingsButtonClicked()
     {
-        settingsView.ShowDialog(owner);
+        settingsView.ShowDialog(Owner);
     }
 
 }
