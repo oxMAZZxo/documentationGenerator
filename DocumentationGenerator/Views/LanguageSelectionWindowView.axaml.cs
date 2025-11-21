@@ -14,8 +14,21 @@ public partial class LanguageSelectionWindowView : Window
     public LanguageSelectionWindowView()
     {
         InitializeComponent();
+        Closing += OnWindowClosing;
         ProgLangOptions.ItemsSource = Enum.GetValues(typeof(ProgLanguage));
         ValidSelection = false;
+    }
+
+    private void OnWindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        e.Cancel = false;
+        if(App.Instance == null){return;}
+
+        if(!App.Instance.IsShuttingDown)
+        {
+            e.Cancel = true;
+            Hide();
+        }
     }
 
     public void OnOkayButtonClicked(object? sender, RoutedEventArgs e)
@@ -25,12 +38,12 @@ public partial class LanguageSelectionWindowView : Window
             ValidSelection = true;
         }
         SelectedProgrammingLanguage = (ProgLanguage)ProgLangOptions.SelectedIndex;
-        this.Hide();
+        Hide();
     }
 
     public void OnCancelButtonClicked(object? sender, RoutedEventArgs e)
     {
         ValidSelection = false;
-        this.Hide();
+        Hide();
     }
 }
