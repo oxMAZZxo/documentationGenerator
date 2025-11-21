@@ -97,6 +97,8 @@ public class MainWindowViewModel : BaseViewModel
         filePickerOpenOptions.AllowMultiple = true;
         filePickerOpenOptions.Title = "Select a file(s) to load.";
 
+        filePickerOpenOptions.FileTypeFilter = [new FilePickerFileType(@"C#"){ Patterns = ["*.cs",]}, new FilePickerFileType("Visual Basic"){ Patterns = ["*.vb"]}, new FilePickerFileType("C++ Files"){Patterns = ["*.cpp", "*.h"]}];
+
         directoryPickerOpenOptions.Title = "Select a folder which contains source files to load."; ;
         directoryPickerOpenOptions.AllowMultiple = false;
 
@@ -104,7 +106,7 @@ public class MainWindowViewModel : BaseViewModel
         filePickerSaveOptions.SuggestedFileName = "Documentation";
         filePickerSaveOptions.DefaultExtension = "pdf";
         filePickerSaveOptions.ShowOverwritePrompt = true;
-        filePickerSaveOptions.FileTypeChoices = new[] { new FilePickerFileType("") { Patterns = new[] { "*.pdf" } } };
+        filePickerSaveOptions.FileTypeChoices = [new FilePickerFileType("PDF") { Patterns = ["*.pdf"] }];
     }
 
     private void Exit()
