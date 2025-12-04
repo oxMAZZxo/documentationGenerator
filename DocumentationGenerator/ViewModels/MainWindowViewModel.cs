@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
@@ -276,7 +273,7 @@ public class MainWindowViewModel : BaseViewModel
 
         if (App.Instance == null || App.Instance.TopLevel == null) { return; }
         IReadOnlyList<IStorageFile>? files = await App.Instance.TopLevel.StorageProvider.OpenFilePickerAsync(filePickerOpenOptions);
-
+        
         if (files == null || files.Count < 1) { return; }
 
         await sourceFileReader.ReadSourceFilesAsync(files.ToList(), ProgLanguage.CSharp);

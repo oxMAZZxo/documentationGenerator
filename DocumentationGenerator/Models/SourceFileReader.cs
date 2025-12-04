@@ -9,6 +9,7 @@ using DocumentationGenerator.Helpers;
 using DocumentationGenerator.Models.Declarations;
 using DocumentationGenerator.Models.LanguageParsers;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace DocumentationGenerator.Models;
 /// <summary>
@@ -143,7 +144,7 @@ public class SourceFileReader : IDisposable
         ParsedSourceResults results;
         switch (progLanguage)
         {
-            //case ProgLanguage.VisualBasic: syntaxTree = VisualBasicSyntaxTree.ParseText(rawCode); break;
+            case ProgLanguage.VisualBasic: results = VbDeclarationsParser.ReadAllDeclarations(VisualBasicSyntaxTree.ParseText(rawCode)); break;
             default: results = CSharpDeclarationsParser.ReadAllDeclarations(CSharpSyntaxTree.ParseText(rawCode)); break;
         }
         return results;

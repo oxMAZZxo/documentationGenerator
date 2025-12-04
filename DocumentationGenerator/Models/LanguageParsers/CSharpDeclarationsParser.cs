@@ -410,20 +410,20 @@ public static class CSharpDeclarationsParser
     /// <returns>Returns true if is a primitive, otherwise false.</returns>
     private static bool IsPrimitiveType(string type)
     {
-        if (type == "int") { return true; }
-        if (type == "bool") { return true; }
-        if (type == "sbyte") { return true; }
-        if (type == "int16") { return true; }
-        if (type == "uint16") { return true; }
-        if (type == "int32") { return true; }
-        if (type == "uint32") { return true; }
-        if (type == "int64") { return true; }
-        if (type == "uint64") { return true; }
-        if (type == "single") { return true; }
-        if (type == "double") { return true; }
-        if (type == "char") { return true; }
-        if (type == "float") { return true; }
-        if (type == "void") { return true; }
+        if (type.ToLower() == "int") { return true; }
+        if (type.ToLower() == "bool") { return true; }
+        if (type.ToLower() == "sbyte") { return true; }
+        if (type.ToLower() == "int16") { return true; }
+        if (type.ToLower() == "uint16") { return true; }
+        if (type.ToLower() == "int32") { return true; }
+        if (type.ToLower() == "uint32") { return true; }
+        if (type.ToLower() == "int64") { return true; }
+        if (type.ToLower() == "uint64") { return true; }
+        if (type.ToLower() == "single") { return true; }
+        if (type.ToLower() == "double") { return true; }
+        if (type.ToLower() == "char") { return true; }
+        if (type.ToLower() == "float") { return true; }
+        if (type.ToLower() == "void") { return true; }
 
         return false;
     }
